@@ -95,9 +95,17 @@ suspend fun ping(ip: String, timeoutMs: Int = 800): Host? = withContext(Dispatch
             c.disconnect()
         }
     } catch (e: Exception) {
+        lastPingError = "${e.javaClass.simpleName}: ${e.message}"
         null
     }
 }
+
+/** Причина последней неудачной проверки, для показа пользователю. */
+@Volatile var lastPingError: String = ""
+
+/** Оставляет только адрес: убирает http://, порт и пробелы. */
+fun cleanIp(raw: String): String =
+    raw.trim().removePrefix("http://").removePrefix("https://").substringBefore('/').substringBefore(':').trim()
 
 private data class Local(val ip: String, val prefix: Int, val broadcast: InetAddress?)
 

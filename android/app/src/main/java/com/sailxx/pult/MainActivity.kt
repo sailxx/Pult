@@ -117,16 +117,19 @@ private fun ConnectScreen(initIp: String, initPin: String, onConnected: (String,
 
     fun connect() {
         scope.launch {
-            busy = true; statusBad = false; status = "Подключаюсь к $ip"
-            val host = ping(ip.trim(), 3000)
+            busy = true; statusBad = false
+            val addr = cleanIp(ip)
+            ip = addr
+            status = "Подключаюсь к $addr"
+            val host = ping(addr, 4000)
             if (host == null) {
                 statusBad = true
-                status = "ПК не отвечает на $ip:$HTTP_PORT. Проверьте, что Pult запущен и телефон в той же Wi-Fi сети. " +
-                    "Если да, на ПК: значок Pult в трее > «Разрешить в брандмауэре»."
+                status = "ПК не отвечает на $addr:$HTTP_PORT.\nПричина: $lastPingError\n" +
+                    "Проверьте, что Pult запущен на ПК и телефон в той же Wi-Fi сети."
             } else {
                 try {
-                    Client(ip.trim(), pin.trim()).apps()
-                    onConnected(ip.trim(), pin.trim())
+                    Client(addr, pin.trim()).apps()
+                    onConnected(addr, pin.trim())
                 } catch (e: WrongPin) {
                     statusBad = true; status = "Неверный PIN. Он показан в окне «Адрес и PIN» в трее ПК."
                 } catch (e: Exception) {
