@@ -69,9 +69,21 @@ private val Bad = Color(0xFFE5675A)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        bindToWifi()
         val prefs = getSharedPreferences("pult", Context.MODE_PRIVATE)
         setContent { Root(prefs) }
     }
+}
+
+/** Привязывает сетевой трафик приложения к Wi-Fi, чтобы он шёл мимо VPN телефона. */
+private fun Context.bindToWifi() {
+    val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as android.net.ConnectivityManager
+    val wifi = cm.allNetworks.firstOrNull {
+        val c = cm.getNetworkCapabilities(it)
+        c != null && c.hasTransport(android.net.NetworkCapabilities.TRANSPORT_WIFI) &&
+            !c.hasTransport(android.net.NetworkCapabilities.TRANSPORT_VPN)
+    }
+    if (wifi != null) cm.bindProcessToNetwork(wifi)
 }
 
 @Composable

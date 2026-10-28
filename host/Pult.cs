@@ -60,6 +60,11 @@ static class Program
         }
     }
 
+    internal static void Notify(string text)
+    {
+        if (tray != null) tray.ShowBalloonTip(4000, "Pult", text, ToolTipIcon.None);
+    }
+
     static void ShowInfo()
     {
         var sb = new StringBuilder();
@@ -120,9 +125,14 @@ static class Firewall
             var psi = new ProcessStartInfo(Application.ExecutablePath, "--firewall");
             psi.Verb = "runas";
             psi.UseShellExecute = true;
-            Process.Start(psi);
+            var p = Process.Start(psi);
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                p.WaitForExit();
+                Program.Notify(p.ExitCode == 0 ? "Порты 47800 и 47801 открыты в брандмауэре." : "Не удалось добавить правила.");
+            });
         }
-        catch { }
+        catch { Program.Notify("Запрос прав администратора отменён."); }
     }
 
     static void Run(string args)
