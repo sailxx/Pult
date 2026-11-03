@@ -6,6 +6,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import org.json.JSONObject
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.HttpURLConnection
@@ -52,8 +54,11 @@ class Client(private val ip: String, private val pin: String) {
 
     suspend fun apps(): List<AppItem> {
         val text = String(call("/apps", timeoutMs = 8000), Charsets.UTF_8)
-        val re = Regex("\"id\":\"([0-9a-f]+)\",\"name\":\"((?:[^\"\\\\]|\\\\.)*)\"")
-        return re.findAll(text).map { AppItem(it.groupValues[1], unescape(it.groupValues[2])) }.toList()
+        val arr = JSONArray(text)
+        return (0 until arr.length()).map { i ->
+            val obj = arr.getJSONObject(i)
+            AppItem(obj.getString("id"), obj.getString("name"))
+        }
     }
 
     suspend fun icon(id: String): ByteArray? = try { call("/icon?id=$id") } catch (e: WrongPin) { throw e } catch (e: Exception) { null }
@@ -64,24 +69,21 @@ class Client(private val ip: String, private val pin: String) {
 
     suspend fun volume(): VolumeState {
         val text = String(call("/volume"), Charsets.UTF_8)
-        val vol = Regex("\"volume\":([0-9]+)").find(text)?.groupValues?.get(1)?.toIntOrNull() ?: 50
-        val muted = text.contains("\"muted\":true")
-        return VolumeState(vol, muted)
+        val obj = JSONObject(text)
+        return VolumeState(obj.optInt("volume", 50), obj.optBoolean("muted", false))
     }
 
     suspend fun setVolume(percent: Int): VolumeState {
         val p = percent.coerceIn(0, 100)
         val text = String(call("/volume?set=$p", "POST"), Charsets.UTF_8)
-        val vol = Regex("\"volume\":([0-9]+)").find(text)?.groupValues?.get(1)?.toIntOrNull() ?: p
-        val muted = text.contains("\"muted\":true")
-        return VolumeState(vol, muted)
+        val obj = JSONObject(text)
+        return VolumeState(obj.optInt("volume", p), obj.optBoolean("muted", false))
     }
 
     suspend fun toggleMute(): VolumeState {
         val text = String(call("/volume?mute=toggle", "POST"), Charsets.UTF_8)
-        val vol = Regex("\"volume\":([0-9]+)").find(text)?.groupValues?.get(1)?.toIntOrNull() ?: 50
-        val muted = text.contains("\"muted\":true")
-        return VolumeState(vol, muted)
+        val obj = JSONObject(text)
+        return VolumeState(obj.optInt("volume", 50), obj.optBoolean("muted", false))
     }
 
     suspend fun system(action: String) {
@@ -110,10 +112,11 @@ class Client(private val ip: String, private val pin: String) {
 
     suspend fun tasks(): List<TaskItem> {
         val text = String(call("/tasks", timeoutMs = 4000), Charsets.UTF_8)
-        val re = Regex("\"id\":(-?[0-9]+),\"title\":\"((?:[^\"\\\\]|\\\\.)*)\",\"proc\":\"((?:[^\"\\\\]|\\\\.)*)\"")
-        return re.findAll(text).map {
-            TaskItem(it.groupValues[1].toLong(), unescape(it.groupValues[2]), unescape(it.groupValues[3]))
-        }.toList()
+        val arr = JSONArray(text)
+        return (0 until arr.length()).map { i ->
+            val obj = arr.getJSONObject(i)
+            TaskItem(obj.getLong("id"), obj.getString("title"), obj.getString("proc"))
+        }
     }
 
     suspend fun switchTask(id: Long) {
@@ -131,23 +134,6 @@ class Client(private val ip: String, private val pin: String) {
     suspend fun sendText(text: String) {
         call("/keyboard?text=${URLEncoder.encode(text, "UTF-8")}", "POST")
     }
-
-    private fun unescape(s: String): String {
-        val sb = StringBuilder()
-        var i = 0
-        while (i < s.length) {
-            val ch = s[i]
-            if (ch == '\\' && i + 1 < s.length) {
-                val n = s[i + 1]
-                if (n == 'u' && i + 5 < s.length) {
-                    sb.append(s.substring(i + 2, i + 6).toInt(16).toChar()); i += 6; continue
-                }
-                sb.append(n); i += 2; continue
-            }
-            sb.append(ch); i++
-        }
-        return sb.toString()
-    }
 }
 
 /** Проверка без PIN: отвечает ли по этому адресу хост Pult. */
@@ -159,10 +145,11 @@ suspend fun ping(ip: String, timeoutMs: Int = 800): Host? = withContext(Dispatch
         try {
             if (c.responseCode != 200) return@withContext null
             val body = c.inputStream.use { String(it.readBytes()) }
-            if (!body.contains("\"pult\"")) return@withContext null
-            val name = Regex("\"name\":\"([^\"]*)\"").find(body)?.groupValues?.get(1) ?: ip
-            val vol = Regex("\"volume\":([0-9]+)").find(body)?.groupValues?.get(1)?.toIntOrNull() ?: 50
-            val muted = body.contains("\"muted\":true")
+            val obj = try { JSONObject(body) } catch (_: Exception) { return@withContext null }
+            if (obj.optString("app") != "pult") return@withContext null
+            val name = obj.optString("name", ip)
+            val vol = obj.optInt("volume", 50)
+            val muted = obj.optBoolean("muted", false)
             Host(ip, name, vol, muted)
         } finally {
             c.disconnect()

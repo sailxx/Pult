@@ -6,9 +6,15 @@ import android.os.Bundle
 import android.view.HapticFeedbackConstants
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -94,8 +100,9 @@ private fun Root(prefs: android.content.SharedPreferences) {
 
     Box(Modifier.fillMaxSize().background(Bg).safeDrawingPadding()) {
         if (connected) {
+            val client = remember(ip, pin) { Client(ip, pin) }
             LandscapeDock(
-                client = Client(ip, pin),
+                client = client,
                 hostName = hostName,
                 prefs = prefs,
                 onDisconnect = { connected = false }
@@ -339,7 +346,7 @@ private fun LandscapeDock(
                 Modifier.clip(RoundedCornerShape(8.dp)).background(Surface).border(1.dp, Line, RoundedCornerShape(8.dp)).padding(2.dp),
                 horizontalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                DeckSection.values().forEach { s ->
+                DeckSection.entries.forEach { s ->
                     val active = s == section
                     Box(
                         Modifier.clip(RoundedCornerShape(6.dp))
@@ -413,8 +420,13 @@ private fun LandscapeDock(
 
         // ----------------- SECTION CONTENT -----------------
         Box(Modifier.weight(1f).fillMaxWidth()) {
-            when (section) {
-                DeckSection.APPS -> FullscreenAppsDeck(
+            AnimatedContent(
+                targetState = section,
+                transitionSpec = { fadeIn() togetherWith fadeOut() },
+                label = "section"
+            ) { currentSection ->
+                when (currentSection) {
+                    DeckSection.APPS -> FullscreenAppsDeck(
                     apps = apps,
                     query = query,
                     onQueryChange = { query = it },
@@ -448,6 +460,7 @@ private fun LandscapeDock(
                     client = client,
                     haptic = ::haptic
                 )
+                }
             }
         }
     }
@@ -840,7 +853,11 @@ private fun DeckSystemRow(title: String, subtitle: String, onClick: () -> Unit) 
 private fun SkeletonGridLandscape() {
     var on by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { while (true) { delay(700); on = !on } }
-    val c = if (on) Color(0xFF161922) else Surface
+    val c by animateColorAsState(
+        targetValue = if (on) Color(0xFF161922) else Surface,
+        animationSpec = tween(durationMillis = 500, easing = LinearEasing),
+        label = "skeleton"
+    )
     LazyVerticalGrid(
         GridCells.Adaptive(92.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),

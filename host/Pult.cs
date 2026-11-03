@@ -264,15 +264,19 @@ interface IAudioEndpointVolume
 
 static class Audio
 {
+    static IAudioEndpointVolume cachedVolume;
+
     static IAudioEndpointVolume GetVolume()
     {
+        if (cachedVolume != null) return cachedVolume;
         var enumerator = (IMMDeviceEnumerator)new MMDeviceEnumeratorComObject();
         IMMDevice device;
         enumerator.GetDefaultAudioEndpoint(0, 1, out device);
         var iid = new Guid("5CDF2C82-841E-4546-9722-0CF74078229A");
         object o;
         device.Activate(ref iid, 1, IntPtr.Zero, out o);
-        return (IAudioEndpointVolume)o;
+        cachedVolume = (IAudioEndpointVolume)o;
+        return cachedVolume;
     }
 
     public static bool GetState(out int volumePercent, out bool muted)
@@ -288,6 +292,7 @@ static class Audio
         }
         catch
         {
+            cachedVolume = null;
             volumePercent = 50;
             muted = false;
             return false;
@@ -304,7 +309,7 @@ static class Audio
             vol.SetMasterVolumeLevelScalar(level, ref g);
             return true;
         }
-        catch { return false; }
+        catch { cachedVolume = null; return false; }
     }
 
     public static bool SetMute(bool? targetMute)
@@ -319,7 +324,7 @@ static class Audio
             vol.SetMute(val, ref g);
             return true;
         }
-        catch { return false; }
+        catch { cachedVolume = null; return false; }
     }
 }
 
@@ -339,8 +344,12 @@ static class Keys
     {
         byte vk;
         if (!map.TryGetValue(name, out vk)) return false;
-        keybd_event(vk, 0, 1, UIntPtr.Zero);
-        keybd_event(vk, 0, 3, UIntPtr.Zero);
+        // Media and navigation keys require KEYEVENTF_EXTENDEDKEY (0x1)
+        bool extended = vk >= 0xA0; // VK_LSHIFT and above, including media keys
+        uint downFlag = extended ? 1u : 0u;
+        uint upFlag = extended ? 3u : 2u; // KEYEVENTF_KEYUP = 0x2
+        keybd_event(vk, 0, downFlag, UIntPtr.Zero);
+        keybd_event(vk, 0, upFlag, UIntPtr.Zero);
         return true;
     }
 
