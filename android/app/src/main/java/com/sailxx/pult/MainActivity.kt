@@ -27,9 +27,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -47,7 +45,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -63,7 +60,7 @@ private val Surface = Color(0xFF0C0E14)
 private val SurfaceLight = Color(0xFF141722)
 private val Line = Color(0xFF1F2432)
 private val Ink = Color(0xFFFFFFFF)
-private val Dim = Color(0xFF94A3B8)
+private val Dim = Color(0xFF8B949E)
 private val Accent = Color(0xFF38BDF8)
 private val Bad = Color(0xFFEF4444)
 private val Good = Color(0xFF22C55E)
@@ -97,7 +94,7 @@ private fun Root(prefs: android.content.SharedPreferences) {
 
     Box(Modifier.fillMaxSize().background(Bg).safeDrawingPadding()) {
         if (connected) {
-            Dock(
+            LandscapeDock(
                 client = Client(ip, pin),
                 hostName = hostName,
                 prefs = prefs,
@@ -121,6 +118,9 @@ private fun Root(prefs: android.content.SharedPreferences) {
     }
 }
 
+// ==========================================
+// 1. CONNECT SCREEN (LANDSCAPE-OPTIMIZED)
+// ==========================================
 @Composable
 private fun ConnectScreen(initIp: String, initPin: String, onConnected: (String, String, String) -> Unit) {
     var ip by remember { mutableStateOf(initIp) }
@@ -140,14 +140,13 @@ private fun ConnectScreen(initIp: String, initPin: String, onConnected: (String,
             val host = ping(addr, 4000)
             if (host == null) {
                 statusBad = true
-                status = "ПК не отвечает на $addr:$HTTP_PORT.\nПричина: $lastPingError\n" +
-                    "Проверьте, что Pult запущен на ПК и телефон в одной Wi-Fi сети."
+                status = "ПК не отвечает на $addr:$HTTP_PORT.\nУбедитесь, что Pult запущен на ПК."
             } else {
                 try {
                     Client(addr, pin.trim()).apps()
                     onConnected(addr, pin.trim(), host.name)
                 } catch (e: WrongPin) {
-                    statusBad = true; status = "Неверный PIN. Посмотрите его в окне «Адрес и PIN» в трее ПК."
+                    statusBad = true; status = "Неверный PIN. Проверьте окно Pult на ПК."
                 } catch (e: Exception) {
                     statusBad = true; status = "Ошибка: ${e.message}"
                 }
@@ -158,11 +157,11 @@ private fun ConnectScreen(initIp: String, initPin: String, onConnected: (String,
 
     fun search() {
         scope.launch {
-            busy = true; statusBad = false; status = "Ищу ПК в локальной сети..."
+            busy = true; statusBad = false; status = "Поиск ПК в локальной сети..."
             hosts.clear()
             val r = discover()
             hosts.addAll(r)
-            status = if (r.isEmpty()) "Ничего не найдено. Введите адрес ПК вручную (он указан в окне на ПК)." else ""
+            status = if (r.isEmpty()) "ПК не найдены. Введите IP адрес вручную." else ""
             statusBad = r.isEmpty()
             if (r.size == 1 && ip.isBlank()) ip = r[0].ip
             busy = false
@@ -171,74 +170,101 @@ private fun ConnectScreen(initIp: String, initPin: String, onConnected: (String,
 
     LaunchedEffect(Unit) { if (ip.isBlank()) search() }
 
-    Column(
-        Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    Row(
+        Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Box(
-                Modifier.size(44.dp).background(Color.White, RoundedCornerShape(12.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Canvas(Modifier.size(24.dp)) { drawRemoteIcon() }
-            }
-            Column {
-                Text("Pult", color = Ink, fontSize = 28.sp, fontWeight = FontWeight.Bold)
-                Text("Дистанционный пульт для ПК", color = Dim, fontSize = 13.sp)
-            }
-        }
-
-        Spacer(Modifier.height(4.dp))
-        Field("Адрес ПК (IP-адрес в Wi-Fi сети)", ip, KeyboardType.Uri) { ip = it }
-        Field("PIN-код (6 цифр)", pin, KeyboardType.NumberPassword) { pin = it.filter(Char::isDigit).take(6) }
-
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            Btn("Подключить", primary = true, enabled = !busy && ip.isNotBlank() && pin.length == 6, modifier = Modifier.weight(1f)) { connect() }
-            Btn("Поиск ПК", primary = false, enabled = !busy, modifier = Modifier.weight(1f)) { search() }
-        }
-
-        if (status.isNotEmpty()) Text(status, color = if (statusBad) Bad else Dim, fontSize = 13.sp, lineHeight = 18.sp)
-
-        if (hosts.isNotEmpty()) {
-            Text("Найденные компьютеры:", color = Dim, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-            hosts.forEach { h ->
-                Row(
-                    Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(Surface).clickable { ip = h.ip }.padding(14.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+        // Левая колонка: Форма входа
+        Column(
+            Modifier.weight(1f).fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Box(
+                    Modifier.size(38.dp).background(Color.White, RoundedCornerShape(10.dp)),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Column {
-                        Text(h.name, color = Ink, fontSize = 15.sp, fontWeight = FontWeight.Medium)
-                        Text(h.ip, color = Dim, fontSize = 13.sp)
+                    Canvas(Modifier.size(20.dp)) { drawRemoteIcon() }
+                }
+                Column {
+                    Text("Pult", color = Ink, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("Деск-док для Windows", color = Dim, fontSize = 12.sp)
+                }
+            }
+
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Field("IP адрес компьютера", ip, KeyboardType.Uri) { ip = it }
+                Field("PIN код (6 цифр)", pin, KeyboardType.NumberPassword) { pin = it.filter(Char::isDigit).take(6) }
+            }
+
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Btn("Подключить", primary = true, enabled = !busy && ip.isNotBlank() && pin.length == 6, modifier = Modifier.weight(1.2f)) { connect() }
+                Btn("Поиск", primary = false, enabled = !busy, modifier = Modifier.weight(0.8f)) { search() }
+            }
+        }
+
+        // Правая колонка: Найденные ПК и статус
+        Column(
+            Modifier.weight(1f).fillMaxHeight(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text("НАЙДЕННЫЕ КОМПЬЮТЕРЫ", color = Dim, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
+
+            if (hosts.isEmpty()) {
+                Box(
+                    Modifier.fillMaxWidth().weight(1f).clip(RoundedCornerShape(10.dp)).background(Surface).border(1.dp, Line, RoundedCornerShape(10.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        if (status.isNotEmpty()) status else "Нажмите «Поиск», чтобы найти ПК в Wi-Fi",
+                        color = if (statusBad) Bad else Dim,
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            } else {
+                LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    items(hosts) { h ->
+                        Row(
+                            Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(Surface).border(1.dp, Line, RoundedCornerShape(8.dp))
+                                .clickable { ip = h.ip; connect() }.padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(h.name, color = Ink, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                                Text(h.ip, color = Dim, fontSize = 12.sp)
+                            }
+                            Box(Modifier.size(8.dp).background(Good, CircleShape))
+                        }
                     }
-                    Box(Modifier.size(8.dp).background(Good, CircleShape))
                 }
             }
         }
     }
 }
 
-private enum class TabMode(val title: String) {
+// ==========================================
+// 2. MAIN HORIZONTAL DOCK INTERFACE
+// ==========================================
+private enum class DeckSection(val title: String) {
     APPS("Приложения"),
-    MEDIA("Медиа"),
-    TRACKPAD("Мышь"),
-    SYSTEM("Система"),
-    TASKS("Окна")
+    MEDIA("Плеер"),
+    CURSOR("Курсор")
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun Dock(
+private fun LandscapeDock(
     client: Client,
     hostName: String,
     prefs: android.content.SharedPreferences,
     onDisconnect: () -> Unit
 ) {
-    var mode by remember { mutableStateOf(TabMode.APPS) }
+    var section by remember { mutableStateOf(DeckSection.APPS) }
     var apps by remember { mutableStateOf<List<AppItem>?>(null) }
-    var tasks by remember { mutableStateOf<List<TaskItem>?>(null) }
     var query by remember { mutableStateOf("") }
-    var error by remember { mutableStateOf("") }
     var favs by remember { mutableStateOf(prefs.getStringSet("favs", emptySet()) ?: emptySet()) }
     var volume by remember { mutableStateOf(50) }
     var isMuted by remember { mutableStateOf(false) }
@@ -255,16 +281,13 @@ private fun Dock(
         scope.launch {
             try {
                 block()
-                error = ""
             } catch (e: WrongPin) {
                 onDisconnect()
-            } catch (e: Exception) {
-                error = "Нет связи с ПК"
-            }
+            } catch (_: Exception) {}
         }
     }
 
-    // Первоначальная загрузка приложений и статуса звука
+    // Первоначальная загрузка
     LaunchedEffect(Unit) {
         try {
             val v = client.volume()
@@ -276,16 +299,15 @@ private fun Dock(
             apps = client.apps()
         } catch (e: WrongPin) {
             onDisconnect()
-        } catch (e: Exception) {
-            error = "Нет связи с ПК"
+        } catch (_: Exception) {
             apps = emptyList()
         }
     }
 
-    // Фоновое периодическое обновление звука раз в 5 сек
+    // Фоновый опрос громкости раз в 4 сек
     LaunchedEffect(Unit) {
         while (true) {
-            delay(5000)
+            delay(4000)
             try {
                 val v = client.volume()
                 volume = v.volume
@@ -294,130 +316,105 @@ private fun Dock(
         }
     }
 
-    Column(Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    Column(Modifier.fillMaxSize().padding(horizontal = 14.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         
-        // 1. Верхняя панель: статус ПК, громкость и кнопка выхода
+        // ----------------- TOP STATUS & SECTION BAR -----------------
         Row(
-            Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Surface).padding(horizontal = 14.dp, vertical = 10.dp),
+            Modifier.fillMaxWidth().height(42.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Box(Modifier.size(8.dp).background(Good, CircleShape))
-                Text(hostName, color = Ink, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+            // Левый блок: Имя ПК и статус
+            Row(
+                Modifier.clip(RoundedCornerShape(8.dp)).background(Surface).border(1.dp, Line, RoundedCornerShape(8.dp)).padding(horizontal = 10.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Box(Modifier.size(7.dp).background(Good, CircleShape))
+                Text(hostName, color = Ink, fontSize = 12.sp, fontWeight = FontWeight.Bold)
             }
 
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                // Mute toggle
+            // Центральный блок: 3 Раздела (Приложения, Плеер, Курсор)
+            Row(
+                Modifier.clip(RoundedCornerShape(8.dp)).background(Surface).border(1.dp, Line, RoundedCornerShape(8.dp)).padding(2.dp),
+                horizontalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                DeckSection.values().forEach { s ->
+                    val active = s == section
+                    Box(
+                        Modifier.clip(RoundedCornerShape(6.dp))
+                            .background(if (active) SurfaceLight else Color.Transparent)
+                            .then(if (active) Modifier.border(1.dp, Accent.copy(alpha = 0.5f), RoundedCornerShape(6.dp)) else Modifier)
+                            .clickable { haptic(); section = s }
+                            .padding(horizontal = 16.dp, vertical = 6.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            s.title,
+                            color = if (active) Ink else Dim,
+                            fontSize = 12.sp,
+                            fontWeight = if (active) FontWeight.Bold else FontWeight.Medium
+                        )
+                    }
+                }
+            }
+
+            // Правый блок: Быстрый регулятор громкости и выход
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                // Stepper -
                 Box(
-                    Modifier.height(30.dp).clip(RoundedCornerShape(8.dp))
-                        .background(if (isMuted) Bad.copy(alpha = 0.2f) else SurfaceLight)
-                        .border(1.dp, if (isMuted) Bad.copy(alpha = 0.5f) else Line, RoundedCornerShape(8.dp))
+                    Modifier.size(30.dp).clip(RoundedCornerShape(6.dp)).background(Surface).border(1.dp, Line, RoundedCornerShape(6.dp))
                         .clickable {
                             fire {
-                                val res = client.toggleMute()
-                                isMuted = res.muted
-                                volume = res.volume
+                                val next = (volume - 5).coerceAtLeast(0)
+                                val r = client.setVolume(next)
+                                volume = r.volume; isMuted = r.muted
                             }
-                        }
-                        .padding(horizontal = 8.dp),
+                        },
+                    contentAlignment = Alignment.Center
+                ) { Text("−", color = Dim, fontSize = 14.sp, fontWeight = FontWeight.Bold) }
+
+                // Volume % / Mute
+                Box(
+                    Modifier.height(30.dp).clip(RoundedCornerShape(6.dp)).background(if (isMuted) Bad.copy(alpha = 0.2f) else Surface)
+                        .border(1.dp, if (isMuted) Bad.copy(alpha = 0.5f) else Line, RoundedCornerShape(6.dp))
+                        .clickable {
+                            fire {
+                                val r = client.toggleMute()
+                                volume = r.volume; isMuted = r.muted
+                            }
+                        }.padding(horizontal = 8.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        if (isMuted) "MUTED" else "MUTE",
-                        color = if (isMuted) Bad else Dim,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 0.5.sp
-                    )
+                    Text(if (isMuted) "MUTE" else "$volume%", color = if (isMuted) Bad else Accent, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
                 }
 
-                // Volume label
-                Text("$volume%", color = if (isMuted) Bad else Accent, fontSize = 14.sp, fontWeight = FontWeight.ExtraBold)
+                // Stepper +
+                Box(
+                    Modifier.size(30.dp).clip(RoundedCornerShape(6.dp)).background(Surface).border(1.dp, Line, RoundedCornerShape(6.dp))
+                        .clickable {
+                            fire {
+                                val next = (volume + 5).coerceAtMost(100)
+                                val r = client.setVolume(next)
+                                volume = r.volume; isMuted = r.muted
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ) { Text("+", color = Dim, fontSize = 14.sp, fontWeight = FontWeight.Bold) }
 
                 // Disconnect
                 Box(
-                    Modifier.clip(RoundedCornerShape(6.dp))
-                        .clickable { onDisconnect() }
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                ) {
-                    Text("Выход", color = Dim, fontSize = 12.sp, fontWeight = FontWeight.Medium)
-                }
-            }
-        }
-
-        // 2. Интерактивный слайдер громкости
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text("—", color = Dim, fontSize = 16.sp, modifier = Modifier.clickable {
-                fire {
-                    val next = (volume - 5).coerceAtLeast(0)
-                    val r = client.setVolume(next)
-                    volume = r.volume; isMuted = r.muted
-                }
-            })
-            Slider(
-                value = volume.toFloat(),
-                onValueChange = { volume = it.toInt() },
-                onValueChangeFinished = {
-                    fire {
-                        val r = client.setVolume(volume)
-                        volume = r.volume; isMuted = r.muted
-                    }
-                },
-                valueRange = 0f..100f,
-                modifier = Modifier.weight(1f),
-                colors = SliderDefaults.colors(
-                    thumbColor = Accent,
-                    activeTrackColor = Accent,
-                    inactiveTrackColor = Line
-                )
-            )
-            Text("+", color = Dim, fontSize = 16.sp, modifier = Modifier.clickable {
-                fire {
-                    val next = (volume + 5).coerceAtMost(100)
-                    val r = client.setVolume(next)
-                    volume = r.volume; isMuted = r.muted
-                }
-            })
-        }
-
-        // 3. Переключатель режимов пульта (Tabs)
-        Row(
-            Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Surface).border(1.dp, Line, RoundedCornerShape(10.dp)).padding(3.dp),
-            horizontalArrangement = Arrangement.spacedBy(3.dp)
-        ) {
-            TabMode.values().forEach { t ->
-                val active = t == mode
-                Box(
-                    Modifier.weight(1f).clip(RoundedCornerShape(8.dp))
-                        .background(if (active) SurfaceLight else Color.Transparent)
-                        .then(if (active) Modifier.border(1.dp, Accent.copy(alpha = 0.5f), RoundedCornerShape(8.dp)) else Modifier)
-                        .clickable { haptic(); mode = t }
-                        .padding(vertical = 8.dp),
+                    Modifier.size(30.dp).clip(RoundedCornerShape(6.dp)).background(Surface).border(1.dp, Line, RoundedCornerShape(6.dp))
+                        .clickable { onDisconnect() },
                     contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        t.title,
-                        color = if (active) Ink else Dim,
-                        fontSize = 11.sp,
-                        fontWeight = if (active) FontWeight.Bold else FontWeight.Medium
-                    )
-                }
+                ) { Text("✕", color = Dim, fontSize = 12.sp) }
             }
         }
 
-        if (error.isNotEmpty()) {
-            Text(error, color = Bad, fontSize = 12.sp, modifier = Modifier.padding(horizontal = 4.dp))
-        }
-
-        // 4. Контент выбранного режима
+        // ----------------- SECTION CONTENT -----------------
         Box(Modifier.weight(1f).fillMaxWidth()) {
-            when (mode) {
-                TabMode.APPS -> AppsTab(
+            when (section) {
+                DeckSection.APPS -> FullscreenAppsDeck(
                     apps = apps,
                     query = query,
                     onQueryChange = { query = it },
@@ -439,31 +436,29 @@ private fun Dock(
                     onLaunch = { fire { client.launch(it) } }
                 )
 
-                TabMode.MEDIA -> MediaTab(client = client, fire = ::fire)
-
-                TabMode.TRACKPAD -> TrackpadTab(client = client, haptic = ::haptic)
-
-                TabMode.SYSTEM -> SystemTab(client = client, fire = ::fire)
-
-                TabMode.TASKS -> TasksTab(
+                DeckSection.MEDIA -> FullscreenMediaDeck(
                     client = client,
-                    fire = ::fire,
-                    tasks = tasks,
-                    onRefresh = {
-                        scope.launch {
-                            try { tasks = client.tasks() } catch (_: Exception) {}
-                        }
-                    }
+                    volume = volume,
+                    isMuted = isMuted,
+                    onVolumeChange = { v, m -> volume = v; isMuted = m },
+                    fire = ::fire
+                )
+
+                DeckSection.CURSOR -> FullscreenCursorDeck(
+                    client = client,
+                    haptic = ::haptic
                 )
             }
         }
     }
 }
 
-// ----------------- TAB 1: APPS -----------------
+// ==========================================
+// РАЗДЕЛ 1: ПОЛНОЭКРАННАЯ СЕТКА ИКОНОК (APPS)
+// ==========================================
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun AppsTab(
+private fun FullscreenAppsDeck(
     apps: List<AppItem>?,
     query: String,
     onQueryChange: (String) -> Unit,
@@ -478,32 +473,48 @@ private fun AppsTab(
         .sortedWith(compareByDescending<AppItem> { it.id in favs }.thenBy { it.name.lowercase() })
 
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        BasicTextField(
-            value = query,
-            onValueChange = onQueryChange,
-            singleLine = true,
-            textStyle = TextStyle(color = Ink, fontSize = 15.sp),
-            cursorBrush = SolidColor(Accent),
-            decorationBox = { inner ->
-                Box(Modifier.padding(vertical = 2.dp)) {
-                    if (query.isEmpty()) Text("Поиск приложения...", color = Dim, fontSize = 15.sp)
-                    inner()
-                }
-            },
-            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(Surface).padding(12.dp)
-        )
+        // Строка поиска и количество приложений
+        Row(
+            Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            BasicTextField(
+                value = query,
+                onValueChange = onQueryChange,
+                singleLine = true,
+                textStyle = TextStyle(color = Ink, fontSize = 13.sp),
+                cursorBrush = SolidColor(Accent),
+                decorationBox = { inner ->
+                    Box(Modifier.padding(vertical = 1.dp)) {
+                        if (query.isEmpty()) Text("🔍 Поиск по меню Пуск и играм...", color = Dim, fontSize = 13.sp)
+                        inner()
+                    }
+                },
+                modifier = Modifier.width(320.dp).clip(RoundedCornerShape(8.dp)).background(Surface).border(1.dp, Line, RoundedCornerShape(8.dp)).padding(horizontal = 12.dp, vertical = 7.dp)
+            )
 
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                if (favs.isNotEmpty()) {
+                    Text("★ ${favs.size} в избранном", color = Accent, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                }
+                Text("${shown.size} приложений", color = Dim, fontSize = 11.sp)
+            }
+        }
+
+        // Полноэкранная горизонтальная сетка иконок (6–8 колонок)
         if (apps == null) {
-            SkeletonGrid()
+            SkeletonGridLandscape()
         } else if (shown.isEmpty()) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Ничего не найдено", color = Dim, fontSize = 14.sp)
+                Text("Приложения не найдены", color = Dim, fontSize = 13.sp)
             }
         } else {
             LazyVerticalGrid(
-                GridCells.Adaptive(84.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp),
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                GridCells.Adaptive(92.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxSize()
             ) {
                 items(shown, key = { it.id }) { app ->
                     val isFav = app.id in favs
@@ -512,28 +523,32 @@ private fun AppsTab(
                     }
 
                     Column(
-                        Modifier.clip(RoundedCornerShape(8.dp))
-                            .background(if (isFav) Color(0xFF232832) else Surface)
-                            .then(if (isFav) Modifier.border(1.dp, Accent.copy(alpha = 0.5f), RoundedCornerShape(8.dp)) else Modifier)
+                        Modifier.height(82.dp).clip(RoundedCornerShape(10.dp))
+                            .background(if (isFav) Color(0xFF131722) else Surface)
+                            .border(1.dp, if (isFav) Accent.copy(alpha = 0.6f) else Line, RoundedCornerShape(10.dp))
                             .combinedClickable(
                                 onClick = { onLaunch(app.id) },
                                 onLongClick = { onToggleFav(app.id) }
-                            ).padding(vertical = 10.dp, horizontal = 4.dp),
+                            ).padding(6.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                        verticalArrangement = Arrangement.Center
                     ) {
                         val bmp = icons[app.id]
-                        if (bmp != null) Image(bmp, null, Modifier.size(42.dp))
-                        else Box(Modifier.size(42.dp).background(Line, RoundedCornerShape(6.dp)))
+                        if (bmp != null) {
+                            Image(bmp, null, Modifier.size(38.dp))
+                        } else {
+                            Box(Modifier.size(38.dp).background(SurfaceLight, RoundedCornerShape(6.dp)))
+                        }
 
+                        Spacer(Modifier.height(4.dp))
                         Text(
                             app.name,
                             color = Ink,
                             fontSize = 11.sp,
-                            maxLines = 2,
+                            fontWeight = if (isFav) FontWeight.Bold else FontWeight.Medium,
+                            maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            textAlign = TextAlign.Center,
-                            lineHeight = 13.sp
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
@@ -542,100 +557,179 @@ private fun AppsTab(
     }
 }
 
-// ----------------- TAB 2: MEDIA -----------------
+// ==========================================
+// РАЗДЕЛ 2: ПЛЕЕР МЕДИА И ГРОМКОСТЬ (MEDIA)
+// ==========================================
 @Composable
-private fun MediaTab(client: Client, fire: (suspend () -> Unit) -> Unit) {
-    Column(
-        Modifier.fillMaxSize().padding(vertical = 12.dp),
-        verticalArrangement = Arrangement.SpaceEvenly,
-        horizontalAlignment = Alignment.CenterHorizontally
+private fun FullscreenMediaDeck(
+    client: Client,
+    volume: Int,
+    isMuted: Boolean,
+    onVolumeChange: (Int, Boolean) -> Unit,
+    fire: (suspend () -> Unit) -> Unit
+) {
+    Row(
+        Modifier.fillMaxSize(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Большой круг управления
-        Box(
-            Modifier.size(220.dp).clip(CircleShape).background(Surface).border(2.dp, Line, CircleShape),
-            contentAlignment = Alignment.Center
+        // БЛОК 1: Аппаратная громкость (Core Audio)
+        Column(
+            Modifier.weight(1.1f).fillMaxHeight().clip(RoundedCornerShape(12.dp)).background(Surface).border(1.dp, Line, RoundedCornerShape(12.dp)).padding(14.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Центральная кнопка Play/Pause
-            Box(
-                Modifier.size(80.dp).clip(CircleShape).background(Ink)
-                    .clickable { fire { client.key("playpause") } },
-                contentAlignment = Alignment.Center
-            ) {
-                Canvas(Modifier.size(26.dp)) {
-                    val w = size.width; val h = size.height
-                    // Play triangle
-                    val p = Path().apply { moveTo(w * 0.15f, 0f); lineTo(w * 0.65f, h / 2f); lineTo(w * 0.15f, h); close() }
-                    drawPath(p, Color(0xFF000000))
-                    // Pause line
-                    drawRoundRect(
-                        Color(0xFF000000),
-                        topLeft = androidx.compose.ui.geometry.Offset(w * 0.78f, h * 0.08f),
-                        size = androidx.compose.ui.geometry.Size(w * 0.18f, h * 0.84f),
-                        cornerRadius = androidx.compose.ui.geometry.CornerRadius(3f, 3f)
-                    )
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text("МАСТЕР-ГРОМКОСТЬ", color = Dim, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
+                Box(
+                    Modifier.clip(RoundedCornerShape(6.dp))
+                        .background(if (isMuted) Bad.copy(alpha = 0.2f) else SurfaceLight)
+                        .border(1.dp, if (isMuted) Bad else Line, RoundedCornerShape(6.dp))
+                        .clickable {
+                            fire {
+                                val r = client.toggleMute()
+                                onVolumeChange(r.volume, r.muted)
+                            }
+                        }.padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(if (isMuted) "ВЫКЛЮЧЕН" else "MUTE", color = if (isMuted) Bad else Dim, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                 }
             }
 
-            // Кнопка Предыдущий трек (Слева)
-            Box(
-                Modifier.align(Alignment.CenterStart).padding(start = 14.dp).size(50.dp).clip(CircleShape)
-                    .background(SurfaceLight)
-                    .clickable { fire { client.key("prev") } },
-                contentAlignment = Alignment.Center
-            ) {
-                Text("◀◀", fontSize = 13.sp, color = Ink, fontWeight = FontWeight.Bold)
+            Text(
+                if (isMuted) "MUTED" else "$volume%",
+                color = if (isMuted) Bad else Ink,
+                fontSize = 44.sp,
+                fontWeight = FontWeight.ExtraBold,
+                letterSpacing = (-1).sp
+            )
+
+            // Слайдер громкости с кнопками точной подстройки
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Box(
+                    Modifier.size(36.dp).clip(RoundedCornerShape(8.dp)).background(SurfaceLight).border(1.dp, Line, RoundedCornerShape(8.dp))
+                        .clickable {
+                            fire {
+                                val next = (volume - 5).coerceAtLeast(0)
+                                val r = client.setVolume(next)
+                                onVolumeChange(r.volume, r.muted)
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ) { Text("−5", color = Ink, fontSize = 12.sp, fontWeight = FontWeight.Bold) }
+
+                Slider(
+                    value = volume.toFloat(),
+                    onValueChange = { onVolumeChange(it.toInt(), isMuted) },
+                    onValueChangeFinished = {
+                        fire {
+                            val r = client.setVolume(volume)
+                            onVolumeChange(r.volume, r.muted)
+                        }
+                    },
+                    valueRange = 0f..100f,
+                    modifier = Modifier.weight(1f),
+                    colors = SliderDefaults.colors(thumbColor = Accent, activeTrackColor = Accent, inactiveTrackColor = Line)
+                )
+
+                Box(
+                    Modifier.size(36.dp).clip(RoundedCornerShape(8.dp)).background(SurfaceLight).border(1.dp, Line, RoundedCornerShape(8.dp))
+                        .clickable {
+                            fire {
+                                val next = (volume + 5).coerceAtMost(100)
+                                val r = client.setVolume(next)
+                                onVolumeChange(r.volume, r.muted)
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ) { Text("+5", color = Ink, fontSize = 12.sp, fontWeight = FontWeight.Bold) }
             }
 
-            // Кнопка Следующий трек (Справа)
-            Box(
-                Modifier.align(Alignment.CenterEnd).padding(end = 14.dp).size(50.dp).clip(CircleShape)
-                    .background(SurfaceLight)
-                    .clickable { fire { client.key("next") } },
-                contentAlignment = Alignment.Center
-            ) {
-                Text("▶▶", fontSize = 13.sp, color = Ink, fontWeight = FontWeight.Bold)
-            }
-
-            // Громкость + (Сверху)
-            Box(
-                Modifier.align(Alignment.TopCenter).padding(top = 14.dp).size(50.dp).clip(CircleShape)
-                    .background(SurfaceLight)
-                    .clickable { fire { client.key("volup") } },
-                contentAlignment = Alignment.Center
-            ) {
-                Text("VOL +", fontSize = 11.sp, color = Ink, fontWeight = FontWeight.ExtraBold)
-            }
-
-            // Громкость - (Снизу)
-            Box(
-                Modifier.align(Alignment.BottomCenter).padding(bottom = 14.dp).size(50.dp).clip(CircleShape)
-                    .background(SurfaceLight)
-                    .clickable { fire { client.key("voldown") } },
-                contentAlignment = Alignment.Center
-            ) {
-                Text("VOL −", fontSize = 11.sp, color = Ink, fontWeight = FontWeight.ExtraBold)
-            }
+            Text("Прямая COM-синхронизация с Windows Core Audio", color = Dim, fontSize = 10.sp)
         }
 
-        // Дополнительные клавиши
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            ControlChip("MUTE") { fire { client.key("mute") } }
-            ControlChip("SPACE") { fire { client.key("space") } }
-            ControlChip("STOP") { fire { client.key("stop") } }
+        // БЛОК 2: Плеер воспроизведения (Media Player)
+        Column(
+            Modifier.weight(1.3f).fillMaxHeight().clip(RoundedCornerShape(12.dp)).background(Surface).border(1.dp, Line, RoundedCornerShape(12.dp)).padding(14.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("УПРАВЛЕНИЕ ВОСПРОИЗВЕДЕНИЕМ", color = Dim, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
+
+            // Основной ряд: Prev - Play/Pause - Next
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                // Prev
+                Box(
+                    Modifier.size(54.dp).clip(CircleShape).background(SurfaceLight).border(1.dp, Line, CircleShape)
+                        .clickable { fire { client.key("prev") } },
+                    contentAlignment = Alignment.Center
+                ) { Text("◀◀", color = Ink, fontSize = 14.sp, fontWeight = FontWeight.Bold) }
+
+                // Play / Pause
+                Box(
+                    Modifier.size(76.dp).clip(CircleShape).background(Ink)
+                        .clickable { fire { client.key("playpause") } },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Canvas(Modifier.size(26.dp)) {
+                        val w = size.width; val h = size.height
+                        val p = Path().apply { moveTo(w * 0.15f, 0f); lineTo(w * 0.65f, h / 2f); lineTo(w * 0.15f, h); close() }
+                        drawPath(p, Color(0xFF000000))
+                        drawRoundRect(
+                            Color(0xFF000000),
+                            topLeft = androidx.compose.ui.geometry.Offset(w * 0.78f, h * 0.08f),
+                            size = androidx.compose.ui.geometry.Size(w * 0.18f, h * 0.84f),
+                            cornerRadius = androidx.compose.ui.geometry.CornerRadius(3f, 3f)
+                        )
+                    }
+                }
+
+                // Next
+                Box(
+                    Modifier.size(54.dp).clip(CircleShape).background(SurfaceLight).border(1.dp, Line, CircleShape)
+                        .clickable { fire { client.key("next") } },
+                    contentAlignment = Alignment.Center
+                ) { Text("▶▶", color = Ink, fontSize = 14.sp, fontWeight = FontWeight.Bold) }
+            }
+
+            // Вспомогательные клавиши
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                DeckActionButton("STOP", Modifier.weight(1f)) { fire { client.key("stop") } }
+                DeckActionButton("ПРОБЕЛ (ПАУЗА)", Modifier.weight(1.4f)) { fire { client.key("space") } }
+            }
+
+            Text("Spotify · YouTube · Браузер · Медиаплееры", color = Dim, fontSize = 10.sp)
+        }
+
+        // БЛОК 3: Быстрые действия Windows
+        Column(
+            Modifier.weight(0.9f).fillMaxHeight().clip(RoundedCornerShape(12.dp)).background(Surface).border(1.dp, Line, RoundedCornerShape(12.dp)).padding(14.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("СИСТЕМА", color = Dim, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
+
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                DeckSystemRow("Блокировка", "Win + L") { fire { client.system("lock") } }
+                DeckSystemRow("Рабочий стол", "Win + D") { fire { client.system("desktop") } }
+                DeckSystemRow("Окно", "Alt + Tab") { fire { client.system("alttab") } }
+                DeckSystemRow("Мониторы", "Выкл") { fire { client.system("monitors_off") } }
+            }
+
+            Text("Управление ПК в 1 клик", color = Dim, fontSize = 10.sp)
         }
     }
 }
 
-// ----------------- TAB 3: TRACKPAD -----------------
+// ==========================================
+// РАЗДЕЛ 3: УПРАВЛЕНИЕ КУРСОРОМ (TRACKPAD)
+// ==========================================
 @Composable
-private fun TrackpadTab(client: Client, haptic: () -> Unit) {
+private fun FullscreenCursorDeck(client: Client, haptic: () -> Unit) {
     val scope = rememberCoroutineScope()
     var lastSend by remember { mutableStateOf(0L) }
 
-    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        // Сенсорная панель (Touchpad area)
+    Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        // Большое сенсорное поле курсора
         Box(
-            Modifier.weight(1f).fillMaxWidth().clip(RoundedCornerShape(12.dp))
+            Modifier.weight(1f).fillMaxHeight().clip(RoundedCornerShape(12.dp))
                 .background(Surface).border(1.dp, Line, RoundedCornerShape(12.dp))
                 .pointerInput(Unit) {
                     detectTapGestures(
@@ -657,10 +751,10 @@ private fun TrackpadTab(client: Client, haptic: () -> Unit) {
                     detectDragGestures { change, dragAmount ->
                         change.consume()
                         val now = System.currentTimeMillis()
-                        if (now - lastSend > 16) { // ~60fps ограничение отправки по сети
+                        if (now - lastSend > 16) { // 60 FPS
                             lastSend = now
-                            val dx = (dragAmount.x * 1.5f).toInt()
-                            val dy = (dragAmount.y * 1.5f).toInt()
+                            val dx = (dragAmount.x * 1.6f).toInt()
+                            val dy = (dragAmount.y * 1.6f).toInt()
                             scope.launch { client.mouseMove(dx, dy) }
                         }
                     }
@@ -668,237 +762,108 @@ private fun TrackpadTab(client: Client, haptic: () -> Unit) {
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text("Сенсорная панель", color = Dim, fontSize = 14.sp, fontWeight = FontWeight.Medium)
-                Text("Перемещение курсора • Тап = ЛКМ • Зажатие = ПКМ", color = Dim.copy(alpha = 0.6f), fontSize = 11.sp)
+                Text("СЕНСОРНАЯ ПАНЕЛЬ МЫШИ", color = Ink, fontSize = 13.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
+                Text("Двигайте пальцем для перемещения курсора по экрану", color = Dim, fontSize = 11.sp)
+                Spacer(Modifier.height(4.dp))
+                Text("Тап = ЛКМ  •  Двойной тап = Клик  •  Удержание = ПКМ", color = Dim.copy(alpha = 0.6f), fontSize = 10.sp)
             }
         }
 
-        // Физические кнопки мыши ЛКМ / Скролл / ПКМ
-        Row(Modifier.fillMaxWidth().height(62.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        // Правая колонка: Вертикальный скролл и аппаратные кнопки мыши
+        Column(
+            Modifier.width(130.dp).fillMaxHeight(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Кнопка Скролл вверх
             Box(
-                Modifier.weight(1.5f).fillMaxHeight().clip(RoundedCornerShape(10.dp))
+                Modifier.fillMaxWidth().weight(1f).clip(RoundedCornerShape(10.dp))
+                    .background(Surface).border(1.dp, Line, RoundedCornerShape(10.dp))
+                    .clickable { haptic(); scope.launch { client.mouseScroll(120) } },
+                contentAlignment = Alignment.Center
+            ) { Text("▲ СКРОЛЛ", color = Dim, fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+
+            // Кнопка Скролл вниз
+            Box(
+                Modifier.fillMaxWidth().weight(1f).clip(RoundedCornerShape(10.dp))
+                    .background(Surface).border(1.dp, Line, RoundedCornerShape(10.dp))
+                    .clickable { haptic(); scope.launch { client.mouseScroll(-120) } },
+                contentAlignment = Alignment.Center
+            ) { Text("▼ СКРОЛЛ", color = Dim, fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+
+            // Кнопка ЛКМ
+            Box(
+                Modifier.fillMaxWidth().weight(1.3f).clip(RoundedCornerShape(10.dp))
                     .background(SurfaceLight).border(1.dp, Line, RoundedCornerShape(10.dp))
-                    .clickable {
-                        haptic()
-                        scope.launch { client.mouseClick("left") }
-                    },
+                    .clickable { haptic(); scope.launch { client.mouseClick("left") } },
                 contentAlignment = Alignment.Center
-            ) {
-                Text("LKM", color = Ink, fontSize = 14.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 0.5.sp)
-            }
+            ) { Text("LKM", color = Ink, fontSize = 14.sp, fontWeight = FontWeight.ExtraBold) }
 
-            Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Box(
-                    Modifier.weight(1f).fillMaxWidth().clip(RoundedCornerShape(8.dp))
-                        .background(SurfaceLight).border(1.dp, Line, RoundedCornerShape(8.dp))
-                        .clickable { scope.launch { client.mouseScroll(120) } },
-                    contentAlignment = Alignment.Center
-                ) { Text("▲", color = Dim, fontSize = 11.sp, fontWeight = FontWeight.Bold) }
-
-                Box(
-                    Modifier.weight(1f).fillMaxWidth().clip(RoundedCornerShape(8.dp))
-                        .background(SurfaceLight).border(1.dp, Line, RoundedCornerShape(8.dp))
-                        .clickable { scope.launch { client.mouseScroll(-120) } },
-                    contentAlignment = Alignment.Center
-                ) { Text("▼", color = Dim, fontSize = 11.sp, fontWeight = FontWeight.Bold) }
-            }
-
+            // Кнопка ПКМ
             Box(
-                Modifier.weight(1.5f).fillMaxHeight().clip(RoundedCornerShape(10.dp))
+                Modifier.fillMaxWidth().weight(1.3f).clip(RoundedCornerShape(10.dp))
                     .background(SurfaceLight).border(1.dp, Line, RoundedCornerShape(10.dp))
-                    .clickable {
-                        haptic()
-                        scope.launch { client.mouseClick("right") }
-                    },
+                    .clickable { haptic(); scope.launch { client.mouseClick("right") } },
                 contentAlignment = Alignment.Center
-            ) {
-                Text("PKM", color = Ink, fontSize = 14.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = 0.5.sp)
-            }
+            ) { Text("PKM", color = Ink, fontSize = 14.sp, fontWeight = FontWeight.ExtraBold) }
         }
     }
 }
 
-// ----------------- TAB 4: SYSTEM -----------------
+// ==========================================
+// ВСПОМОГАТЕЛЬНЫЕ КОМПОНЕНТЫ
+// ==========================================
 @Composable
-private fun SystemTab(client: Client, fire: (suspend () -> Unit) -> Unit) {
-    var confirmDialog by remember { mutableStateOf<String?>(null) }
-
-    if (confirmDialog != null) {
-        AlertDialog(
-            onDismissRequest = { confirmDialog = null },
-            title = { Text(if (confirmDialog == "shutdown") "Выключить ПК?" else "Перезагрузить ПК?") },
-            text = { Text("Компьютер завершит работу через 30 секунд. Вы сможете отменить действие кнопкой в приложении.") },
-            confirmButton = {
-                Text(
-                    "Подтвердить",
-                    color = Bad,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.clickable {
-                        val action = confirmDialog!!
-                        confirmDialog = null
-                        fire { client.system(action) }
-                    }.padding(8.dp)
-                )
-            },
-            dismissButton = {
-                Text("Отмена", color = Dim, modifier = Modifier.clickable { confirmDialog = null }.padding(8.dp))
-            }
-        )
-    }
-
-    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text("БЫСТРЫЕ ДЕЙСТВИЯ WINDOWS", color = Dim, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
-
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            SystemCard("Блокировка", "Win + L", Modifier.weight(1f)) { fire { client.system("lock") } }
-            SystemCard("Рабочий стол", "Win + D", Modifier.weight(1f)) { fire { client.system("desktop") } }
-        }
-
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            SystemCard("Переключить окно", "Alt + Tab", Modifier.weight(1f)) { fire { client.system("alttab") } }
-            SystemCard("Выключить экраны", "Standby", Modifier.weight(1f)) { fire { client.system("monitors_off") } }
-        }
-
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            SystemCard("Спящий режим", "Sleep PC", Modifier.weight(1f)) { fire { client.system("sleep") } }
-            SystemCard("Отмена выключения", "shutdown /a", Modifier.weight(1f)) { fire { client.system("cancel_shutdown") } }
-        }
-
-        Spacer(Modifier.height(8.dp))
-        Text("ПИТАНИЕ КОМПЬЮТЕРА", color = Dim, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
-
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Box(
-                Modifier.weight(1f).clip(RoundedCornerShape(8.dp)).background(SurfaceLight).clickable { confirmDialog = "restart" }.padding(14.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Перезагрузка ПК", color = Ink, fontSize = 14.sp, fontWeight = FontWeight.Medium)
-            }
-            Box(
-                Modifier.weight(1f).clip(RoundedCornerShape(8.dp)).background(Bad.copy(alpha = 0.2f)).border(1.dp, Bad.copy(alpha = 0.4f), RoundedCornerShape(8.dp))
-                    .clickable { confirmDialog = "shutdown" }.padding(14.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Выключить ПК", color = Bad, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-            }
-        }
-    }
-}
-
-// ----------------- TAB 5: TASKS -----------------
-@Composable
-private fun TasksTab(
-    client: Client,
-    fire: (suspend () -> Unit) -> Unit,
-    tasks: List<TaskItem>?,
-    onRefresh: () -> Unit
-) {
-    LaunchedEffect(Unit) { onRefresh() }
-
-    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Text("ОТКРЫТЫЕ ОКНА НА ПК", color = Dim, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
-            Box(
-                Modifier.clip(RoundedCornerShape(6.dp))
-                    .clickable { onRefresh() }
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            ) {
-                Text("Обновить", color = Accent, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-            }
-        }
-
-        if (tasks == null) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Загружаю список окон...", color = Dim, fontSize = 14.sp)
-            }
-        } else if (tasks.isEmpty()) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Нет открытых окон", color = Dim, fontSize = 14.sp)
-            }
-        } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                items(tasks, key = { it.id }) { t ->
-                    Row(
-                        Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(Surface).padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column(Modifier.weight(1f).clickable { fire { client.switchTask(t.id) } }) {
-                            Text(t.title, color = Ink, fontSize = 14.sp, fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                            Text(t.proc, color = Dim, fontSize = 11.sp)
-                        }
-
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Box(
-                                Modifier.clip(RoundedCornerShape(6.dp)).background(SurfaceLight).clickable { fire { client.switchTask(t.id) } }.padding(horizontal = 10.dp, vertical = 6.dp)
-                            ) { Text("Открыть", color = Accent, fontSize = 12.sp) }
-
-                            Box(
-                                Modifier.clip(RoundedCornerShape(6.dp)).background(Bad.copy(alpha = 0.15f)).clickable {
-                                    fire { client.closeTask(t.id); onRefresh() }
-                                }.padding(horizontal = 10.dp, vertical = 6.dp)
-                            ) { Text("✕", color = Bad, fontSize = 12.sp) }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-// ----------------- UI Helpers -----------------
-@Composable
-private fun SystemCard(title: String, subtitle: String, modifier: Modifier, onClick: () -> Unit) {
-    Column(
-        modifier.clip(RoundedCornerShape(10.dp))
-            .background(Surface)
-            .border(1.dp, Line, RoundedCornerShape(10.dp))
-            .clickable(onClick = onClick)
-            .padding(14.dp),
-        verticalArrangement = Arrangement.spacedBy(3.dp)
-    ) {
-        Text(title, color = Ink, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-        Text(subtitle, color = Dim, fontSize = 11.sp, fontWeight = FontWeight.Medium)
-    }
-}
-
-@Composable
-private fun ControlChip(text: String, onClick: () -> Unit) {
+private fun DeckActionButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Box(
-        Modifier.clip(RoundedCornerShape(10.dp))
-            .background(Surface)
-            .border(1.dp, Line, RoundedCornerShape(10.dp))
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+        modifier.clip(RoundedCornerShape(8.dp)).background(SurfaceLight).border(1.dp, Line, RoundedCornerShape(8.dp))
+            .clickable(onClick = onClick).padding(vertical = 12.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(text, color = Ink, fontSize = 12.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
+        Text(text, color = Ink, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
     }
 }
 
 @Composable
-private fun SkeletonGrid() {
+private fun DeckSystemRow(title: String, subtitle: String, onClick: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(SurfaceLight).border(1.dp, Line, RoundedCornerShape(8.dp))
+            .clickable(onClick = onClick).padding(horizontal = 10.dp, vertical = 7.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(title, color = Ink, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+        Text(subtitle, color = Dim, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+    }
+}
+
+@Composable
+private fun SkeletonGridLandscape() {
     var on by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { while (true) { delay(700); on = !on } }
-    val c = if (on) Color(0xFF1E232C) else Surface
-    LazyVerticalGrid(GridCells.Adaptive(84.dp), verticalArrangement = Arrangement.spacedBy(6.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        items((0 until 20).toList()) { Box(Modifier.fillMaxWidth().aspectRatio(1f).background(c, RoundedCornerShape(8.dp))) }
+    val c = if (on) Color(0xFF161922) else Surface
+    LazyVerticalGrid(
+        GridCells.Adaptive(92.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items((0 until 18).toList()) { Box(Modifier.height(82.dp).background(c, RoundedCornerShape(10.dp))) }
     }
 }
 
 @Composable
 private fun Field(label: String, value: String, type: KeyboardType, onChange: (String) -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(label, color = Dim, fontSize = 12.sp)
+    Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+        Text(label, color = Dim, fontSize = 11.sp, fontWeight = FontWeight.Medium)
         BasicTextField(
             value = value,
             onValueChange = onChange,
             singleLine = true,
-            textStyle = TextStyle(color = Ink, fontSize = 16.sp),
+            textStyle = TextStyle(color = Ink, fontSize = 14.sp),
             cursorBrush = SolidColor(Accent),
             keyboardOptions = KeyboardOptions(keyboardType = type),
             modifier = Modifier.fillMaxWidth().background(Surface, RoundedCornerShape(8.dp))
-                .border(1.dp, Line, RoundedCornerShape(8.dp)).padding(14.dp)
+                .border(1.dp, Line, RoundedCornerShape(8.dp)).padding(10.dp)
         )
     }
 }
@@ -908,13 +873,13 @@ private fun Btn(text: String, primary: Boolean, enabled: Boolean, modifier: Modi
     val bg = if (primary) Accent else Surface
     val fg = if (primary) Color(0xFF030712) else Ink
     Box(
-        modifier.clip(RoundedCornerShape(10.dp))
+        modifier.clip(RoundedCornerShape(8.dp))
             .background(bg)
-            .then(if (primary) Modifier else Modifier.border(1.dp, Line, RoundedCornerShape(10.dp)))
-            .clickable(enabled = enabled, onClick = onClick).padding(vertical = 14.dp),
+            .then(if (primary) Modifier else Modifier.border(1.dp, Line, RoundedCornerShape(8.dp)))
+            .clickable(enabled = enabled, onClick = onClick).padding(vertical = 12.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(text, color = if (enabled) fg else fg.copy(alpha = 0.4f), fontSize = 14.sp, fontWeight = FontWeight.Bold)
+        Text(text, color = if (enabled) fg else fg.copy(alpha = 0.4f), fontSize = 13.sp, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -927,6 +892,6 @@ private fun DrawScope.drawRemoteIcon() {
             radiusX = rx, radiusY = rx
         ))
     }
-    drawPath(body, Color(0xFF090B0E), style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.5f))
-    drawCircle(Color(0xFF090B0E), radius = 2.5f, center = androidx.compose.ui.geometry.Offset(w * 0.5f, h * 0.52f))
+    drawPath(body, Color(0xFF000000), style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.5f))
+    drawCircle(Color(0xFF000000), radius = 2.5f, center = androidx.compose.ui.geometry.Offset(w * 0.5f, h * 0.52f))
 }

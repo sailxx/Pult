@@ -6,8 +6,8 @@
 </picture>
 
 <p>
-  <b>Phone as a physical remote and desk dock for your Windows PC.</b><br/>
-  Hardware volume, 60 fps wireless trackpad, app launcher, active window manager, and power controls over local Wi-Fi.
+  <b>Phone as a landscape desk dock and second screen for your Windows PC.</b><br/>
+  Fullscreen apps grid, hardware volume &amp; media player, and wireless trackpad over local Wi-Fi.
 </p>
 
 <p>
@@ -23,26 +23,24 @@
   <a href="https://github.com/sailxx/Pult/actions/workflows/ci.yml"><img alt="CI status" src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square" /></a>
 </p>
 
-[⚡ Quick Start](#-quick-start) • [💡 Why Pult](#-why-pult) • [📸 Interface](#-interface-screenshots) • [🎛️ Capabilities](#️-capabilities) • [🗺️ Roadmap](#️-roadmap) • [📊 Comparison](#-comparison) • [🌐 Protocol](docs/PROTOCOL.md) • [🛠️ Build](#️-building-from-source)
+[⚡ Quick Start](#-quick-start) • [💡 Why Pult](#-why-pult) • [📸 Interface](#-interface-screenshots) • [🎛️ 3 Sections](#️-the-3-dock-sections) • [🗺️ Roadmap](#️-roadmap) • [📊 Comparison](#-comparison) • [🌐 Protocol](docs/PROTOCOL.md) • [🛠️ Build](#️-building-from-source)
 
 </div>
 
 <br/>
 
-<img src="assets/hero.png" width="100%" alt="Pult - phone as a remote for Windows PC" />
+<img src="assets/hero.png" width="100%" alt="Pult - landscape desk dock for Windows PC" />
 
 <br/><br/>
 
 ## 💡 Why Pult
 
-Remote desktop tools are built for office support: they stream your entire screen with lag, drain battery, and require cloud accounts. Dedicated remote apps push subscriptions or require heavy runtimes.
+Pult is not a TV remote with cluttered buttons. It turns your phone on a desk stand into a **minimalist, fullscreen landscape dock** for your Windows PC:
 
-Pult is designed for real everyday moments at home:
-
-* **Watching a movie from bed:** Pause playback, balance loud dialogue with the true master volume slider, or turn off monitors without getting under the blankets.
-* **Phone on a desk stand:** One-tap dock to launch your browser, Spotify, terminal, or games without searching through taskbars.
-* **Frozen fullscreen game:** When an unresponsive game locks up your mouse cursor, open Pult on your phone, head to the Tasks tab, and kill the frozen window cleanly.
-* **Offline router or hotspot:** Pult communicates strictly peer-to-peer over your local Wi-Fi. No internet, cloud servers, or third-party relays are ever involved.
+* **Phone on a desk stand:** Place your phone horizontally beside your keyboard. Instantly launch Chrome, Spotify, VS Code, Steam, or Terminal with a single tap on crisp 96×96 cached icons.
+* **Bedside media control:** One swipe to the Media deck to adjust master hardware volume with the Core Audio slider, toggle mute, or pause videos without touching your keyboard.
+* **Wireless mouse anywhere:** One swipe to the Cursor deck turns the entire widescreen display into a smooth 60 fps precision trackpad with tap-to-click, two-finger scrolling, and thumb buttons.
+* **100% offline & local:** Pult communicates strictly peer-to-peer over your local Wi-Fi router or mobile hotspot. Zero cloud servers, zero telemetry, zero accounts.
 
 <br/>
 
@@ -56,53 +54,43 @@ Pult is designed for real everyday moments at home:
 
 ## 📸 Interface Screenshots
 
-The Android companion application is built with an AMOLED black interface, instant haptic response, and five specialized functional tabs:
+The application runs in **fullscreen landscape mode** on AMOLED black (`#000000`), divided into 3 dedicated, focused sections:
 
 <br/>
 
-<img src="assets/screenshots/screens-showcase.svg" width="100%" alt="Pult Mobile Interface Screens: Media Remote, Wireless Trackpad, Apps Launchpad, System & Tasks" />
+<img src="assets/screenshots/screens-showcase.svg" width="100%" alt="Pult Landscape Dock Screens: Fullscreen Apps, Media Player, and Cursor Trackpad" />
 
 <br/>
 
-* **1. Media Remote:** Real-time two-way Windows Core Audio slider, quick mute badge, and tactile circular D-pad for volume and media playback.
-* **2. Wireless Trackpad:** High-precision 60 fps touch surface with tap-to-click, two-finger vertical scrolling, and dedicated hardware-styled LKM/PKM thumb buttons.
-* **3. Apps Launchpad:** Automatic Start Menu application index with cached icons, fuzzy search, and long-press favorite pinning.
-* **4. System & Tasks:** Immediate `Win + L` workstation lock, display standby, and a live active window manager to bring windows forward or force-close hung processes.
+* **1. Приложения (Fullscreen Apps Grid):** A 7-column wide application launchpad and switcher. Displays all installed Windows Start Menu and Desktop shortcuts with cached icons, instant fuzzy search, and long-press favorite pinning.
+* **2. Плеер (Hardware Audio & Media Player):** Direct Windows Core Audio COM master volume slider (0–100%) with ±5 stepper buttons, quick MUTE toggle, large tactile Play/Pause, Next/Prev, Space, and instant PC shortcuts (`Win+L`, `Win+D`, `Alt+Tab`, Monitors Standby).
+* **3. Курсор (Wireless Touchpad):** An expansive 60 fps touch surface for fluid mouse cursor control, double-tap click, right-click, smooth vertical scroll strip, and ergonomic hardware `LKM` / `PKM` buttons.
 
 <br/>
 
-## 🎛️ Capabilities
+## 🎛️ The 3 Dock Sections
 
-### 🔊 Master Volume & Mute
-* Direct integration with Windows Core Audio (`IAudioEndpointVolume`).
-* Live two-way volume slider: adjust volume on your PC with physical keyboard keys, and the phone slider updates instantaneously.
-* Instant Mute toggle with clear visual badge.
+### 📱 1. Fullscreen Apps Deck
+* Automatically indexes applications and games from the Windows Start Menu and Desktop shortcuts.
+* High-density 7-column widescreen grid optimized for desk stands.
+* Extracts 96×96 crisp PNG icons directly from executables with in-memory caching.
+* Instant fuzzy search as you type.
+* Long-press any app to pin it to your favorites dock with priority positioning.
 
-### 🖱️ 60 FPS Wireless Trackpad
-* Smooth relative cursor motion with hardware-assisted touch delta calculation.
+### 🎵 2. Media Player Deck
+* Master volume integration via native Windows Core Audio COM API (`IAudioEndpointVolume`).
+* Live two-way volume slider: adjust volume on your PC with physical keyboard keys, and the phone updates instantaneously.
+* Large, tactile Play / Pause, Next, Prev, Stop, and Space controls.
+* Quick desktop system actions: Lock (`Win + L`), Desktop (`Win + D`), App cycle (`Alt + Tab`), and display standby.
+
+### 🖱️ 3. Finger Cursor Control
+* 60 fps ultra-low-latency mouse control over local TCP sockets.
 * Native gesture support:
   * **Single tap:** Left click
   * **Double tap:** Double click
   * **Long press:** Right click
-  * **Two-finger swipe / scroll strip:** Smooth vertical page scrolling
-* Dedicated physical thumb buttons for left and right click.
-
-### ⚡ Start Menu Launchpad
-* Automatically indexes applications from Windows Start Menu and Desktop shortcuts.
-* Instant fuzzy search as you type.
-* Extracts 96×96 crisp PNG icons directly from executables with in-memory caching.
-* Long-press any app to pin it to your favorites dock.
-
-### 🪟 Task & Window Switcher
-* Inspect all top-level running application windows on your desktop.
-* Bring any window to the foreground with a single tap.
-* Cleanly terminate hanging or unresponsive processes (`WM_CLOSE`).
-
-### 🔒 Power & System Deck
-* Lock workstation (`Win + L`) in one touch.
-* Toggle desktop (`Win + D`) and cycle applications (`Alt + Tab`).
-* Power down monitors into energy-saving standby.
-* Sleep, reboot, and timed shutdown with confirmation dialogs and one-click abort (`shutdown /a`).
+  * **Dedicated scroll strip:** Smooth vertical document and web browsing
+* Physical landscape thumb buttons for left and right click.
 
 <br/>
 
@@ -114,8 +102,8 @@ The Android companion application is built with an AMOLED black interface, insta
 
 | Milestone | Status | Key Deliverables |
 |---|:---:|---|
-| **v0.2 — Foundation & Zero-Lag Core** | **Shipped** | Core Audio COM volume, 60 fps Trackpad, Start Menu apps index, Window switcher & task killer, pure offline UDP discovery, 40 KB native host. |
-| **v0.3 — Media & Quick Macros** | **In Progress** | GSMTC Windows media integration (live track title, artist, live album artwork thumbnail on phone), custom one-tap PowerShell/CMD quick action macros. |
+| **v0.2 — Landscape Dock & Zero-Lag Core** | **Shipped** | Fullscreen landscape dock, Core Audio COM volume, 60 fps Trackpad, Start Menu apps index, pure offline UDP discovery, 40 KB native host. |
+| **v0.3 — Media Art & Quick Macros** | **In Progress** | GSMTC Windows media integration (live track title, artist, live album artwork thumbnail on phone), custom one-tap PowerShell/CMD quick action macros. |
 | **v0.4 — Companion & Telemetry** | **Planned** | iOS Companion Client (SwiftUI), Android Lock screen media controls widget, real-time PC telemetry dock (CPU temperature, GPU load, RAM usage). |
 | **v1.0 — Production Suite** | **Future** | Encrypted local TLS/WSS transport with auto-generated self-signed LAN certificates, multi-monitor display switching, bidirectional clipboard bridge. |
 
@@ -125,6 +113,7 @@ The Android companion application is built with an AMOLED black interface, insta
 
 | Dimension | Pult | Unified Remote | KDE Connect | TeamViewer / AnyDesk |
 |---|:---:|:---:|:---:|:---:|
+| **Form factor** | Landscape Desk Dock | Vertical remote | Vertical remote | Remote desktop stream |
 | **Accounts or sign-up** | None | Optional | None | Mandatory |
 | **Network path** | 100% offline LAN | Local + Telemetry | Local | Cloud relay |
 | **PC Host binary** | **40 KB** | ~45 MB | ~110 MB | ~55 MB |
@@ -132,7 +121,6 @@ The Android companion application is built with an AMOLED black interface, insta
 | **Volume control** | Core Audio COM (0-100%) | Blind key simulation | Blind key simulation | None |
 | **Start menu launchpad** | Automatic with cached icons | Paid addon | None | None |
 | **Wireless trackpad** | 60 fps relative delta | 60 fps | 60 fps | High video stream lag |
-| **Task / window manager** | Native list & force kill | None | None | Slow video feed |
 | **License** | Open source (MIT) | Proprietary | Open source (GPL) | Proprietary |
 
 <br/>
@@ -147,26 +135,25 @@ The Android companion application is built with an AMOLED black interface, insta
 
 ### 2. Android Client
 1. Download and install [`Pult.apk`](https://github.com/sailxx/Pult/releases/latest/download/Pult.apk).
-2. Tap **«Поиск ПК»** for automatic UDP discovery over your local Wi-Fi.
-3. Enter the 6-digit PIN and tap **«Подключить»**.
+2. Place phone on your desk stand in landscape orientation.
+3. Tap **«Поиск»** for automatic UDP discovery, enter your PIN, and tap **«Подключить»**.
 
 <br/>
 
 ## 🌐 Network Architecture
 
 ```
-┌─────────────────────────────────┐                 ┌─────────────────────────────────┐
-│       Android Phone             │                 │           Windows PC            │
-│    (Kotlin + Compose M3)        │                 │        (Native C# Host)         │
-│                                 │                 │                                 │
-│  UDP Broadcast: PULT?           │ ──────────────> │  UDP 47801 Discovery Listener   │
-│                                 │ <────────────── │  Answers: PULT!47800|DESKTOP-PC │
-│                                 │                 │                                 │
-│  HTTP GET /volume               │ ──────────────> │  Windows Core Audio COM API     │
-│  HTTP POST /launch?id=...       │ ──────────────> │  Process.Start()                │
-│  HTTP POST /mouse?dx=..&dy=..   │ ──────────────> │  mouse_event() Win32            │
-│  HTTP POST /system?action=lock  │ ──────────────> │  LockWorkStation() Win32        │
-└─────────────────────────────────┘  Local Network  └─────────────────────────────────┘
+┌──────────────────────────────────────────────┐                 ┌─────────────────────────────────┐
+│           Android Phone (Landscape)         │                 │           Windows PC            │
+│          (Kotlin + Jetpack Compose)          │                 │        (Native C# Host)         │
+│                                              │                 │                                 │
+│  UDP Broadcast: PULT?                        │ ──────────────> │  UDP 47801 Discovery Listener   │
+│                                              │ <────────────── │  Answers: PULT!47800|DESKTOP-PC │
+│                                              │                 │                                 │
+│  1. Apps Dock:     POST /launch?id=...       │ ──────────────> │  Process.Start()                │
+│  2. Media Player:  GET/POST /volume, /key    │ ──────────────> │  Core Audio COM API, keybd_event│
+│  3. Cursor Deck:   POST /mouse?dx=..&dy=..   │ ──────────────> │  mouse_event() Win32            │
+└──────────────────────────────────────────────┘  Local Network  └─────────────────────────────────┘
 ```
 
 * **Discovery (UDP 47801):** Broadcast beacon with automatic subnet sweep fallback if router client isolation is active.

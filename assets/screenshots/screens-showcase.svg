@@ -1,300 +1,333 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-label="Pult Mobile Interface Screens">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-label="Pult Landscape Dock Screens">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap');
 text { font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-.card{fill:#090B0E;stroke:#22262F;stroke-width:1.5}
-.phone{fill:#050608;stroke:#1F242D;stroke-width:2}
-.sub{fill:#8C95A3}
+.phone{fill:#06070A;stroke:#222834;stroke-width:2}
+.card{fill:#0C0E14;stroke:#1F2432;stroke-width:1}
+.cardLight{fill:#141722;stroke:#1F2432;stroke-width:1}
 .white{fill:#FFFFFF}
-.line{stroke:#1F242D;stroke-width:1}
+.sub{fill:#8B949E}
 </style>
 <defs>
-<clipPath id="p1"><rect x="30" y="30" width="265" height="580" rx="36"/></clipPath>
-<clipPath id="p2"><rect x="325" y="30" width="265" height="580" rx="36"/></clipPath>
-<clipPath id="p3"><rect x="620" y="30" width="265" height="580" rx="36"/></clipPath>
-<clipPath id="p4"><rect x="915" y="30" width="265" height="580" rx="36"/></clipPath>
+<clipPath id="cHero"><rect x="230" y="25" width="740" height="340" rx="28"/></clipPath>
+<clipPath id="cMedia"><rect x="40" y="420" width="545" height="270" rx="24"/></clipPath>
+<clipPath id="cCursor"><rect x="615" y="420" width="545" height="270" rx="24"/></clipPath>
 </defs>
 
 <!-- Pure OLED Background -->
-<rect width="1200" height="680" fill="#000000"/>
+<rect width="1200" height="760" fill="#000000"/>
 
-<!-- ==================== PHONE 1: MEDIA REMOTE ==================== -->
+<!-- ============================================================ -->
+<!-- 1. HERO SCREEN (LANDSCAPE): FULLSCREEN APPS DOCK             -->
+<!-- ============================================================ -->
 <g>
-  <rect x="30" y="30" width="265" height="580" rx="36" class="phone"/>
-  <rect x="30" y="30" width="265" height="580" rx="36" fill="none" stroke="#2B3242" stroke-width="1"/>
+  <rect x="230" y="25" width="740" height="340" rx="28" class="phone"/>
+  <!-- Punch hole camera on left edge -->
+  <circle cx="248" cy="195" r="5" fill="#141720" stroke="#000000" stroke-width="1.5"/>
   
-  <!-- Notch -->
-  <rect x="117" y="40" width="90" height="18" rx="9" fill="#0D0F14"/>
-  <circle cx="185" cy="49" r="4" fill="#1C212B"/>
-  
-  <!-- Content -->
-  <g clip-path="url(#p1)">
-    <!-- Top Bar: Connected status -->
-    <rect x="44" y="68" width="237" height="36" rx="10" fill="#0F1218" stroke="#1F242D"/>
-    <circle cx="58" cy="86" r="4" fill="#4ADE80"/>
-    <text x="70" y="90" class="white" font-size="12" font-weight="700">DESKTOP-PC</text>
-    <text x="210" y="90" fill="#4ADE80" font-size="11" font-weight="600">Online</text>
+  <g clip-path="url(#cHero)">
+    <!-- Top Horizontal Bar -->
+    <rect x="264" y="38" width="692" height="36" rx="8" fill="#0A0C10" stroke="#1E232E"/>
     
-    <!-- Volume Slider Card -->
-    <rect x="44" y="114" width="237" height="74" rx="14" class="card"/>
-    <text x="58" y="136" class="white" font-size="12" font-weight="700">Master Volume</text>
-    <text x="248" y="136" fill="#38BDF8" font-size="13" font-weight="800">74%</text>
-    <!-- Slider Track -->
-    <rect x="58" y="148" width="209" height="8" rx="4" fill="#171B24"/>
-    <rect x="58" y="148" width="155" height="8" rx="4" fill="#38BDF8"/>
-    <circle cx="213" cy="152" r="8" fill="#FFFFFF"/>
-    <text x="58" y="174" class="sub" font-size="10">Core Audio COM API Sync</text>
-    <text x="238" y="174" fill="#E8B04A" font-size="10" font-weight="700">Mute</text>
+    <!-- Left: Host badge -->
+    <circle cx="280" cy="56" r="3.5" fill="#22C55E"/>
+    <text x="290" y="60" class="white" font-size="11" font-weight="700">DESKTOP-PC</text>
     
-    <!-- Circular Remote D-Pad -->
-    <g transform="translate(162 315)">
-      <!-- Outer Dial -->
-      <circle cx="0" cy="0" r="105" fill="#0C0E13" stroke="#222834" stroke-width="2"/>
+    <!-- Center: 3 Sections Switcher -->
+    <g transform="translate(485 43)">
+      <rect x="0" y="0" width="250" height="26" rx="6" fill="#0F1218" stroke="#1F242D"/>
+      <!-- Active Tab: Приложения -->
+      <rect x="2" y="2" width="84" height="22" rx="5" fill="#141722" stroke="#38BDF8" stroke-opacity="0.6"/>
+      <text x="44" y="17" class="white" font-size="10" font-weight="800" text-anchor="middle">Приложения</text>
       
-      <!-- Vol + -->
-      <rect x="-35" y="-98" width="70" height="38" rx="8" fill="#141720"/>
-      <text x="0" y="-74" class="white" font-size="12" font-weight="700" text-anchor="middle">VOL +</text>
+      <!-- Tab 2: Плеер -->
+      <text x="127" y="17" class="sub" font-size="10" font-weight="600" text-anchor="middle">Плеер</text>
       
-      <!-- Vol - -->
-      <rect x="-35" y="60" width="70" height="38" rx="8" fill="#141720"/>
-      <text x="0" y="84" class="white" font-size="12" font-weight="700" text-anchor="middle">VOL −</text>
-      
-      <!-- Prev -->
-      <rect x="-98" y="-35" width="38" height="70" rx="8" fill="#141720"/>
-      <path d="M-84 -8L-74 0L-84 8Z" fill="#FFFFFF"/>
-      <path d="M-74 -8L-64 0L-74 8Z" fill="#FFFFFF"/>
-      
-      <!-- Next -->
-      <rect x="60" y="-35" width="38" height="70" rx="8" fill="#141720"/>
-      <path d="M74 -8L84 0L74 8Z" fill="#FFFFFF"/>
-      <path d="M84 -8L94 0L84 8Z" fill="#FFFFFF"/>
-      
-      <!-- Center OK / Play-Pause -->
-      <circle cx="0" cy="0" r="42" fill="#1E232E" stroke="#333C4D" stroke-width="2"/>
-      <path d="M-6 -10L8 0L-6 10Z" fill="#FFFFFF"/>
-      <line x1="8" y1="-8" x2="8" y2="8" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+      <!-- Tab 3: Курсор -->
+      <text x="209" y="17" class="sub" font-size="10" font-weight="600" text-anchor="middle">Курсор</text>
     </g>
     
-    <!-- Quick Transport Buttons -->
-    <rect x="44" y="445" width="72" height="42" rx="10" class="card"/>
-    <text x="80" y="471" class="white" font-size="11" font-weight="700" text-anchor="middle">MUTE</text>
+    <!-- Right: Volume & Disconnect -->
+    <g transform="translate(860 44)">
+      <rect x="0" y="0" width="24" height="24" rx="5" fill="#141722" stroke="#1F2432"/>
+      <text x="12" y="16" class="sub" font-size="12" font-weight="700" text-anchor="middle">−</text>
+      
+      <rect x="28" y="0" width="38" height="24" rx="5" fill="#141722" stroke="#1F2432"/>
+      <text x="47" y="16" fill="#38BDF8" font-size="10" font-weight="800" text-anchor="middle">74%</text>
+      
+      <rect x="70" y="0" width="24" height="24" rx="5" fill="#141722" stroke="#1F2432"/>
+      <text x="82" y="16" class="sub" font-size="12" font-weight="700" text-anchor="middle">+</text>
+    </g>
     
-    <rect x="126" y="445" width="73" height="42" rx="10" class="card"/>
-    <text x="162" y="471" class="white" font-size="11" font-weight="700" text-anchor="middle">SPACE</text>
+    <!-- Search Row -->
+    <g transform="translate(264 84)">
+      <rect x="0" y="0" width="280" height="28" rx="6" fill="#0C0E14" stroke="#1F2432"/>
+      <circle cx="16" cy="14" r="4.5" fill="none" stroke="#8B949E" stroke-width="1.2"/>
+      <line x1="19" y1="17" x2="23" y2="21" stroke="#8B949E" stroke-width="1.2"/>
+      <text x="32" y="18" class="sub" font-size="10">Поиск по меню Пуск и играм...</text>
+      <text x="692" y="18" fill="#38BDF8" font-size="10" font-weight="700" text-anchor="end">★ 4 в избранном · 42 приложения</text>
+    </g>
     
-    <rect x="209" y="445" width="72" height="42" rx="10" class="card"/>
-    <text x="245" y="471" class="white" font-size="11" font-weight="700" text-anchor="middle">STOP</text>
+    <!-- 7-Column App Grid -->
+    <!-- Row 1 -->
+    <g transform="translate(264 120)">
+      <!-- App 1: Chrome (Fav) -->
+      <rect x="0" y="0" width="92" height="74" rx="8" fill="#131722" stroke="#38BDF8" stroke-opacity="0.6"/>
+      <circle cx="46" cy="28" r="14" fill="#2563EB"/>
+      <circle cx="46" cy="28" r="6" fill="#FFFFFF"/>
+      <text x="46" y="58" class="white" font-size="10" font-weight="700" text-anchor="middle">Chrome</text>
+      <circle cx="82" cy="10" r="2.5" fill="#38BDF8"/>
+      
+      <!-- App 2: Spotify (Fav) -->
+      <rect x="100" y="0" width="92" height="74" rx="8" fill="#131722" stroke="#38BDF8" stroke-opacity="0.6"/>
+      <circle cx="146" cy="28" r="14" fill="#16A34A"/>
+      <path d="M141 27C144 25 149 26 151 27M140 31C143 29 148 30 151 32" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+      <text x="146" y="58" class="white" font-size="10" font-weight="700" text-anchor="middle">Spotify</text>
+      <circle cx="182" cy="10" r="2.5" fill="#38BDF8"/>
+      
+      <!-- App 3: VS Code (Fav) -->
+      <rect x="200" y="0" width="92" height="74" rx="8" fill="#131722" stroke="#38BDF8" stroke-opacity="0.6"/>
+      <rect x="232" y="14" width="28" height="28" rx="6" fill="#0284C7"/>
+      <path d="M240 28L248 22V34L240 28Z" fill="#FFFFFF"/>
+      <text x="246" y="58" class="white" font-size="10" font-weight="700" text-anchor="middle">VS Code</text>
+      <circle cx="282" cy="10" r="2.5" fill="#38BDF8"/>
+      
+      <!-- App 4: Steam (Fav) -->
+      <rect x="300" y="0" width="92" height="74" rx="8" fill="#131722" stroke="#38BDF8" stroke-opacity="0.6"/>
+      <circle cx="346" cy="28" r="14" fill="#1E293B"/>
+      <circle cx="343" cy="26" r="4" fill="#FFFFFF"/>
+      <circle cx="350" cy="32" r="3" fill="#FFFFFF"/>
+      <text x="346" y="58" class="white" font-size="10" font-weight="700" text-anchor="middle">Steam</text>
+      <circle cx="382" cy="10" r="2.5" fill="#38BDF8"/>
+      
+      <!-- App 5: Terminal -->
+      <rect x="400" y="0" width="92" height="74" rx="8" class="card"/>
+      <rect x="432" y="14" width="28" height="28" rx="6" fill="#181B22"/>
+      <text x="446" y="33" class="white" font-size="12" font-weight="800" text-anchor="middle">&gt;_</text>
+      <text x="446" y="58" class="white" font-size="10" font-weight="600" text-anchor="middle">Terminal</text>
+      
+      <!-- App 6: Telegram -->
+      <rect x="500" y="0" width="92" height="74" rx="8" class="card"/>
+      <circle cx="546" cy="28" r="14" fill="#0284C7"/>
+      <path d="M540 28L552 23L549 34L546 30L540 28Z" fill="#FFFFFF"/>
+      <text x="546" y="58" class="white" font-size="10" font-weight="600" text-anchor="middle">Telegram</text>
+      
+      <!-- App 7: Blender -->
+      <rect x="600" y="0" width="92" height="74" rx="8" class="card"/>
+      <circle cx="646" cy="28" r="14" fill="#EA580C"/>
+      <circle cx="646" cy="28" r="5" fill="#FFFFFF"/>
+      <text x="646" y="58" class="white" font-size="10" font-weight="600" text-anchor="middle">Blender</text>
+    </g>
     
-    <!-- Tab Bar -->
-    <rect x="30" y="555" width="265" height="55" fill="#08090C" stroke="#1A1D24"/>
-    <text x="65" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Приложения</text>
-    <text x="120" y="586" fill="#38BDF8" font-size="10" font-weight="800" text-anchor="middle">Медиа</text>
-    <circle cx="120" cy="596" r="2" fill="#38BDF8"/>
-    <text x="165" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Мышь</text>
-    <text x="210" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Система</text>
-    <text x="255" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Окна</text>
+    <!-- Row 2 -->
+    <g transform="translate(264 202)">
+      <!-- App 8: Discord -->
+      <rect x="0" y="0" width="92" height="74" rx="8" class="card"/>
+      <circle cx="46" cy="28" r="14" fill="#4F46E5"/>
+      <circle cx="41" cy="27" r="2.5" fill="#FFFFFF"/>
+      <circle cx="51" cy="27" r="2.5" fill="#FFFFFF"/>
+      <text x="46" y="58" class="white" font-size="10" font-weight="600" text-anchor="middle">Discord</text>
+      
+      <!-- App 9: Photoshop -->
+      <rect x="100" y="0" width="92" height="74" rx="8" class="card"/>
+      <rect x="132" y="14" width="28" height="28" rx="6" fill="#001E36"/>
+      <text x="146" y="32" fill="#38BDF8" font-size="11" font-weight="800" text-anchor="middle">Ps</text>
+      <text x="146" y="58" class="white" font-size="10" font-weight="600" text-anchor="middle">Photoshop</text>
+      
+      <!-- App 10: Notion -->
+      <rect x="200" y="0" width="92" height="74" rx="8" class="card"/>
+      <rect x="232" y="14" width="28" height="28" rx="6" fill="#1F242E"/>
+      <text x="246" y="33" class="white" font-size="12" font-weight="800" text-anchor="middle">N</text>
+      <text x="246" y="58" class="white" font-size="10" font-weight="600" text-anchor="middle">Notion</text>
+      
+      <!-- App 11: Obsidian -->
+      <rect x="300" y="0" width="92" height="74" rx="8" class="card"/>
+      <rect x="332" y="14" width="28" height="28" rx="6" fill="#3B1C54"/>
+      <text x="346" y="33" fill="#C084FC" font-size="12" font-weight="800" text-anchor="middle">◆</text>
+      <text x="346" y="58" class="white" font-size="10" font-weight="600" text-anchor="middle">Obsidian</text>
+      
+      <!-- App 12: Figma -->
+      <rect x="400" y="0" width="92" height="74" rx="8" class="card"/>
+      <circle cx="441" cy="24" r="5" fill="#EF4444"/>
+      <circle cx="451" cy="24" r="5" fill="#F97316"/>
+      <circle cx="441" cy="33" r="5" fill="#8B5CF6"/>
+      <text x="446" y="58" class="white" font-size="10" font-weight="600" text-anchor="middle">Figma</text>
+      
+      <!-- App 13: Explorer -->
+      <rect x="500" y="0" width="92" height="74" rx="8" class="card"/>
+      <rect x="532" y="16" width="28" height="22" rx="4" fill="#EAB308"/>
+      <text x="546" y="58" class="white" font-size="10" font-weight="600" text-anchor="middle">Проводник</text>
+      
+      <!-- App 14: Calculator -->
+      <rect x="600" y="0" width="92" height="74" rx="8" class="card"/>
+      <rect x="632" y="14" width="28" height="28" rx="6" fill="#181B22"/>
+      <text x="646" y="33" class="white" font-size="12" font-weight="700" text-anchor="middle">±</text>
+      <text x="646" y="58" class="white" font-size="10" font-weight="600" text-anchor="middle">Калькулятор</text>
+    </g>
+    
+    <!-- Row 3 preview -->
+    <g transform="translate(264 284)">
+      <rect x="0" y="0" width="92" height="74" rx="8" class="card"/>
+      <text x="46" y="40" class="sub" font-size="10" text-anchor="middle">Игры...</text>
+      
+      <rect x="100" y="0" width="92" height="74" rx="8" class="card"/>
+      <text x="146" y="40" class="sub" font-size="10" text-anchor="middle">Браузеры...</text>
+      
+      <rect x="200" y="0" width="92" height="74" rx="8" class="card"/>
+      <text x="246" y="40" class="sub" font-size="10" text-anchor="middle">Утилиты...</text>
+    </g>
   </g>
 </g>
-<text x="162" y="640" class="white" font-size="14" font-weight="800" text-anchor="middle">1. Media Remote</text>
-<text x="162" y="658" class="sub" font-size="11" text-anchor="middle">Core Audio Slider &amp; D-Pad</text>
+<text x="600" y="390" class="white" font-size="14" font-weight="800" text-anchor="middle">1. Раздел «Приложения» · Полноэкранный деск-док на подставке</text>
 
-<!-- ==================== PHONE 2: TRACKPAD ==================== -->
+<!-- ============================================================ -->
+<!-- 2. SCREEN 2 (LANDSCAPE): MEDIA PLAYER DECK                   -->
+<!-- ============================================================ -->
 <g>
-  <rect x="325" y="30" width="265" height="580" rx="36" class="phone"/>
-  <rect x="325" y="30" width="265" height="580" rx="36" fill="none" stroke="#2B3242" stroke-width="1"/>
+  <rect x="40" y="420" width="545" height="270" rx="24" class="phone"/>
+  <circle cx="54" cy="555" r="4" fill="#141720" stroke="#000000" stroke-width="1.5"/>
   
-  <rect x="412" y="40" width="90" height="18" rx="9" fill="#0D0F14"/>
-  <circle cx="480" cy="49" r="4" fill="#1C212B"/>
-  
-  <g clip-path="url(#p2)">
-    <rect x="339" y="68" width="237" height="36" rx="10" fill="#0F1218" stroke="#1F242D"/>
-    <circle cx="353" cy="86" r="4" fill="#4ADE80"/>
-    <text x="365" y="90" class="white" font-size="12" font-weight="700">DESKTOP-PC</text>
-    <text x="515" y="90" fill="#A78BFA" font-size="11" font-weight="600">60 FPS</text>
+  <g clip-path="url(#cMedia)">
+    <!-- Top Bar -->
+    <rect x="68" y="432" width="497" height="32" rx="6" fill="#0A0C10" stroke="#1E232E"/>
+    <circle cx="80" cy="448" r="3" fill="#22C55E"/>
+    <text x="88" y="452" class="white" font-size="10" font-weight="700">DESKTOP-PC</text>
     
-    <!-- Touch Area -->
-    <rect x="339" y="114" width="202" height="360" rx="18" fill="#0C0E14" stroke="#222834"/>
-    <!-- Center Cross / Grid dot -->
-    <circle cx="440" cy="294" r="3" fill="#38BDF8" opacity="0.6"/>
-    <circle cx="440" cy="294" r="32" fill="none" stroke="#38BDF8" stroke-dasharray="4 4" opacity="0.3"/>
-    <text x="440" y="350" class="sub" font-size="12" font-weight="600" text-anchor="middle">Touch &amp; Drag Surface</text>
-    <text x="440" y="368" fill="#4B5563" font-size="10" text-anchor="middle">Tap = Click · Hold = Right Click</text>
+    <g transform="translate(230 436)">
+      <rect x="0" y="0" width="180" height="24" rx="5" fill="#0F1218" stroke="#1F242D"/>
+      <text x="30" y="16" class="sub" font-size="9" text-anchor="middle">Приложения</text>
+      <rect x="58" y="2" width="64" height="20" rx="4" fill="#141722" stroke="#38BDF8" stroke-opacity="0.6"/>
+      <text x="90" y="16" class="white" font-size="9" font-weight="800" text-anchor="middle">Плеер</text>
+      <text x="150" y="16" class="sub" font-size="9" text-anchor="middle">Курсор</text>
+    </g>
     
-    <!-- Scroll Strip -->
-    <rect x="548" y="114" width="28" height="360" rx="14" fill="#0F1218" stroke="#222834"/>
-    <path d="M562 135L567 142H557Z" fill="#A1A1AA"/>
-    <path d="M562 455L567 448H557Z" fill="#A1A1AA"/>
-    <rect x="554" y="240" width="16" height="40" rx="8" fill="#2B3242"/>
+    <text x="550" y="452" class="sub" font-size="11" text-anchor="end">74%</text>
     
-    <!-- Bottom Physical Mouse Buttons -->
-    <rect x="339" y="484" width="114" height="60" rx="14" fill="#141720" stroke="#2B3242"/>
-    <text x="396" y="520" class="white" font-size="14" font-weight="800" text-anchor="middle">LKM</text>
-    
-    <rect x="462" y="484" width="114" height="60" rx="14" fill="#141720" stroke="#2B3242"/>
-    <text x="519" y="520" class="white" font-size="14" font-weight="800" text-anchor="middle">PKM</text>
-    
-    <!-- Tab Bar -->
-    <rect x="325" y="555" width="265" height="55" fill="#08090C" stroke="#1A1D24"/>
-    <text x="360" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Приложения</text>
-    <text x="415" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Медиа</text>
-    <text x="460" y="586" fill="#A78BFA" font-size="10" font-weight="800" text-anchor="middle">Мышь</text>
-    <circle cx="460" cy="596" r="2" fill="#A78BFA"/>
-    <text x="505" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Система</text>
-    <text x="550" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Окна</text>
+    <!-- 3 Column Deck -->
+    <g transform="translate(68 474)">
+      <!-- Col 1: Volume Card -->
+      <rect x="0" y="0" width="155" height="200" rx="10" class="card"/>
+      <text x="12" y="22" class="sub" font-size="9" font-weight="700" letter-spacing="0.5">МАСТЕР-ГРОМКОСТЬ</text>
+      <text x="12" y="62" class="white" font-size="34" font-weight="800">74%</text>
+      
+      <!-- Stepper and Slider -->
+      <rect x="12" y="80" width="131" height="6" rx="3" fill="#1A1D26"/>
+      <rect x="12" y="80" width="97" height="6" rx="3" fill="#38BDF8"/>
+      
+      <rect x="12" y="100" width="28" height="28" rx="6" class="cardLight"/>
+      <text x="26" y="118" class="white" font-size="11" font-weight="700" text-anchor="middle">−5</text>
+      
+      <rect x="46" y="100" width="63" height="28" rx="6" fill="#141722" stroke="#1F2432"/>
+      <text x="77" y="118" fill="#38BDF8" font-size="10" font-weight="800" text-anchor="middle">MUTE</text>
+      
+      <rect x="115" y="100" width="28" height="28" rx="6" class="cardLight"/>
+      <text x="129" y="118" class="white" font-size="11" font-weight="700" text-anchor="middle">+5</text>
+      
+      <text x="12" y="152" class="sub" font-size="8">Core Audio COM API</text>
+      <text x="12" y="168" class="sub" font-size="8">Мгновенная синхронизация</text>
+      
+      <!-- Col 2: Media Controller -->
+      <rect x="165" y="0" width="195" height="200" rx="10" class="card"/>
+      <text x="177" y="22" class="sub" font-size="9" font-weight="700" letter-spacing="0.5">УПРАВЛЕНИЕ МЕДИА</text>
+      
+      <!-- Controls Row -->
+      <g transform="translate(177 50)">
+        <!-- Prev -->
+        <circle cx="22" cy="30" r="22" fill="#141722" stroke="#1F2432"/>
+        <text x="22" y="34" class="white" font-size="11" font-weight="700" text-anchor="middle">◀◀</text>
+        
+        <!-- Play / Pause -->
+        <circle cx="85" cy="30" r="32" fill="#FFFFFF"/>
+        <path d="M80 20L95 30L80 40Z" fill="#000000"/>
+        
+        <!-- Next -->
+        <circle cx="148" cy="30" r="22" fill="#141722" stroke="#1F2432"/>
+        <text x="148" y="34" class="white" font-size="11" font-weight="700" text-anchor="middle">▶▶</text>
+      </g>
+      
+      <!-- Chips -->
+      <rect x="177" y="128" width="80" height="28" rx="6" class="cardLight"/>
+      <text x="217" y="146" class="white" font-size="10" font-weight="700" text-anchor="middle">STOP</text>
+      
+      <rect x="263" y="128" width="85" height="28" rx="6" class="cardLight"/>
+      <text x="305" y="146" class="white" font-size="10" font-weight="700" text-anchor="middle">ПРОБЕЛ</text>
+      
+      <text x="262" y="180" class="sub" font-size="9" text-anchor="middle">Spotify · YouTube · VLC</text>
+      
+      <!-- Col 3: System Shortcuts -->
+      <rect x="370" y="0" width="127" height="200" rx="10" class="card"/>
+      <text x="380" y="22" class="sub" font-size="9" font-weight="700" letter-spacing="0.5">СИСТЕМА</text>
+      
+      <rect x="378" y="36" width="111" height="28" rx="6" class="cardLight"/>
+      <text x="386" y="54" class="white" font-size="9" font-weight="600">Блокировка</text>
+      <text x="482" y="54" class="sub" font-size="8" text-anchor="end">Win+L</text>
+      
+      <rect x="378" y="70" width="111" height="28" rx="6" class="cardLight"/>
+      <text x="386" y="88" class="white" font-size="9" font-weight="600">Рабочий стол</text>
+      <text x="482" y="88" class="sub" font-size="8" text-anchor="end">Win+D</text>
+      
+      <rect x="378" y="104" width="111" height="28" rx="6" class="cardLight"/>
+      <text x="386" y="122" class="white" font-size="9" font-weight="600">Окно</text>
+      <text x="482" y="122" class="sub" font-size="8" text-anchor="end">Alt+Tab</text>
+      
+      <rect x="378" y="138" width="111" height="28" rx="6" class="cardLight"/>
+      <text x="386" y="156" class="white" font-size="9" font-weight="600">Мониторы</text>
+      <text x="482" y="156" class="sub" font-size="8" text-anchor="end">Выкл</text>
+    </g>
   </g>
 </g>
-<text x="457" y="640" class="white" font-size="14" font-weight="800" text-anchor="middle">2. Wireless Trackpad</text>
-<text x="457" y="658" class="sub" font-size="11" text-anchor="middle">60 FPS Cursor &amp; Gestures</text>
+<text x="312" y="720" class="white" font-size="13" font-weight="800" text-anchor="middle">2. Раздел «Плеер» · Громкость, плеер и системные шорткаты</text>
 
-<!-- ==================== PHONE 3: APPS LAUNCHPAD ==================== -->
+<!-- ============================================================ -->
+<!-- 3. SCREEN 3 (LANDSCAPE): CURSOR TRACKPAD                     -->
+<!-- ============================================================ -->
 <g>
-  <rect x="620" y="30" width="265" height="580" rx="36" class="phone"/>
-  <rect x="620" y="30" width="265" height="580" rx="36" fill="none" stroke="#2B3242" stroke-width="1"/>
+  <rect x="615" y="420" width="545" height="270" rx="24" class="phone"/>
+  <circle cx="629" cy="555" r="4" fill="#141720" stroke="#000000" stroke-width="1.5"/>
   
-  <rect x="707" y="40" width="90" height="18" rx="9" fill="#0D0F14"/>
-  <circle cx="775" cy="49" r="4" fill="#1C212B"/>
-  
-  <g clip-path="url(#p3)">
-    <rect x="634" y="68" width="237" height="36" rx="10" fill="#0F1218" stroke="#1F242D"/>
-    <circle cx="648" cy="86" r="4" fill="#4ADE80"/>
-    <text x="660" y="90" class="white" font-size="12" font-weight="700">DESKTOP-PC</text>
-    <text x="830" y="90" fill="#34D399" font-size="11" font-weight="600">42 Apps</text>
+  <g clip-path="url(#cCursor)">
+    <!-- Top Bar -->
+    <rect x="643" y="432" width="497" height="32" rx="6" fill="#0A0C10" stroke="#1E232E"/>
+    <circle cx="655" cy="448" r="3" fill="#22C55E"/>
+    <text x="663" y="452" class="white" font-size="10" font-weight="700">DESKTOP-PC</text>
     
-    <!-- Search Bar -->
-    <rect x="634" y="114" width="237" height="36" rx="10" fill="#12151D" stroke="#28303F"/>
-    <circle cx="650" cy="132" r="5" fill="none" stroke="#8C95A3" stroke-width="1.5"/>
-    <line x1="654" y1="136" x2="658" y2="140" stroke="#8C95A3" stroke-width="1.5"/>
-    <text x="666" y="136" class="sub" font-size="11">Search Start menu &amp; games...</text>
+    <g transform="translate(805 436)">
+      <rect x="0" y="0" width="180" height="24" rx="5" fill="#0F1218" stroke="#1F242D"/>
+      <text x="30" y="16" class="sub" font-size="9" text-anchor="middle">Приложения</text>
+      <text x="90" y="16" class="sub" font-size="9" text-anchor="middle">Плеер</text>
+      <rect x="118" y="2" width="60" height="20" rx="4" fill="#141722" stroke="#38BDF8" stroke-opacity="0.6"/>
+      <text x="148" y="16" class="white" font-size="9" font-weight="800" text-anchor="middle">Курсор</text>
+    </g>
     
-    <!-- Favorites Section -->
-    <text x="634" y="172" class="white" font-size="11" font-weight="800">PINNED FAVORITES</text>
+    <text x="1125" y="452" fill="#A78BFA" font-size="10" font-weight="700" text-anchor="end">60 FPS</text>
     
-    <!-- App 1: Chrome -->
-    <rect x="634" y="184" width="112" height="76" rx="12" class="card"/>
-    <circle cx="690" cy="214" r="14" fill="#2563EB"/>
-    <circle cx="690" cy="214" r="6" fill="#FFFFFF"/>
-    <text x="690" y="246" class="white" font-size="11" font-weight="700" text-anchor="middle">Chrome</text>
+    <!-- Touch Area (Large Canvas) -->
+    <rect x="643" y="474" width="375" height="200" rx="10" class="card"/>
+    <circle cx="830" cy="570" r="3" fill="#38BDF8" opacity="0.6"/>
+    <circle cx="830" cy="570" r="28" fill="none" stroke="#38BDF8" stroke-dasharray="3 3" opacity="0.3"/>
+    <text x="830" y="610" class="white" font-size="12" font-weight="700" text-anchor="middle">Широкая сенсорная панель мыши</text>
+    <text x="830" y="628" class="sub" font-size="9" text-anchor="middle">Тап = ЛКМ · Двойной тап = Клик · Удержание = ПКМ</text>
     
-    <!-- App 2: Spotify -->
-    <rect x="759" y="184" width="112" height="76" rx="12" class="card"/>
-    <circle cx="815" cy="214" r="14" fill="#16A34A"/>
-    <path d="M809 212C813 210 819 211 822 213M808 216C812 214 817 215 821 217M810 220C813 219 816 219 819 221" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
-    <text x="815" y="246" class="white" font-size="11" font-weight="700" text-anchor="middle">Spotify</text>
-    
-    <!-- App 3: VS Code -->
-    <rect x="634" y="268" width="112" height="76" rx="12" class="card"/>
-    <rect x="676" y="200" width="28" height="28" rx="6" fill="#0284C7"/>
-    <path d="M684 214L692 208V220L684 214Z" fill="#FFFFFF"/>
-    <text x="690" y="330" class="white" font-size="11" font-weight="700" text-anchor="middle">VS Code</text>
-    
-    <!-- App 4: Steam -->
-    <rect x="759" y="268" width="112" height="76" rx="12" class="card"/>
-    <circle cx="815" cy="298" r="14" fill="#1E293B"/>
-    <circle cx="812" cy="295" r="4" fill="#FFFFFF"/>
-    <circle cx="820" cy="303" r="3" fill="#FFFFFF"/>
-    <text x="815" y="330" class="white" font-size="11" font-weight="700" text-anchor="middle">Steam</text>
-    
-    <!-- All Apps List -->
-    <text x="634" y="370" class="white" font-size="11" font-weight="800">ALL APPLICATIONS</text>
-    
-    <!-- Row 1: Terminal -->
-    <rect x="634" y="382" width="237" height="46" rx="10" class="card"/>
-    <rect x="644" y="393" width="24" height="24" rx="5" fill="#1E232E"/>
-    <text x="652" y="409" class="white" font-size="12" font-weight="700">&gt;_</text>
-    <text x="678" y="406" class="white" font-size="12" font-weight="600">Windows Terminal</text>
-    <text x="678" y="419" class="sub" font-size="9">PowerShell 7</text>
-    <rect x="835" y="394" width="26" height="22" rx="5" fill="#19202D"/>
-    <text x="848" y="409" fill="#38BDF8" font-size="11" font-weight="800" text-anchor="middle">▶</text>
-    
-    <!-- Row 2: Telegram -->
-    <rect x="634" y="434" width="237" height="46" rx="10" class="card"/>
-    <circle cx="656" cy="457" r="12" fill="#0284C7"/>
-    <path d="M650 457L662 452L659 463L656 459L650 457Z" fill="#FFFFFF"/>
-    <text x="678" y="458" class="white" font-size="12" font-weight="600">Telegram Desktop</text>
-    <text x="678" y="471" class="sub" font-size="9">Messenger</text>
-    <rect x="835" y="446" width="26" height="22" rx="5" fill="#19202D"/>
-    <text x="848" y="461" fill="#38BDF8" font-size="11" font-weight="800" text-anchor="middle">▶</text>
-    
-    <!-- Tab Bar -->
-    <rect x="620" y="555" width="265" height="55" fill="#08090C" stroke="#1A1D24"/>
-    <text x="655" y="586" fill="#38BDF8" font-size="10" font-weight="800" text-anchor="middle">Приложения</text>
-    <circle cx="655" cy="596" r="2" fill="#38BDF8"/>
-    <text x="710" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Медиа</text>
-    <text x="755" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Мышь</text>
-    <text x="800" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Система</text>
-    <text x="845" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Окна</text>
+    <!-- Right Control Column: Scroll & LKM / PKM -->
+    <g transform="translate(1028 474)">
+      <!-- Scroll Up -->
+      <rect x="0" y="0" width="112" height="44" rx="8" class="card"/>
+      <text x="56" y="26" class="white" font-size="10" font-weight="700" text-anchor="middle">▲ СКРОЛЛ</text>
+      
+      <!-- Scroll Down -->
+      <rect x="0" y="52" width="112" height="44" rx="8" class="card"/>
+      <text x="56" y="78" class="white" font-size="10" font-weight="700" text-anchor="middle">▼ СКРОЛЛ</text>
+      
+      <!-- LKM Button -->
+      <rect x="0" y="104" width="112" height="44" rx="8" class="cardLight"/>
+      <text x="56" y="131" class="white" font-size="13" font-weight="800" text-anchor="middle">LKM</text>
+      
+      <!-- PKM Button -->
+      <rect x="0" y="156" width="112" height="44" rx="8" class="cardLight"/>
+      <text x="56" y="183" class="white" font-size="13" font-weight="800" text-anchor="middle">PKM</text>
+    </g>
   </g>
 </g>
-<text x="752" y="640" class="white" font-size="14" font-weight="800" text-anchor="middle">3. Apps Launchpad</text>
-<text x="752" y="658" class="sub" font-size="11" text-anchor="middle">Instant Start Menu Dock</text>
+<text x="887" y="720" class="white" font-size="13" font-weight="800" text-anchor="middle">3. Раздел «Курсор» · Полноэкранный трекпад с аппаратными кнопками</text>
 
-<!-- ==================== PHONE 4: SYSTEM & TASKS ==================== -->
-<g>
-  <rect x="915" y="30" width="265" height="580" rx="36" class="phone"/>
-  <rect x="915" y="30" width="265" height="580" rx="36" fill="none" stroke="#2B3242" stroke-width="1"/>
-  
-  <rect x="1002" y="40" width="90" height="18" rx="9" fill="#0D0F14"/>
-  <circle cx="1070" cy="49" r="4" fill="#1C212B"/>
-  
-  <g clip-path="url(#p4)">
-    <rect x="929" y="68" width="237" height="36" rx="10" fill="#0F1218" stroke="#1F242D"/>
-    <circle cx="943" cy="86" r="4" fill="#4ADE80"/>
-    <text x="955" y="90" class="white" font-size="12" font-weight="700">DESKTOP-PC</text>
-    <text x="1105" y="90" fill="#F87171" font-size="11" font-weight="600">Controls</text>
-    
-    <!-- System Controls Grid -->
-    <text x="929" y="124" class="white" font-size="11" font-weight="800">POWER &amp; SYSTEM</text>
-    
-    <rect x="929" y="134" width="112" height="56" rx="10" class="card"/>
-    <text x="941" y="156" class="white" font-size="11" font-weight="700">Lock PC</text>
-    <text x="941" y="174" class="sub" font-size="9">Win + L</text>
-    
-    <rect x="1054" y="134" width="112" height="56" rx="10" class="card"/>
-    <text x="1066" y="156" class="white" font-size="11" font-weight="700">Desktop</text>
-    <text x="1066" y="174" class="sub" font-size="9">Win + D</text>
-    
-    <rect x="929" y="196" width="112" height="56" rx="10" class="card"/>
-    <text x="941" y="218" class="white" font-size="11" font-weight="700">Monitors Off</text>
-    <text x="941" y="236" class="sub" font-size="9">Low Power</text>
-    
-    <rect x="1054" y="196" width="112" height="56" rx="10" class="card"/>
-    <text x="1066" y="218" fill="#F87171" font-size="11" font-weight="700">Sleep PC</text>
-    <text x="1066" y="236" class="sub" font-size="9">Standby</text>
-    
-    <!-- Active Windows List -->
-    <text x="929" y="278" class="white" font-size="11" font-weight="800">RUNNING WINDOWS</text>
-    
-    <!-- Window 1: Chrome -->
-    <rect x="929" y="290" width="237" height="54" rx="10" class="card"/>
-    <text x="941" y="312" class="white" font-size="11" font-weight="700">YouTube — Chrome</text>
-    <text x="941" y="330" class="sub" font-size="9">Active Window</text>
-    <rect x="1115" y="303" width="42" height="26" rx="6" fill="#1C2433"/>
-    <text x="1136" y="320" fill="#38BDF8" font-size="10" font-weight="700" text-anchor="middle">Focus</text>
-    
-    <!-- Window 2: VS Code -->
-    <rect x="929" y="352" width="237" height="54" rx="10" class="card"/>
-    <text x="941" y="374" class="white" font-size="11" font-weight="700">Pult.cs — VS Code</text>
-    <text x="941" y="392" class="sub" font-size="9">PID: 14208</text>
-    <rect x="1115" y="365" width="42" height="26" rx="6" fill="#1C2433"/>
-    <text x="1136" y="382" fill="#38BDF8" font-size="10" font-weight="700" text-anchor="middle">Focus</text>
-    
-    <!-- Window 3: Frozen Game -->
-    <rect x="929" y="414" width="237" height="54" rx="10" fill="#170F12" stroke="#4A1D24"/>
-    <text x="941" y="436" fill="#FCA5A5" font-size="11" font-weight="700">Game (Hung Process)</text>
-    <text x="941" y="454" fill="#F87171" font-size="9">PID: 8940 · Not Responding</text>
-    <rect x="1115" y="427" width="42" height="26" rx="6" fill="#450A0A" stroke="#7F1D1D"/>
-    <text x="1136" y="444" fill="#F87171" font-size="10" font-weight="800" text-anchor="middle">KILL</text>
-    
-    <!-- Tab Bar -->
-    <rect x="915" y="555" width="265" height="55" fill="#08090C" stroke="#1A1D24"/>
-    <text x="950" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Приложения</text>
-    <text x="1005" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Медиа</text>
-    <text x="1050" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Мышь</text>
-    <text x="1095" y="586" fill="#F87171" font-size="10" font-weight="800" text-anchor="middle">Система</text>
-    <circle cx="1095" cy="596" r="2" fill="#F87171"/>
-    <text x="1140" y="586" class="sub" font-size="10" font-weight="600" text-anchor="middle">Окна</text>
-  </g>
-</g>
-<text x="1047" y="640" class="white" font-size="14" font-weight="800" text-anchor="middle">4. System &amp; Tasks</text>
-<text x="1047" y="658" class="sub" font-size="11" text-anchor="middle">One-Tap Lock &amp; Window Killer</text>
 </svg>
