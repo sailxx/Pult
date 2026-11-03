@@ -1,123 +1,124 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/banner-dark.svg">
-    <img alt="Pult" src="assets/banner-light.svg" width="100%">
-  </picture>
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/banner-dark.svg">
+  <img alt="Pult" src="assets/banner-light.svg" width="100%">
+</picture>
+
+<p>
+  <b>Phone as a physical remote and desk dock for your Windows PC.</b><br/>
+  Hardware volume, 60 fps wireless trackpad, app launcher, active window manager, and power controls over local Wi-Fi.
 </p>
 
-<p align="center">
-  <b>Phone as a physical remote and desk dock for your Windows PC.</b>
+<p>
+  <a href="https://github.com/sailxx/Pult/releases/latest/download/Pult.exe"><img src="assets/readme/cta-windows.svg" height="48" alt="Download for Windows"></a>
+  &nbsp;
+  <a href="https://github.com/sailxx/Pult/releases/latest/download/Pult.apk"><img src="assets/readme/cta-android.svg" height="48" alt="Download for Android"></a>
 </p>
 
-<p align="center">
-  Control volume, media, app launches, active windows, and power over local Wi-Fi in milliseconds.<br/>
-  Zero cloud. Zero accounts. Zero telemetry. 32 KB host. Completely offline.
-</p>
-
-<p align="center">
+<p>
   <a href="https://github.com/sailxx/Pult/releases/latest"><img alt="Latest release" src="https://img.shields.io/badge/release-v0.2.0-orange?style=flat-square" /></a>
   <a href="https://github.com/sailxx/Pult/releases/latest"><img alt="Platforms" src="https://img.shields.io/badge/platform-Windows%20%7C%20Android-blue?style=flat-square" /></a>
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-black?style=flat-square" /></a>
   <a href="https://github.com/sailxx/Pult/actions/workflows/ci.yml"><img alt="CI status" src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square" /></a>
 </p>
 
-<p align="center">
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#why-pult">Why Pult</a> •
-  <a href="#features">Features</a> •
-  <a href="#how-it-works">How It Works</a> •
-  <a href="docs/PROTOCOL.md">Protocol</a> •
-  <a href="SECURITY.md">Security</a> •
-  <a href="#contributing">Contribute</a>
-</p>
+[Quick Start](#quick-start) • [Why Pult](#why-pult) • [Capabilities](#capabilities) • [Comparison](#comparison) • [Protocol](docs/PROTOCOL.md) • [Security](SECURITY.md) • [Build](#building-from-source)
 
-<p align="center">
-  <img src="assets/hero.png" width="100%" alt="Pult - phone as a remote for Windows PC" />
-</p>
+</div>
 
----
+<br/>
 
-## What is Pult?
+<img src="assets/hero.png" width="100%" alt="Pult - phone as a remote for Windows PC" />
 
-Pult turns your Android phone into an instant hardware remote and second-screen dock for your Windows computer.
+<br/><br/>
 
-It is designed for real everyday moments:
+## Why Pult
 
-* **Watching a movie from bed?** Pause playback, balance loud audio with the true volume slider, or turn off monitors without getting under the blankets.
-* **Phone sitting on a desk stand?** One-tap dock to launch your browser, Spotify, terminal, or games without searching through taskbars.
-* **Fullscreen game froze your mouse?** Open Pult on your phone, head to the Tasks tab, and kill the frozen window instantly.
-* **No internet or router offline?** Pult works strictly peer-to-peer over your local Wi-Fi router or hotspot.
+Remote desktop tools are built for office support: they stream your entire screen with lag, drain battery, and require cloud accounts. Dedicated remote apps push subscriptions or require heavy runtimes.
 
----
+Pult is designed for real everyday moments at home:
 
-## Why Pult over alternatives?
+* **Watching a movie from bed:** Pause playback, balance loud dialogue with the true master volume slider, or turn off monitors without getting under the blankets.
+* **Phone on a desk stand:** One-tap dock to launch your browser, Spotify, terminal, or games without searching through taskbars.
+* **Frozen fullscreen game:** When an unresponsive game locks up your mouse cursor, open Pult on your phone, open the Tasks tab, and kill the frozen window cleanly.
+* **Offline router or hotspot:** Pult communicates strictly peer-to-peer over your local Wi-Fi. No internet, cloud servers, or third-party relays are ever involved.
 
-Remote desktop tools are bloated, stream your entire screen with lag, and require cloud logins. Dedicated remote apps push subscriptions or require heavy runtimes.
+<br/>
 
-Pult does one job and does it with zero overhead:
+<img src="assets/readme/features.svg" width="100%" alt="Pult capabilities" />
 
-| Feature | Pult | Unified Remote | KDE Connect | TeamViewer / AnyDesk |
+<br/><br/>
+
+<img src="assets/readme/numbers.svg" width="100%" alt="Pult specifications" />
+
+<br/><br/>
+
+## Comparison
+
+| Dimension | Pult | Unified Remote | KDE Connect | TeamViewer / AnyDesk |
 |---|:---:|:---:|:---:|:---:|
-| **Zero accounts or sign-up** | ✅ | ⚠️ Push notifications | ✅ | ❌ Mandatory account |
-| **Zero cloud / 100% offline local Wi-Fi** | ✅ | ⚠️ Cloud telemetry | ✅ | ❌ Cloud relay |
-| **PC Host binary size** | **32 KB** | ~45 MB | ~110 MB | ~55 MB |
-| **Dependencies on PC** | **None** (Native Win32/C#) | .NET Runtimes | KDE runtime pack | Proprietary drivers |
-| **Real two-way volume sync (0-100%)** | ✅ Core Audio API | ⚠️ Blind keys | ⚠️ Blind keys | ❌ None |
-| **Start menu app scan & launchpad** | ✅ Native | ⚠️ Paid addon | ❌ | ❌ |
-| **Ultra-fast 60 fps wireless trackpad** | ✅ | ✅ | ✅ | ⚠️ High video lag |
-| **Kill frozen windows / Task switcher** | ✅ | ❌ | ❌ | ⚠️ Sluggish stream |
-| **Open source & MIT license** | ✅ | ❌ Proprietary | ✅ GPL | ❌ Proprietary |
+| **Accounts or sign-up** | None | Optional | None | Mandatory |
+| **Network path** | 100% offline LAN | Local + Telemetry | Local | Cloud relay |
+| **PC Host binary** | **40 KB** | ~45 MB | ~110 MB | ~55 MB |
+| **Host dependencies** | None (Native Win32/C#) | .NET Runtimes | KDE runtime pack | Proprietary drivers |
+| **Volume control** | Core Audio COM (0-100%) | Blind key simulation | Blind key simulation | None |
+| **Start menu launchpad** | Automatic with cached icons | Paid addon | None | None |
+| **Wireless trackpad** | 60 fps relative delta | 60 fps | 60 fps | High video stream lag |
+| **Task / window manager** | Native list & force kill | None | None | Slow video feed |
+| **License** | Open source (MIT) | Proprietary | Open source (GPL) | Proprietary |
 
----
+<br/>
 
-## Key Capabilities
+## Capabilities
 
-### ⚡ 1. Launchpad & Quick Apps
-* Scans shortcuts from Windows Start Menu and Desktop automatically.
-* Instant fuzzy search as you type.
-* Extracts 96×96 crisp PNG icons from executables with in-memory caching.
-* Long-press any app to pin it to your favorites with priority positioning.
-
-### 🔊 2. Hardware Audio Sync
+### Master Volume & Mute
 * Direct integration with Windows Core Audio (`IAudioEndpointVolume`).
-* Live two-way volume slider: change volume on your PC with physical keyboard keys, and the phone slider updates instantly.
+* Live two-way volume slider: adjust volume on your PC with physical keyboard keys, and the phone slider updates instantaneously.
 * Instant Mute toggle with clear visual badge.
 
-### 🖱️ 3. Smooth Wireless Trackpad
-* 60 fps responsive touch surface with haptic feedback.
-* **Gestures**:
-  * Tap = Left click
-  * Double tap = Double click
-  * Long press = Right click
-  * Two-finger swipe or scroll arrows = Smooth page scrolling
-* Large physical LKM / PKM thumb buttons at the bottom.
+### 60 FPS Wireless Trackpad
+* Smooth relative cursor motion with hardware-assisted touch delta calculation.
+* Native gesture support:
+  * **Single tap:** Left click
+  * **Double tap:** Double click
+  * **Long press:** Right click
+  * **Two-finger swipe / scroll arrows:** Smooth vertical page scrolling
+* Dedicated physical thumb buttons for left and right click.
 
-### 🔒 4. System & Power
-* Lock screen (`Win + L`) in one touch.
-* Show Desktop (`Win + D`) and switch apps (`Alt + Tab`).
-* Power down monitors to save electricity.
-* Sleep mode, reboot, and timed shutdown with safety confirmation dialog and one-click abort (`shutdown /a`).
+### Start Menu Launchpad
+* Automatically indexes applications from Windows Start Menu and Desktop shortcuts.
+* Instant fuzzy search as you type.
+* Extracts 96×96 crisp PNG icons directly from executables with in-memory caching.
+* Long-press any app to pin it to your favorites dock.
 
-### 🪟 5. Task & Window Switcher
-* Lists all active windows currently running on your PC.
-* Bring any window to the front or kill hung processes cleanly (`WM_CLOSE`).
+### Task & Window Switcher
+* Inspect all top-level running application windows on your desktop.
+* Bring any window to the foreground with a single tap.
+* Cleanly terminate hanging or unresponsive processes (`WM_CLOSE`).
 
----
+### Power & System Deck
+* Lock workstation (`Win + L`) in one touch.
+* Toggle desktop (`Win + D`) and cycle applications (`Alt + Tab`).
+* Power down monitors into energy-saving standby.
+* Sleep, reboot, and timed shutdown with confirmation dialogs and one-click abort (`shutdown /a`).
+
+<br/>
 
 ## Quick Start
 
-### 1. Windows PC
-1. Download [`Pult.exe`](https://github.com/sailxx/Pult/releases/latest) (single standalone 32 KB binary).
-2. Run `Pult.exe` (sits quietly in your system notification tray).
-3. Right-click the tray icon > click **«Разрешить в брандмауэре»** (one-click Windows Firewall setup).
-4. Click the tray icon to see your PC's local IP and 6-digit PIN.
+### 1. Windows Host
+1. Download [`Pult.exe`](https://github.com/sailxx/Pult/releases/latest/download/Pult.exe) (single 40 KB executable, zero installer).
+2. Run `Pult.exe`. The remote icon will appear in your system notification tray.
+3. Right-click the tray icon and select **«Разрешить в брандмауэре»** for automatic Windows Firewall setup.
+4. Left-click the tray icon to see your PC's local IP and current 6-digit security PIN.
 
-### 2. Android Phone
-1. Download and install [`Pult.apk`](https://github.com/sailxx/Pult/releases/latest).
-2. Tap **«Поиск ПК»** for instant automatic discovery over UDP broadcast.
+### 2. Android Client
+1. Download and install [`Pult.apk`](https://github.com/sailxx/Pult/releases/latest/download/Pult.apk).
+2. Tap **«Поиск ПК»** for automatic UDP discovery over your local Wi-Fi.
 3. Enter the 6-digit PIN and tap **«Подключить»**.
 
----
+<br/>
 
 ## Network Architecture
 
@@ -136,43 +137,29 @@ Pult does one job and does it with zero overhead:
 └─────────────────────────────────┘  Local Network  └─────────────────────────────────┘
 ```
 
-- **Discovery (UDP 47801)**: Broadcast discovery with automated fallback to parallel subnet sweep if router client isolation is active.
-- **REST API (TCP 47800)**: Direct socket server with cryptographically secure PIN authentication (`RandomNumberGenerator`) and brute-force lockout (10 failed tries = 60-second lock).
+* **Discovery (UDP 47801):** Broadcast beacon with automatic subnet sweep fallback if router client isolation is active.
+* **REST API (TCP 47800):** Lightweight HTTP server with cryptographically secure PIN authentication (`RandomNumberGenerator`) and brute-force lockout (10 failed tries = 60-second lock).
 
 Full API endpoints and curl examples are documented in [docs/PROTOCOL.md](docs/PROTOCOL.md).
 
----
+<br/>
 
 ## Building from Source
 
-### Windows Host (0 SDKs needed)
-Built with the standard C# compiler shipped in every Windows installation:
+### Windows Host (Zero SDKs required)
+Compiles directly with the native C# compiler present on every modern Windows installation:
 ```cmd
 host\build.cmd
 ```
 
 ### Android Client
-Built with modern Kotlin and Gradle:
+Built with Kotlin and Jetpack Compose:
 ```bash
 cd android
 ./gradlew assembleRelease
 ```
 
----
-
-## Releases & Downloads
-
-Pre-built binaries are signed and available under **[Releases](https://github.com/sailxx/Pult/releases)**:
-* **Windows**: `Pult.exe` (32 KB standalone)
-* **Android**: `Pult.apk` (Optimized APK)
-
----
-
-## Contributing
-
-Pull requests and bug reports are welcome! Check [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for contribution guidelines.
-
----
+<br/>
 
 ## License
 

@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="330" viewBox="0 0 880 330" role="img" aria-label="Pult capabilities">
+<style>
+.r{animation:rise .8s cubic-bezier(.2,.8,.2,1) backwards}
+.glow{animation:drift 16s ease-in-out infinite}
+.glow2{animation:drift 18s ease-in-out -8s infinite reverse}
+.sweep{animation:sweep 7s ease-in-out infinite}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,20px)}}
+@keyframes sweep{0%{transform:translateX(-120%)}50%,100%{transform:translateX(220%)}}
+@media (prefers-reduced-motion:reduce){.r,.glow,.glow2,.sweep{animation:none}}
+</style>
+<defs>
+<radialGradient id="fg1" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#38BDF8" stop-opacity="0.14"/>
+  <stop offset="1" stop-color="#38BDF8" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="fg2" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#6366F1" stop-opacity=".12"/>
+  <stop offset="1" stop-color="#6366F1" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="fcg" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#161920"/>
+  <stop offset="1" stop-color="#0C0E13"/>
+</linearGradient>
+<linearGradient id="fhl" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#FFF" stop-opacity="0"/>
+  <stop offset=".5" stop-color="#FFF" stop-opacity=".22"/>
+  <stop offset="1" stop-color="#FFF" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="ftg" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#FFFFFF"/>
+  <stop offset="1" stop-color="#BAE6FD"/>
+</linearGradient>
+<linearGradient id="fbg" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#0D0F14"/>
+  <stop offset="1" stop-color="#060709"/>
+</linearGradient>
+<linearGradient id="fsw" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#FFF" stop-opacity="0"/>
+  <stop offset=".5" stop-color="#FFF" stop-opacity=".05"/>
+  <stop offset="1" stop-color="#FFF" stop-opacity="0"/>
+</linearGradient>
+<clipPath id="fclip"><rect width="880" height="330" rx="20"/></clipPath>
+</defs>
+
+<g clip-path="url(#fclip)">
+  <rect width="880" height="330" fill="url(#fbg)"/>
+  <circle class="glow" cx="740" cy="80" r="220" fill="url(#fg1)"/>
+  <circle class="glow2" cx="120" cy="270" r="190" fill="url(#fg2)"/>
+  <rect class="sweep" x="0" y="0" width="320" height="330" fill="url(#fsw)"/>
+</g>
+<rect x=".5" y=".5" width="879" height="329" rx="20" fill="none" stroke="#222834"/>
+
+<!-- Badge -->
+<g class="r">
+  <rect x="36" y="28" width="132" height="26" rx="7" fill="#151922" stroke="#2B3242"/>
+  <circle cx="48" cy="41" r="3.5" fill="#38BDF8"/>
+  <text x="60" y="45" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1" fill="#FFFFFF">CAPABILITIES</text>
+</g>
+
+<!-- Title -->
+<g class="r" style="animation-delay:0.08s">
+  <text x="36" y="90" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="26" font-weight="800" letter-spacing="-.5" fill="#FFFFFF">
+    Complete desktop command. <tspan fill="url(#ftg)">Right from your phone.</tspan>
+  </text>
+</g>
+
+<!-- Card 1: Volume -->
+<g class="r" style="animation-delay:0.16s">
+  <rect x="36" y="118" width="392" height="86" rx="14" fill="url(#fcg)" stroke="#262D3D"/>
+  <rect x="52" y="118.5" width="360" height="1" fill="url(#fhl)"/>
+  <!-- Speaker Icon -->
+  <g fill="#38BDF8" transform="translate(56 138)">
+    <path d="M0 6V14H6L13 20V0L6 6H0ZM16 4.5V7C17.8 7.9 19 9.8 19 12C19 14.2 17.8 16.1 16 17V19.5C19.2 18.4 21.5 15.5 21.5 12C21.5 8.5 19.2 5.6 16 4.5Z"/>
+  </g>
+  <text x="92" y="145" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">Master Hardware Volume</text>
+  <text x="92" y="167" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="400" fill="#8B949E">Two-way Windows Core Audio COM sync, slider, and quick mute</text>
+</g>
+
+<!-- Card 2: Trackpad -->
+<g class="r" style="animation-delay:0.24s">
+  <rect x="448" y="118" width="392" height="86" rx="14" fill="url(#fcg)" stroke="#262D3D"/>
+  <rect x="464" y="118.5" width="360" height="1" fill="url(#fhl)"/>
+  <!-- Mouse Icon -->
+  <g fill="#A78BFA" transform="translate(468 138)">
+    <rect x="3" y="1" width="14" height="20" rx="7" fill="none" stroke="#A78BFA" stroke-width="2"/>
+    <line x1="10" y1="5" x2="10" y2="9" stroke="#A78BFA" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <text x="504" y="145" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">60 FPS Touch Trackpad</text>
+  <text x="504" y="167" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="400" fill="#8B949E">Relative cursor delta, tap-to-click, smooth wheel and drag</text>
+</g>
+
+<!-- Card 3: Tasks -->
+<g class="r" style="animation-delay:0.32s">
+  <rect x="36" y="218" width="392" height="86" rx="14" fill="url(#fcg)" stroke="#262D3D"/>
+  <rect x="52" y="218.5" width="360" height="1" fill="url(#fhl)"/>
+  <!-- Window Icon -->
+  <g fill="#34D399" transform="translate(56 238)">
+    <rect x="1" y="2" width="18" height="16" rx="3" fill="none" stroke="#34D399" stroke-width="2"/>
+    <line x1="1" y1="7" x2="19" y2="7" stroke="#34D399" stroke-width="2"/>
+    <circle cx="5" cy="4.5" r="1" fill="#34D399"/>
+    <circle cx="8" cy="4.5" r="1" fill="#34D399"/>
+  </g>
+  <text x="92" y="245" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">Task &amp; Window Manager</text>
+  <text x="92" y="267" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="400" fill="#8B949E">List active Windows, bring to front, or close frozen processes</text>
+</g>
+
+<!-- Card 4: Power -->
+<g class="r" style="animation-delay:0.40s">
+  <rect x="448" y="218" width="392" height="86" rx="14" fill="url(#fcg)" stroke="#262D3D"/>
+  <rect x="464" y="218.5" width="360" height="1" fill="url(#fhl)"/>
+  <!-- Power Icon -->
+  <g fill="#F87171" transform="translate(468 238)">
+    <path d="M10 2V10M5.5 5.5C3.3 7.3 2 10 2 13C2 17.4 5.6 21 10 21C14.4 21 18 17.4 18 13C18 10 16.7 7.3 14.5 5.5" fill="none" stroke="#F87171" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <text x="504" y="245" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">Power &amp; System Hub</text>
+  <text x="504" y="267" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="400" fill="#8B949E">Instant Win+L lock, sleep, monitor off, restart and abort</text>
+</g>
+</svg>

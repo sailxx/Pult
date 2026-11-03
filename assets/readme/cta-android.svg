@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="52" viewBox="0 0 260 52" role="img" aria-label="Download Pult for Android">
+<style>
+.btn{cursor:pointer;transition:transform .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.sweep{animation:sweep 5s ease-in-out infinite 0.8s}
+@keyframes sweep{0%{transform:translateX(-120%)}40%,100%{transform:translateX(240%)}}
+@media (prefers-reduced-motion:reduce){.sweep{animation:none}}
+</style>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#1F242D"/>
+  <stop offset="1" stop-color="#12151B"/>
+</linearGradient>
+<linearGradient id="hl" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/>
+  <stop offset=".5" stop-color="#FFFFFF" stop-opacity=".35"/>
+  <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="sw" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/>
+  <stop offset=".5" stop-color="#FFFFFF" stop-opacity=".12"/>
+  <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+</linearGradient>
+<clipPath id="btnClip"><rect width="260" height="52" rx="14"/></clipPath>
+</defs>
+
+<g class="btn" clip-path="url(#btnClip)">
+  <rect width="260" height="52" rx="14" fill="url(#bg)" stroke="#303846" stroke-width="1.5"/>
+  <rect class="sweep" x="0" y="0" width="100" height="52" fill="url(#sw)"/>
+  <rect x="20" y="1" width="220" height="1" fill="url(#hl)"/>
+  
+  <!-- Android Icon -->
+  <g fill="#FFFFFF" transform="translate(18 16)">
+    <path d="M4.5 13.5C3.7 13.5 3 14.2 3 15V18.5C3 19.3 3.7 20 4.5 20C5.3 20 6 19.3 6 18.5V15C6 14.2 5.3 13.5 4.5 13.5ZM17.5 13.5C16.7 13.5 16 14.2 16 15V18.5C16 19.3 16.7 20 17.5 20C18.3 20 19 19.3 19 18.5V15C19 14.2 18.3 13.5 17.5 13.5ZM6.8 10.2L5.4 7.8C5.2 7.5 5.3 7.1 5.6 6.9C5.9 6.7 6.3 6.8 6.5 7.1L7.9 9.6C9.1 9.1 10.5 8.8 12 8.8C13.5 8.8 14.9 9.1 16.1 9.6L17.5 7.1C17.7 6.8 18.1 6.7 18.4 6.9C18.7 7.1 18.8 7.5 18.6 7.8L17.2 10.2C19 11.4 20.3 13.3 20.5 15.5H3.5C3.7 13.3 5 11.4 6.8 10.2ZM9.5 13C9.5 12.4 9 12 8.5 12C8 12 7.5 12.4 7.5 13C7.5 13.6 8 14 8.5 14C9 14 9.5 13.6 9.5 13ZM16.5 13C16.5 12.4 16 12 15.5 12C15 12 14.5 12.4 14.5 13C14.5 13.6 15 14 15.5 14C16 14 16.5 13.6 16.5 13Z"/>
+  </g>
+  
+  <!-- Typography -->
+  <text x="50" y="24" fill="#FFFFFF" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2">Download for Android</text>
+  <text x="50" y="39" fill="#8B949E" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="400">Pult.apk · Android 8.0+ · AMOLED</text>
+</g>
+</svg>
