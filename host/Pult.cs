@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-[assembly: System.Reflection.AssemblyVersion("0.1.0.0")]
+[assembly: System.Reflection.AssemblyVersion("0.2.0.0")]
 
 static class Program
 {
@@ -43,7 +43,8 @@ static class Program
             Discovery.Start();
 
             tray = new NotifyIcon();
-            tray.Icon = SystemIcons.Application;
+            try { tray.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath); }
+            catch { tray.Icon = SystemIcons.Application; }
             tray.Text = "Pult";
             tray.Visible = true;
             var menu = new ContextMenuStrip();
@@ -116,8 +117,6 @@ static class Firewall
         Run("advfirewall firewall add rule name=\"" + Rule + " discovery\" dir=in action=allow protocol=UDP localport=" + Program.UdpPort + " profile=any");
     }
 
-    // The default network profile is often "Public", which blocks incoming connections;
-    // the rules above allow the two ports on every profile.
     public static void RunElevated()
     {
         try
@@ -222,24 +221,320 @@ static class Apps
     }
 }
 
+// ----------------- Core Audio Volume API (COM Interop) -----------------
+[ComImport]
+[Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
+class MMDeviceEnumeratorComObject { }
+
+[Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IMMDeviceEnumerator
+{
+    int EnumAudioEndpoints(int dataFlow, int stateMask, out IntPtr devices);
+    int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDevice endpoint);
+}
+
+[Guid("D666063F-1587-4E43-81F1-B948E807363F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IMMDevice
+{
+    int Activate(ref Guid iid, int clsCtx, IntPtr activationParams, [MarshalAs(UnmanagedType.IUnknown)] out object interfacePointer);
+}
+
+[Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface IAudioEndpointVolume
+{
+    int RegisterControlChangeNotify(IntPtr notify);
+    int UnregisterControlChangeNotify(IntPtr notify);
+    int GetChannelCount(out uint channelCount);
+    int SetMasterVolumeLevel(float levelDB, ref Guid eventContext);
+    int SetMasterVolumeLevelScalar(float level, ref Guid eventContext);
+    int GetMasterVolumeLevel(out float levelDB);
+    int GetMasterVolumeLevelScalar(out float level);
+    int SetChannelVolumeLevel(uint channelNumber, float levelDB, ref Guid eventContext);
+    int SetChannelVolumeLevelScalar(uint channelNumber, float level, ref Guid eventContext);
+    int GetChannelVolumeLevel(uint channelNumber, out float levelDB);
+    int GetChannelVolumeLevelScalar(uint channelNumber, out float level);
+    int SetMute([MarshalAs(UnmanagedType.Bool)] bool isMuted, ref Guid eventContext);
+    int GetMute([MarshalAs(UnmanagedType.Bool)] out bool isMuted);
+    int GetVolumeStepInfo(out uint step, out uint stepCount);
+    int VolumeStepUp(ref Guid eventContext);
+    int VolumeStepDown(ref Guid eventContext);
+    int QueryHardwareSupport(out uint hardwareSupportMask);
+    int GetVolumeRange(out float volumeMinDB, out float volumeMaxDB, out float volumeIncrementDB);
+}
+
+static class Audio
+{
+    static IAudioEndpointVolume GetVolume()
+    {
+        var enumerator = (IMMDeviceEnumerator)new MMDeviceEnumeratorComObject();
+        IMMDevice device;
+        enumerator.GetDefaultAudioEndpoint(0, 1, out device);
+        var iid = new Guid("5CDF2C82-841E-4546-9722-0CF74078229A");
+        object o;
+        device.Activate(ref iid, 1, IntPtr.Zero, out o);
+        return (IAudioEndpointVolume)o;
+    }
+
+    public static bool GetState(out int volumePercent, out bool muted)
+    {
+        try
+        {
+            var vol = GetVolume();
+            float level;
+            vol.GetMasterVolumeLevelScalar(out level);
+            vol.GetMute(out muted);
+            volumePercent = (int)Math.Round(level * 100f);
+            return true;
+        }
+        catch
+        {
+            volumePercent = 50;
+            muted = false;
+            return false;
+        }
+    }
+
+    public static bool SetVolume(int percent)
+    {
+        try
+        {
+            var vol = GetVolume();
+            float level = Math.Max(0f, Math.Min(100f, percent)) / 100f;
+            var g = Guid.Empty;
+            vol.SetMasterVolumeLevelScalar(level, ref g);
+            return true;
+        }
+        catch { return false; }
+    }
+
+    public static bool SetMute(bool? targetMute)
+    {
+        try
+        {
+            var vol = GetVolume();
+            bool current;
+            vol.GetMute(out current);
+            bool val = targetMute.HasValue ? targetMute.Value : !current;
+            var g = Guid.Empty;
+            vol.SetMute(val, ref g);
+            return true;
+        }
+        catch { return false; }
+    }
+}
+
+// ----------------- Keys & Mouse Control -----------------
 static class Keys
 {
     [DllImport("user32.dll")] static extern void keybd_event(byte vk, byte scan, uint flags, UIntPtr extra);
 
-    static readonly Dictionary<string, byte> map = new Dictionary<string, byte> {
+    static readonly Dictionary<string, byte> map = new Dictionary<string, byte>(StringComparer.OrdinalIgnoreCase) {
         { "playpause", 0xB3 }, { "next", 0xB0 }, { "prev", 0xB1 }, { "stop", 0xB2 },
-        { "volup", 0xAF }, { "voldown", 0xAE }, { "mute", 0xAD } };
+        { "volup", 0xAF }, { "voldown", 0xAE }, { "mute", 0xAD },
+        { "enter", 0x0D }, { "esc", 0x1B }, { "space", 0x20 }, { "backspace", 0x08 },
+        { "tab", 0x09 }, { "up", 0x26 }, { "down", 0x28 }, { "left", 0x25 }, { "right", 0x27 }
+    };
 
     public static bool Press(string name)
     {
         byte vk;
         if (!map.TryGetValue(name, out vk)) return false;
-        keybd_event(vk, 0, 1, UIntPtr.Zero);  // KEYEVENTF_EXTENDEDKEY
-        keybd_event(vk, 0, 3, UIntPtr.Zero);  // + KEYEVENTF_KEYUP
+        keybd_event(vk, 0, 1, UIntPtr.Zero);
+        keybd_event(vk, 0, 3, UIntPtr.Zero);
         return true;
+    }
+
+    public static void SendWinD()
+    {
+        // Win + D (Toggle Desktop)
+        keybd_event(0x5B, 0, 1, UIntPtr.Zero); // LWIN down
+        keybd_event(0x44, 0, 0, UIntPtr.Zero); // D down
+        keybd_event(0x44, 0, 2, UIntPtr.Zero); // D up
+        keybd_event(0x5B, 0, 2, UIntPtr.Zero); // LWIN up
+    }
+
+    public static void SendAltTab()
+    {
+        // Alt + Tab
+        keybd_event(0x12, 0, 1, UIntPtr.Zero); // ALT down
+        keybd_event(0x09, 0, 0, UIntPtr.Zero); // TAB down
+        keybd_event(0x09, 0, 2, UIntPtr.Zero); // TAB up
+        keybd_event(0x12, 0, 2, UIntPtr.Zero); // ALT up
     }
 }
 
+static class Mouse
+{
+    [DllImport("user32.dll")] static extern void mouse_event(uint flags, int dx, int dy, int data, UIntPtr extra);
+    [DllImport("user32.dll")] static extern bool GetCursorPos(out POINT lpPoint);
+    [DllImport("user32.dll")] static extern bool SetCursorPos(int X, int Y);
+
+    [StructLayout(LayoutKind.Sequential)]
+    struct POINT { public int X; public int Y; }
+
+    const uint MOUSEEVENTF_MOVE = 0x0001;
+    const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
+    const uint MOUSEEVENTF_LEFTUP = 0x0004;
+    const uint MOUSEEVENTF_RIGHTDOWN = 0x0008;
+    const uint MOUSEEVENTF_RIGHTUP = 0x0010;
+    const uint MOUSEEVENTF_MIDDLEDOWN = 0x0020;
+    const uint MOUSEEVENTF_MIDDLEUP = 0x0040;
+    const uint MOUSEEVENTF_WHEEL = 0x0800;
+
+    public static void Move(int dx, int dy)
+    {
+        mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, UIntPtr.Zero);
+    }
+
+    public static void Click(string btn)
+    {
+        if (btn == "right")
+        {
+            mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, UIntPtr.Zero);
+            mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, UIntPtr.Zero);
+        }
+        else if (btn == "middle")
+        {
+            mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, UIntPtr.Zero);
+            mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, UIntPtr.Zero);
+        }
+        else if (btn == "double")
+        {
+            Click("left");
+            Thread.Sleep(50);
+            Click("left");
+        }
+        else
+        {
+            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
+            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
+        }
+    }
+
+    public static void Down(string btn)
+    {
+        uint f = btn == "right" ? MOUSEEVENTF_RIGHTDOWN : btn == "middle" ? MOUSEEVENTF_MIDDLEDOWN : MOUSEEVENTF_LEFTDOWN;
+        mouse_event(f, 0, 0, 0, UIntPtr.Zero);
+    }
+
+    public static void Up(string btn)
+    {
+        uint f = btn == "right" ? MOUSEEVENTF_RIGHTUP : btn == "middle" ? MOUSEEVENTF_MIDDLEUP : MOUSEEVENTF_LEFTUP;
+        mouse_event(f, 0, 0, 0, UIntPtr.Zero);
+    }
+
+    public static void Scroll(int delta)
+    {
+        mouse_event(MOUSEEVENTF_WHEEL, 0, 0, delta, UIntPtr.Zero);
+    }
+}
+
+static class SystemPower
+{
+    [DllImport("user32.dll")] static extern bool LockWorkStation();
+    [DllImport("PowrProf.dll", SetLastError = true)] static extern bool SetSuspendState(bool hibernate, bool forceCritical, bool disableWakeEvent);
+    [DllImport("user32.dll")] static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+    const int HWND_BROADCAST = 0xFFFF;
+    const uint WM_SYSCOMMAND = 0x0112;
+    static readonly IntPtr SC_MONITORPOWER = new IntPtr(0xF170);
+
+    public static void Execute(string action)
+    {
+        switch (action.ToLowerInvariant())
+        {
+            case "lock":
+                LockWorkStation();
+                break;
+            case "sleep":
+                SetSuspendState(false, true, false);
+                break;
+            case "monitors_off":
+                SendMessage(new IntPtr(HWND_BROADCAST), WM_SYSCOMMAND, SC_MONITORPOWER, new IntPtr(2));
+                break;
+            case "desktop":
+                Keys.SendWinD();
+                break;
+            case "alttab":
+                Keys.SendAltTab();
+                break;
+            case "shutdown":
+                Process.Start("shutdown", "/s /t 30 /c \"Pult Remote Shutdown\"");
+                break;
+            case "restart":
+                Process.Start("shutdown", "/r /t 30 /c \"Pult Remote Restart\"");
+                break;
+            case "cancel_shutdown":
+                Process.Start("shutdown", "/a");
+                break;
+        }
+    }
+}
+
+class WindowItem
+{
+    public IntPtr Hwnd;
+    public string Title;
+    public string ProcessName;
+}
+
+static class WindowTasks
+{
+    delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+    [DllImport("user32.dll")] static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
+    [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr hWnd);
+    [DllImport("user32.dll")] static extern int GetWindowText(IntPtr hWnd, StringBuilder strText, int maxCount);
+    [DllImport("user32.dll")] static extern int GetWindowTextLength(IntPtr hWnd);
+    [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
+    [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr hWnd);
+    [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+    [DllImport("user32.dll")] static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+    const int SW_RESTORE = 9;
+    const uint WM_CLOSE = 0x0010;
+
+    public static List<WindowItem> List()
+    {
+        var list = new List<WindowItem>();
+        try
+        {
+            EnumWindows(delegate(IntPtr hWnd, IntPtr lParam)
+            {
+                if (!IsWindowVisible(hWnd)) return true;
+                int len = GetWindowTextLength(hWnd);
+                if (len == 0) return true;
+                var sb = new StringBuilder(len + 1);
+                GetWindowText(hWnd, sb, sb.Capacity);
+                var title = sb.ToString().Trim();
+                if (string.IsNullOrEmpty(title)) return true;
+                if (title == "Program Manager" || title == "Windows Input Experience" || title == "Settings") return true;
+
+                uint pid;
+                GetWindowThreadProcessId(hWnd, out pid);
+                string proc = "";
+                try { proc = Process.GetProcessById((int)pid).ProcessName; } catch { }
+
+                list.Add(new WindowItem { Hwnd = hWnd, Title = title, ProcessName = proc });
+                return true;
+            }, IntPtr.Zero);
+        }
+        catch { }
+        return list;
+    }
+
+    public static void Switch(IntPtr hwnd)
+    {
+        ShowWindow(hwnd, SW_RESTORE);
+        SetForegroundWindow(hwnd);
+    }
+
+    public static void Close(IntPtr hwnd)
+    {
+        SendMessage(hwnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+    }
+}
+
+// ----------------- HTTP Server -----------------
 static class Server
 {
     static int failures;
@@ -276,8 +571,8 @@ static class Server
         {
             try
             {
-                c.ReceiveTimeout = 5000;
-                c.SendTimeout = 5000;
+                c.ReceiveTimeout = 6000;
+                c.SendTimeout = 6000;
                 var s = c.GetStream();
                 var head = ReadHead(s);
                 if (head == null) return;
@@ -296,7 +591,10 @@ static class Server
 
                 if (path == "/ping")
                 {
-                    Send(s, 200, "application/json", Json("{\"app\":\"pult\",\"name\":" + Q(Environment.MachineName) + ",\"port\":" + Program.HttpPort + "}"));
+                    int vol; bool muted;
+                    Audio.GetState(out vol, out muted);
+                    Send(s, 200, "application/json", Json("{\"app\":\"pult\",\"name\":" + Q(Environment.MachineName) +
+                        ",\"port\":" + Program.HttpPort + ",\"version\":\"0.2\",\"volume\":" + vol + ",\"muted\":" + (muted ? "true" : "false") + "}"));
                     return;
                 }
                 if (!Authorized(pin)) { Send(s, 401, "application/json", Json("{\"error\":\"pin\"}")); return; }
@@ -329,11 +627,109 @@ static class Server
                     Apps.Launch(a);
                     Send(s, 200, "application/json", Json("{\"ok\":true}"));
                 }
+                else if (path == "/volume")
+                {
+                    if (method == "POST")
+                    {
+                        string setVal;
+                        if (query.TryGetValue("set", out setVal))
+                        {
+                            int val;
+                            if (int.TryParse(setVal, out val)) Audio.SetVolume(val);
+                        }
+                        string muteVal;
+                        if (query.TryGetValue("mute", out muteVal))
+                        {
+                            if (muteVal == "toggle") Audio.SetMute(null);
+                            else if (muteVal == "true" || muteVal == "1") Audio.SetMute(true);
+                            else if (muteVal == "false" || muteVal == "0") Audio.SetMute(false);
+                        }
+                        string stepVal;
+                        if (query.TryGetValue("step", out stepVal))
+                        {
+                            int step;
+                            if (int.TryParse(stepVal, out step))
+                            {
+                                int cur; bool m;
+                                Audio.GetState(out cur, out m);
+                                Audio.SetVolume(cur + step);
+                            }
+                        }
+                    }
+                    int v; bool isMuted;
+                    Audio.GetState(out v, out isMuted);
+                    Send(s, 200, "application/json", Json("{\"volume\":" + v + ",\"muted\":" + (isMuted ? "true" : "false") + ",\"ok\":true}"));
+                }
                 else if (path == "/key" && method == "POST")
                 {
                     string name; query.TryGetValue("name", out name);
                     var ok = Keys.Press(name ?? "");
                     Send(s, ok ? 200 : 400, "application/json", Json("{\"ok\":" + (ok ? "true" : "false") + "}"));
+                }
+                else if (path == "/mouse" && method == "POST")
+                {
+                    string dxStr, dyStr;
+                    if (query.TryGetValue("dx", out dxStr) && query.TryGetValue("dy", out dyStr))
+                    {
+                        int dx, dy;
+                        if (int.TryParse(dxStr, out dx) && int.TryParse(dyStr, out dy)) Mouse.Move(dx, dy);
+                    }
+                    string click;
+                    if (query.TryGetValue("click", out click)) Mouse.Click(click);
+                    string down;
+                    if (query.TryGetValue("down", out down)) Mouse.Down(down);
+                    string up;
+                    if (query.TryGetValue("up", out up)) Mouse.Up(up);
+                    string scrollStr;
+                    if (query.TryGetValue("scroll", out scrollStr))
+                    {
+                        int scroll;
+                        if (int.TryParse(scrollStr, out scroll)) Mouse.Scroll(scroll);
+                    }
+                    Send(s, 200, "application/json", Json("{\"ok\":true}"));
+                }
+                else if (path == "/system" && method == "POST")
+                {
+                    string action; query.TryGetValue("action", out action);
+                    if (!string.IsNullOrEmpty(action)) SystemPower.Execute(action);
+                    Send(s, 200, "application/json", Json("{\"ok\":true}"));
+                }
+                else if (path == "/tasks")
+                {
+                    var tasks = WindowTasks.List();
+                    var sb = new StringBuilder("[");
+                    for (int i = 0; i < tasks.Count; i++)
+                    {
+                        if (i > 0) sb.Append(',');
+                        sb.Append("{\"id\":" + tasks[i].Hwnd.ToInt64() + ",\"title\":" + Q(tasks[i].Title) + ",\"proc\":" + Q(tasks[i].ProcessName) + "}");
+                    }
+                    sb.Append(']');
+                    Send(s, 200, "application/json", Json(sb.ToString()));
+                }
+                else if (path == "/tasks/switch" && method == "POST")
+                {
+                    string idStr; query.TryGetValue("id", out idStr);
+                    long hwnd;
+                    if (long.TryParse(idStr, out hwnd)) WindowTasks.Switch(new IntPtr(hwnd));
+                    Send(s, 200, "application/json", Json("{\"ok\":true}"));
+                }
+                else if (path == "/tasks/close" && method == "POST")
+                {
+                    string idStr; query.TryGetValue("id", out idStr);
+                    long hwnd;
+                    if (long.TryParse(idStr, out hwnd)) WindowTasks.Close(new IntPtr(hwnd));
+                    Send(s, 200, "application/json", Json("{\"ok\":true}"));
+                }
+                else if (path == "/keyboard" && method == "POST")
+                {
+                    string key;
+                    if (query.TryGetValue("key", out key)) Keys.Press(key);
+                    string text;
+                    if (query.TryGetValue("text", out text) && !string.IsNullOrEmpty(text))
+                    {
+                        try { SendKeys.SendWait(text); } catch { }
+                    }
+                    Send(s, 200, "application/json", Json("{\"ok\":true}"));
                 }
                 else Send(s, 404, "application/json", Json("{\"error\":\"not found\"}"));
             }

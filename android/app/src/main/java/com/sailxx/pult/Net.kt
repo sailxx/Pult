@@ -19,8 +19,10 @@ import java.net.URLEncoder
 const val HTTP_PORT = 47800
 const val UDP_PORT = 47801
 
-data class Host(val ip: String, val name: String)
+data class Host(val ip: String, val name: String, val volume: Int = 50, val muted: Boolean = false)
 data class AppItem(val id: String, val name: String)
+data class VolumeState(val volume: Int, val muted: Boolean)
+data class TaskItem(val id: Long, val title: String, val proc: String)
 
 class WrongPin : Exception()
 
@@ -50,7 +52,6 @@ class Client(private val ip: String, private val pin: String) {
 
     suspend fun apps(): List<AppItem> {
         val text = String(call("/apps", timeoutMs = 8000), Charsets.UTF_8)
-        // Ответ хоста простой: [{"id":"..","name":".."},...]
         val re = Regex("\"id\":\"([0-9a-f]+)\",\"name\":\"((?:[^\"\\\\]|\\\\.)*)\"")
         return re.findAll(text).map { AppItem(it.groupValues[1], unescape(it.groupValues[2])) }.toList()
     }
@@ -60,6 +61,76 @@ class Client(private val ip: String, private val pin: String) {
     suspend fun launch(id: String) { call("/launch?id=$id", "POST") }
 
     suspend fun key(name: String) { call("/key?name=${URLEncoder.encode(name, "UTF-8")}", "POST") }
+
+    suspend fun volume(): VolumeState {
+        val text = String(call("/volume"), Charsets.UTF_8)
+        val vol = Regex("\"volume\":([0-9]+)").find(text)?.groupValues?.get(1)?.toIntOrNull() ?: 50
+        val muted = text.contains("\"muted\":true")
+        return VolumeState(vol, muted)
+    }
+
+    suspend fun setVolume(percent: Int): VolumeState {
+        val p = percent.coerceIn(0, 100)
+        val text = String(call("/volume?set=$p", "POST"), Charsets.UTF_8)
+        val vol = Regex("\"volume\":([0-9]+)").find(text)?.groupValues?.get(1)?.toIntOrNull() ?: p
+        val muted = text.contains("\"muted\":true")
+        return VolumeState(vol, muted)
+    }
+
+    suspend fun toggleMute(): VolumeState {
+        val text = String(call("/volume?mute=toggle", "POST"), Charsets.UTF_8)
+        val vol = Regex("\"volume\":([0-9]+)").find(text)?.groupValues?.get(1)?.toIntOrNull() ?: 50
+        val muted = text.contains("\"muted\":true")
+        return VolumeState(vol, muted)
+    }
+
+    suspend fun system(action: String) {
+        call("/system?action=${URLEncoder.encode(action, "UTF-8")}", "POST")
+    }
+
+    suspend fun mouseMove(dx: Int, dy: Int) {
+        call("/mouse?dx=$dx&dy=$dy", "POST", timeoutMs = 1500)
+    }
+
+    suspend fun mouseClick(btn: String = "left") {
+        call("/mouse?click=$btn", "POST", timeoutMs = 1500)
+    }
+
+    suspend fun mouseDown(btn: String = "left") {
+        call("/mouse?down=$btn", "POST", timeoutMs = 1500)
+    }
+
+    suspend fun mouseUp(btn: String = "left") {
+        call("/mouse?up=$btn", "POST", timeoutMs = 1500)
+    }
+
+    suspend fun mouseScroll(delta: Int) {
+        call("/mouse?scroll=$delta", "POST", timeoutMs = 1500)
+    }
+
+    suspend fun tasks(): List<TaskItem> {
+        val text = String(call("/tasks", timeoutMs = 4000), Charsets.UTF_8)
+        val re = Regex("\"id\":(-?[0-9]+),\"title\":\"((?:[^\"\\\\]|\\\\.)*)\",\"proc\":\"((?:[^\"\\\\]|\\\\.)*)\"")
+        return re.findAll(text).map {
+            TaskItem(it.groupValues[1].toLong(), unescape(it.groupValues[2]), unescape(it.groupValues[3]))
+        }.toList()
+    }
+
+    suspend fun switchTask(id: Long) {
+        call("/tasks/switch?id=$id", "POST")
+    }
+
+    suspend fun closeTask(id: Long) {
+        call("/tasks/close?id=$id", "POST")
+    }
+
+    suspend fun keyboard(key: String) {
+        call("/keyboard?key=${URLEncoder.encode(key, "UTF-8")}", "POST")
+    }
+
+    suspend fun sendText(text: String) {
+        call("/keyboard?text=${URLEncoder.encode(text, "UTF-8")}", "POST")
+    }
 
     private fun unescape(s: String): String {
         val sb = StringBuilder()
@@ -90,7 +161,9 @@ suspend fun ping(ip: String, timeoutMs: Int = 800): Host? = withContext(Dispatch
             val body = c.inputStream.use { String(it.readBytes()) }
             if (!body.contains("\"pult\"")) return@withContext null
             val name = Regex("\"name\":\"([^\"]*)\"").find(body)?.groupValues?.get(1) ?: ip
-            Host(ip, name)
+            val vol = Regex("\"volume\":([0-9]+)").find(body)?.groupValues?.get(1)?.toIntOrNull() ?: 50
+            val muted = body.contains("\"muted\":true")
+            Host(ip, name, vol, muted)
         } finally {
             c.disconnect()
         }

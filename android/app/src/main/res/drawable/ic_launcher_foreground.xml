@@ -1,9 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp" android:height="108dp"
-    android:viewportWidth="108" android:viewportHeight="108">
-    <path android:fillColor="#E8B04A" android:pathData="M30,34h18v18H30z" />
-    <path android:fillColor="#E8B04A" android:pathData="M60,34h18v18H60z" />
-    <path android:fillColor="#E8B04A" android:pathData="M30,64h18v18H30z" />
-    <path android:fillColor="#6F7782" android:pathData="M60,64h18v18H60z" />
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Верхняя волна сигнала -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="6.5"
+        android:strokeLineCap="round"
+        android:pathData="M 40,16 Q 54,9 68,16" />
+
+    <!-- Корпус пульта -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="7"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M 48,24 h 12 a 16,16 0 0 1 16,16 v 38 a 16,16 0 0 1 -16,16 h -12 a 16,16 0 0 1 -16,-16 v -38 a 16,16 0 0 1 16,-16 z" />
+
+    <!-- Верхний индикатор / кнопка питания -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 54,34.5 a 3,3 0 1,0 0.1,0 z" />
+
+    <!-- Кольцо D-Pad -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4.5"
+        android:pathData="M 54,46 a 10,10 0 1,0 0.1,0 z" />
+
+    <!-- Центральная точка D-Pad -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 54,53.5 a 2.5,2.5 0 1,0 0.1,0 z" />
+
+    <!-- Нижняя левая кнопка (громкость -) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5.5"
+        android:strokeLineCap="round"
+        android:pathData="M 45,76 v 5" />
+
+    <!-- Нижняя правая кнопка (громкость +) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5.5"
+        android:strokeLineCap="round"
+        android:pathData="M 63,76 v 5" />
+
 </vector>
