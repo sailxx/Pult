@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="260" viewBox="0 0 1000 260" role="img" aria-label="Pult">
+<style>
+.logo{transform-box:fill-box;transform-origin:center;animation:pop 8s linear infinite}
+.l{animation:rise 8s linear infinite;opacity:0}
+@keyframes pop{0%{transform:scale(0) rotate(-40deg);opacity:0;animation-timing-function:cubic-bezier(.3,1.5,.5,1)}9%{transform:none;opacity:1}90%{transform:none;opacity:1}96%,100%{transform:scale(.6);opacity:0}}
+@keyframes rise{0%{transform:translateY(34px);opacity:0;animation-timing-function:cubic-bezier(.2,.9,.3,1)}8%{transform:none;opacity:1}90%{transform:none;opacity:1}96%,100%{transform:translateY(-14px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.logo,.l{animation:none;opacity:1}}
+</style>
+
+<!-- Animated Icon -->
+<g class="logo" transform="translate(316 74)">
+  <!-- Squircle Base -->
+  <rect x="0" y="0" width="112" height="112" rx="25" fill="#F3F4F6" stroke="#E5E7EB" stroke-width="2"/>
+  <!-- Remote Contour inside icon -->
+  <g transform="translate(13 13) scale(0.86)">
+    <!-- Signal wave -->
+    <path d="M 36 12 Q 50 4 64 12" fill="none" stroke="#111827" stroke-width="7" stroke-linecap="round"/>
+    <!-- Body -->
+    <rect x="28" y="20" width="44" height="70" rx="16" fill="none" stroke="#111827" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Power dot -->
+    <circle cx="50" cy="33" r="3.5" fill="#111827"/>
+    <!-- D-Pad -->
+    <circle cx="50" cy="52" r="10" fill="none" stroke="#111827" stroke-width="5"/>
+    <circle cx="50" cy="52" r="2.5" fill="#111827"/>
+    <!-- Buttons -->
+    <line x1="41" y1="72" x2="41" y2="76" stroke="#111827" stroke-width="6" stroke-linecap="round"/>
+    <line x1="59" y1="72" x2="59" y2="76" stroke="#111827" stroke-width="6" stroke-linecap="round"/>
+  </g>
+</g>
+
+<!-- Animated Letters 'Pult' -->
+<g fill="#111827">
+  <!-- P -->
+  <g transform="translate(464 165)">
+    <g class="l" style="animation-delay:0.35s">
+      <path d="M7.7 0L7.7 -77L39.05 -77Q49.83 -77 56.81 -73.86Q63.8 -70.73 67.1 -64.84Q70.4 -58.96 70.4 -50.71Q70.4 -42.57 67.1 -36.63Q63.8 -30.69 56.81 -27.55Q49.83 -24.42 39.05 -24.42L27.5 -24.42L27.5 0ZM27.5 -40.7L36.85 -40.7Q44.33 -40.7 47.47 -43.17Q50.6 -45.65 50.6 -50.71Q50.6 -55.66 47.47 -58.19Q44.33 -60.72 36.85 -60.72L27.5 -60.72Z"/>
+    </g>
+  </g>
+  <!-- u -->
+  <g transform="translate(538 165)">
+    <g class="l" style="animation-delay:0.42s">
+      <path d="M25.52 1.54Q15.51 1.54 10.23 -4.24Q4.95 -10.01 4.95 -21.67L4.95 -58.3L21.89 -58.3L21.89 -24.31Q21.89 -18.7 24.25 -15.73Q26.62 -12.76 31.79 -12.76Q35.64 -12.76 38.12 -14.3Q40.59 -15.84 41.8 -18.43Q43.01 -21.01 43.01 -24.31L43.01 -58.3L59.95 -58.3L59.95 0L44.33 0L44.33 -7.92Q42.02 -3.96 37.34 -1.21Q32.67 1.54 25.52 1.54Z"/>
+    </g>
+  </g>
+  <!-- l -->
+  <g transform="translate(604 165)">
+    <g class="l" style="animation-delay:0.49s">
+      <path d="M26.4 0.66Q19.36 0.66 14.85 -1.04Q10.34 -2.75 8.2 -7.32Q6.05 -11.88 6.05 -20.57L6.05 -77L22.99 -77L22.99 -23.1Q22.99 -17.71 24.48 -15.56Q25.96 -13.42 30.69 -13.42Q32.01 -13.42 32.89 -13.47Q33.77 -13.53 34.65 -13.64L34.65 0.22Q33.55 0.55 32.29 0.6Q31.02 0.66 29.54 0.66Q28.05 0.66 26.4 0.66Z"/>
+    </g>
+  </g>
+  <!-- t -->
+  <g transform="translate(641 165)">
+    <g class="l" style="animation-delay:0.56s">
+      <path d="M30.25 0.66Q22.99 0.66 18.37 -1.26Q13.75 -3.19 11.55 -7.65Q9.35 -12.1 9.35 -19.8L9.35 -44.44L2.2 -44.44L2.2 -58.3L9.35 -58.3L9.35 -71.5L26.29 -71.5L26.29 -58.3L39.6 -58.3L39.6 -44.44L26.29 -44.44L26.29 -22.66Q26.29 -17.6 27.89 -15.51Q29.48 -13.42 34.1 -13.42Q37.4 -13.42 40.7 -13.75L40.7 0.11Q38.61 0.33 36.3 0.49Q33.99 0.66 30.25 0.66Z"/>
+    </g>
+  </g>
+</g>
+</svg>

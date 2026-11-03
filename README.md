@@ -1,28 +1,29 @@
 <p align="center">
-  <img src="assets/icon.png" width="112" height="112" alt="Pult" />
-</p>
-
-<h1 align="center">Pult <span title="pult = remote control, in Russian and German">🎛️</span></h1>
-
-<p align="center">
-  <b>Fast, light, and private. Phone as a remote and dock for your Windows PC.</b>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/banner-dark.svg">
+    <img alt="Pult" src="assets/banner-light.svg" width="100%">
+  </picture>
 </p>
 
 <p align="center">
-  Control apps, volume, media playback, mouse, and power over local Wi-Fi in milliseconds.<br/>
-  Zero cloud. Zero accounts. Zero telemetry. Nothing leaves your local machine.
+  <b>Phone as a physical remote and desk dock for your Windows PC.</b>
 </p>
 
 <p align="center">
-  <a href="https://github.com/sailxx/pult/releases/latest"><img alt="Latest release" src="https://img.shields.io/badge/version-0.2.0-orange?style=for-the-badge" /></a>
-  <a href="https://github.com/sailxx/pult/releases/latest"><img alt="Platforms" src="https://img.shields.io/badge/platform-Windows%20%7C%20Android-blue?style=for-the-badge" /></a>
-  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-111111?style=for-the-badge" /></a>
-  <a href="https://github.com/sailxx/pult/actions/workflows/ci.yml"><img alt="CI status" src="https://img.shields.io/badge/build-passing-brightgreen?style=for-the-badge" /></a>
+  Control volume, media, app launches, active windows, and power over local Wi-Fi in milliseconds.<br/>
+  Zero cloud. Zero accounts. Zero telemetry. 32 KB host. Completely offline.
 </p>
 
 <p align="center">
-  <a href="#install">Install</a> •
-  <a href="#what-pult-does-that-the-others-dont">Why Pult</a> •
+  <a href="https://github.com/sailxx/Pult/releases/latest"><img alt="Latest release" src="https://img.shields.io/badge/release-v0.2.0-orange?style=flat-square" /></a>
+  <a href="https://github.com/sailxx/Pult/releases/latest"><img alt="Platforms" src="https://img.shields.io/badge/platform-Windows%20%7C%20Android-blue?style=flat-square" /></a>
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-black?style=flat-square" /></a>
+  <a href="https://github.com/sailxx/Pult/actions/workflows/ci.yml"><img alt="CI status" src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square" /></a>
+</p>
+
+<p align="center">
+  <a href="#quick-start">Quick Start</a> •
+  <a href="#why-pult">Why Pult</a> •
   <a href="#features">Features</a> •
   <a href="#how-it-works">How It Works</a> •
   <a href="docs/PROTOCOL.md">Protocol</a> •
@@ -31,133 +32,127 @@
 </p>
 
 <p align="center">
-  <img src="assets/hero.png" width="100%" alt="Pult - phone as a remote and dock for Windows PC" />
+  <img src="assets/hero.png" width="100%" alt="Pult - phone as a remote for Windows PC" />
 </p>
 
 ---
 
-## Control your PC from where you sit
+## What is Pult?
 
-You are watching a movie across the room, listening to music while cooking, or working with your phone docked beside your keyboard.
+Pult turns your Android phone into an instant hardware remote and second-screen dock for your Windows computer.
 
-- Skip the track or adjust the volume without reaching for your mouse.
-- Launch your favorite apps, games, or terminal in one tap.
-- Lock your workstation or put the monitors to sleep when you walk away.
-- Use your phone screen as a responsive wireless trackpad.
+It is designed for real everyday moments:
 
-Pult connects your Android smartphone directly to your Windows PC over Wi-Fi without cloud relays, logins, or tracking.
+* **Watching a movie from bed?** Pause playback, balance loud audio with the true volume slider, or turn off monitors without getting under the blankets.
+* **Phone sitting on a desk stand?** One-tap dock to launch your browser, Spotify, terminal, or games without searching through taskbars.
+* **Fullscreen game froze your mouse?** Open Pult on your phone, head to the Tasks tab, and kill the frozen window instantly.
+* **No internet or router offline?** Pult works strictly peer-to-peer over your local Wi-Fi router or hotspot.
 
 ---
 
-## What Pult does that the others don't
+## Why Pult over alternatives?
 
-Remote control tools are often bloated, demand accounts, route packets through cloud servers, or require heavy runtime environments. Pult takes the opposite approach.
+Remote desktop tools are bloated, stream your entire screen with lag, and require cloud logins. Dedicated remote apps push subscriptions or require heavy runtimes.
 
-| Capability | Pult | Unified Remote | KDE Connect | TeamViewer / AnyDesk |
+Pult does one job and does it with zero overhead:
+
+| Feature | Pult | Unified Remote | KDE Connect | TeamViewer / AnyDesk |
 |---|:---:|:---:|:---:|:---:|
-| **Zero accounts or sign-in** | ✅ | ⚠️ (Account pushes) | ✅ | ❌ (Mandatory account) |
-| **Zero cloud / strictly local network** | ✅ | ⚠️ | ✅ | ❌ (Cloud relay) |
-| **Host size & dependencies** | **32 KB** (Zero deps) | ~40 MB | ~100 MB | ~50 MB |
-| **No .NET SDK / Visual C++ needed** | ✅ (Built-in `csc`) | ❌ | ❌ | ❌ |
-| **Two-way hardware volume sync (0-100%)** | ✅ (Core Audio) | ⚠️ (Keys only) | ⚠️ | ❌ |
-| **Instant app launch & Start menu sync** | ✅ | ⚠️ (Paid add-on) | ❌ | ❌ |
-| **Touchpad & 60 fps gesture control** | ✅ | ✅ | ✅ | ⚠️ (Screen streaming lag) |
-| **Window & task switcher (Bring to front / Kill)** | ✅ | ❌ | ❌ | ⚠️ |
-| **Open source & MIT-licensed** | ✅ | ❌ (Proprietary) | ✅ (GPL) | ❌ (Proprietary) |
+| **Zero accounts or sign-up** | ✅ | ⚠️ Push notifications | ✅ | ❌ Mandatory account |
+| **Zero cloud / 100% offline local Wi-Fi** | ✅ | ⚠️ Cloud telemetry | ✅ | ❌ Cloud relay |
+| **PC Host binary size** | **32 KB** | ~45 MB | ~110 MB | ~55 MB |
+| **Dependencies on PC** | **None** (Native Win32/C#) | .NET Runtimes | KDE runtime pack | Proprietary drivers |
+| **Real two-way volume sync (0-100%)** | ✅ Core Audio API | ⚠️ Blind keys | ⚠️ Blind keys | ❌ None |
+| **Start menu app scan & launchpad** | ✅ Native | ⚠️ Paid addon | ❌ | ❌ |
+| **Ultra-fast 60 fps wireless trackpad** | ✅ | ✅ | ✅ | ⚠️ High video lag |
+| **Kill frozen windows / Task switcher** | ✅ | ❌ | ❌ | ⚠️ Sluggish stream |
+| **Open source & MIT license** | ✅ | ❌ Proprietary | ✅ GPL | ❌ Proprietary |
 
 ---
 
-## Features
+## Key Capabilities
 
-### ⚡ Fast & Instant
-- **Single-click launch**: Scans your Windows Start Menu and Desktop shortcuts, extracts high-res 96×96 icons, and launches apps via native shell execute.
-- **Real-time search**: Filter through hundreds of installed applications as you type.
-- **Favorites**: Long-press any app card to pin it to the top of your dock with a gold accent border.
+### ⚡ 1. Launchpad & Quick Apps
+* Scans shortcuts from Windows Start Menu and Desktop automatically.
+* Instant fuzzy search as you type.
+* Extracts 96×96 crisp PNG icons from executables with in-memory caching.
+* Long-press any app to pin it to your favorites with priority positioning.
 
-### 🔊 Two-Way Hardware Audio
-- **True volume slider**: Integrates directly with Windows Core Audio API (`IAudioEndpointVolume`). Unlike apps that simply send blind Volume Up/Down keystrokes, Pult reads the exact system audio level (0–100%) and updates in real-time.
-- **Instant mute toggle**: Hardware mute state sync with visual indicators.
+### 🔊 2. Hardware Audio Sync
+* Direct integration with Windows Core Audio (`IAudioEndpointVolume`).
+* Live two-way volume slider: change volume on your PC with physical keyboard keys, and the phone slider updates instantly.
+* Instant Mute toggle with clear visual badge.
 
-### 🖱️ Responsive Trackpad
-- **Ultra-low latency**: Touchpad stream tuned for 60 fps local Wi-Fi operation.
-- **Intuitive gestures**:
-  - Single tap: Left click
-  - Double tap: Double click
-  - Long press: Right click (context menu)
-  - Scroll buttons: Fast page up/down scroll
-- Dedicated ergonomic L/R mouse buttons for comfortable one-handed use.
+### 🖱️ 3. Smooth Wireless Trackpad
+* 60 fps responsive touch surface with haptic feedback.
+* **Gestures**:
+  * Tap = Left click
+  * Double tap = Double click
+  * Long press = Right click
+  * Two-finger swipe or scroll arrows = Smooth page scrolling
+* Large physical LKM / PKM thumb buttons at the bottom.
 
-### 🔒 System & Power Management
-- **Security**: Lock your workstation (`Win + L`) in a single tap.
-- **Energy**: Turn off connected monitors or send the PC to Sleep mode.
-- **Workflow**: Show Desktop (`Win + D`), Alt+Tab window switcher.
-- **Safe Power**: Timed Shutdown and Restart with a safety confirmation dialog and a one-click abort button (`shutdown /a`).
+### 🔒 4. System & Power
+* Lock screen (`Win + L`) in one touch.
+* Show Desktop (`Win + D`) and switch apps (`Alt + Tab`).
+* Power down monitors to save electricity.
+* Sleep mode, reboot, and timed shutdown with safety confirmation dialog and one-click abort (`shutdown /a`).
 
-### 🪟 Live Task Switcher
-- View all active top-level windows currently open on your PC.
-- Switch focus to any application immediately or close unresponsive windows.
-
----
-
-## Install
-
-### 1. Windows Host
-1. Download [`Pult.exe`](https://github.com/sailxx/pult/releases/latest) (single 32 KB standalone binary).
-2. Run `Pult.exe`. It will appear in your system notification tray.
-3. Right-click the tray icon > click **«Разрешить в брандмауэре»** (one-time firewall rule creation for ports 47800 and 47801).
-4. Click the tray icon to view your PC's local IP address and 6-digit PIN.
-
-### 2. Android Client
-1. Download and install [`Pult.apk`](https://github.com/sailxx/pult/releases/latest).
-2. Tap **«Поиск ПК»** for automatic discovery, or enter your PC's IP and 6-digit PIN.
-3. Tap **«Подключить»** — you are now in full control!
+### 🪟 5. Task & Window Switcher
+* Lists all active windows currently running on your PC.
+* Bring any window to the front or kill hung processes cleanly (`WM_CLOSE`).
 
 ---
 
-## How It Works
+## Quick Start
+
+### 1. Windows PC
+1. Download [`Pult.exe`](https://github.com/sailxx/Pult/releases/latest) (single standalone 32 KB binary).
+2. Run `Pult.exe` (sits quietly in your system notification tray).
+3. Right-click the tray icon > click **«Разрешить в брандмауэре»** (one-click Windows Firewall setup).
+4. Click the tray icon to see your PC's local IP and 6-digit PIN.
+
+### 2. Android Phone
+1. Download and install [`Pult.apk`](https://github.com/sailxx/Pult/releases/latest).
+2. Tap **«Поиск ПК»** for instant automatic discovery over UDP broadcast.
+3. Enter the 6-digit PIN and tap **«Подключить»**.
+
+---
+
+## Network Architecture
 
 ```
-┌────────────────────────┐                   ┌────────────────────────┐
-│   Android Smartphone   │                   │       Windows PC       │
-│  (Kotlin + Compose M3) │                   │ (C# Native Host in Tray)│
-│                        │                   │                        │
-│  UDP Broadcast: PULT?  │ ───────────────>  │  Listens on UDP 47801  │
-│                        │ <───────────────  │  Answers: PULT!47800|PC│
-│                        │                   │                        │
-│  HTTP GET /volume      │ ───────────────>  │  Core Audio API        │
-│  HTTP POST /launch     │ ───────────────>  │  Process.Start()       │
-│  HTTP POST /mouse      │ ───────────────>  │  mouse_event()         │
-└────────────────────────┘  Local Wi-Fi Network └────────────────────────┘
+┌─────────────────────────────────┐                 ┌─────────────────────────────────┐
+│       Android Phone             │                 │           Windows PC            │
+│    (Kotlin + Compose M3)        │                 │        (Native C# Host)         │
+│                                 │                 │                                 │
+│  UDP Broadcast: PULT?           │ ──────────────> │  UDP 47801 Discovery Listener   │
+│                                 │ <────────────── │  Answers: PULT!47800|DESKTOP-PC │
+│                                 │                 │                                 │
+│  HTTP GET /volume               │ ──────────────> │  Windows Core Audio COM API     │
+│  HTTP POST /launch?id=...       │ ──────────────> │  Process.Start()                │
+│  HTTP POST /mouse?dx=..&dy=..   │ ──────────────> │  mouse_event() Win32            │
+│  HTTP POST /system?action=lock  │ ──────────────> │  LockWorkStation() Win32        │
+└─────────────────────────────────┘  Local Network  └─────────────────────────────────┘
 ```
 
-- **Discovery (UDP 47801)**: Broadcasts `PULT?` to discover all Pult instances in your subnet. If your Wi-Fi router isolates UDP broadcast between clients, Pult automatically performs an asynchronous subnet sweep via `GET /ping`.
-- **Control API (TCP 47800)**: Compact, zero-dependency HTTP server built directly on .NET `TcpListener`. State changes require an `X-Pin` header matching the host's dynamic PIN.
+- **Discovery (UDP 47801)**: Broadcast discovery with automated fallback to parallel subnet sweep if router client isolation is active.
+- **REST API (TCP 47800)**: Direct socket server with cryptographically secure PIN authentication (`RandomNumberGenerator`) and brute-force lockout (10 failed tries = 60-second lock).
 
-Full API schema and curl examples are documented in [docs/PROTOCOL.md](docs/PROTOCOL.md).
-
----
-
-## Security
-
-- **Strictly local**: No packets ever leave your home/office network.
-- **Crypto PIN**: 6-digit PIN generated via `RandomNumberGenerator`.
-- **Brute-force lockout**: 10 consecutive failed PIN attempts trigger an automatic 60-second connection lockout.
-- **VPN bypass**: Android client explicitly binds network traffic to physical Wi-Fi, preventing accidental routing through third-party VPNs.
-
-Full threat model details: [SECURITY.md](SECURITY.md).
+Full API endpoints and curl examples are documented in [docs/PROTOCOL.md](docs/PROTOCOL.md).
 
 ---
 
 ## Building from Source
 
-### Windows Host
-The Windows server requires **zero SDK installations**. It compiles using the C# compiler built into every copy of Windows:
+### Windows Host (0 SDKs needed)
+Built with the standard C# compiler shipped in every Windows installation:
 ```cmd
 host\build.cmd
 ```
 
 ### Android Client
-Requires JDK 17+ and the Android SDK:
+Built with modern Kotlin and Gradle:
 ```bash
 cd android
 ./gradlew assembleRelease
@@ -165,24 +160,17 @@ cd android
 
 ---
 
-## Roadmap
+## Releases & Downloads
 
-- [x] Initial Windows Host and Android Client
-- [x] Modern Asterisk/Remote branding and iconography
-- [x] Two-way hardware volume control via Core Audio API
-- [x] Multi-gesture trackpad and mouse control
-- [x] Windows task switcher and active window management
-- [ ] Now Playing widget with album art & track metadata (GSMTC API)
-- [ ] Quick Actions / Custom user scripts (PowerShell, batch files)
-- [ ] iOS client (SwiftUI)
+Pre-built binaries are signed and available under **[Releases](https://github.com/sailxx/Pult/releases)**:
+* **Windows**: `Pult.exe` (32 KB standalone)
+* **Android**: `Pult.apk` (Optimized APK)
 
 ---
 
 ## Contributing
 
-Pult is open source under the [MIT License](LICENSE). Contributions of any kind are welcome!
-- Check [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for setup and guidelines.
-- Report bugs and request features through [GitHub Issues](https://github.com/sailxx/pult/issues).
+Pull requests and bug reports are welcome! Check [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for contribution guidelines.
 
 ---
 
