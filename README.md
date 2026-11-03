@@ -23,7 +23,7 @@
   <a href="https://github.com/sailxx/Pult/actions/workflows/ci.yml"><img alt="CI status" src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square" /></a>
 </p>
 
-[Quick Start](#quick-start) • [Why Pult](#why-pult) • [Capabilities](#capabilities) • [Comparison](#comparison) • [Protocol](docs/PROTOCOL.md) • [Security](SECURITY.md) • [Build](#building-from-source)
+[⚡ Quick Start](#-quick-start) • [💡 Why Pult](#-why-pult) • [📸 Interface](#-interface-screenshots) • [🎛️ Capabilities](#️-capabilities) • [🗺️ Roadmap](#️-roadmap) • [📊 Comparison](#-comparison) • [🌐 Protocol](docs/PROTOCOL.md) • [🛠️ Build](#️-building-from-source)
 
 </div>
 
@@ -33,7 +33,7 @@
 
 <br/><br/>
 
-## Why Pult
+## 💡 Why Pult
 
 Remote desktop tools are built for office support: they stream your entire screen with lag, drain battery, and require cloud accounts. Dedicated remote apps push subscriptions or require heavy runtimes.
 
@@ -41,7 +41,7 @@ Pult is designed for real everyday moments at home:
 
 * **Watching a movie from bed:** Pause playback, balance loud dialogue with the true master volume slider, or turn off monitors without getting under the blankets.
 * **Phone on a desk stand:** One-tap dock to launch your browser, Spotify, terminal, or games without searching through taskbars.
-* **Frozen fullscreen game:** When an unresponsive game locks up your mouse cursor, open Pult on your phone, open the Tasks tab, and kill the frozen window cleanly.
+* **Frozen fullscreen game:** When an unresponsive game locks up your mouse cursor, open Pult on your phone, head to the Tasks tab, and kill the frozen window cleanly.
 * **Offline router or hotspot:** Pult communicates strictly peer-to-peer over your local Wi-Fi. No internet, cloud servers, or third-party relays are ever involved.
 
 <br/>
@@ -54,7 +54,74 @@ Pult is designed for real everyday moments at home:
 
 <br/><br/>
 
-## Comparison
+## 📸 Interface Screenshots
+
+The Android companion application is built with an AMOLED black interface, instant haptic response, and five specialized functional tabs:
+
+<br/>
+
+<img src="assets/screenshots/screens-showcase.svg" width="100%" alt="Pult Mobile Interface Screens: Media Remote, Wireless Trackpad, Apps Launchpad, System & Tasks" />
+
+<br/>
+
+* **1. Media Remote:** Real-time two-way Windows Core Audio slider, quick mute badge, and tactile circular D-pad for volume and media playback.
+* **2. Wireless Trackpad:** High-precision 60 fps touch surface with tap-to-click, two-finger vertical scrolling, and dedicated hardware-styled LKM/PKM thumb buttons.
+* **3. Apps Launchpad:** Automatic Start Menu application index with cached icons, fuzzy search, and long-press favorite pinning.
+* **4. System & Tasks:** Immediate `Win + L` workstation lock, display standby, and a live active window manager to bring windows forward or force-close hung processes.
+
+<br/>
+
+## 🎛️ Capabilities
+
+### 🔊 Master Volume & Mute
+* Direct integration with Windows Core Audio (`IAudioEndpointVolume`).
+* Live two-way volume slider: adjust volume on your PC with physical keyboard keys, and the phone slider updates instantaneously.
+* Instant Mute toggle with clear visual badge.
+
+### 🖱️ 60 FPS Wireless Trackpad
+* Smooth relative cursor motion with hardware-assisted touch delta calculation.
+* Native gesture support:
+  * **Single tap:** Left click
+  * **Double tap:** Double click
+  * **Long press:** Right click
+  * **Two-finger swipe / scroll strip:** Smooth vertical page scrolling
+* Dedicated physical thumb buttons for left and right click.
+
+### ⚡ Start Menu Launchpad
+* Automatically indexes applications from Windows Start Menu and Desktop shortcuts.
+* Instant fuzzy search as you type.
+* Extracts 96×96 crisp PNG icons directly from executables with in-memory caching.
+* Long-press any app to pin it to your favorites dock.
+
+### 🪟 Task & Window Switcher
+* Inspect all top-level running application windows on your desktop.
+* Bring any window to the foreground with a single tap.
+* Cleanly terminate hanging or unresponsive processes (`WM_CLOSE`).
+
+### 🔒 Power & System Deck
+* Lock workstation (`Win + L`) in one touch.
+* Toggle desktop (`Win + D`) and cycle applications (`Alt + Tab`).
+* Power down monitors into energy-saving standby.
+* Sleep, reboot, and timed shutdown with confirmation dialogs and one-click abort (`shutdown /a`).
+
+<br/>
+
+## 🗺️ Roadmap
+
+<img src="assets/readme/roadmap.svg" width="100%" alt="Pult Roadmap" />
+
+<br/>
+
+| Milestone | Status | Key Deliverables |
+|---|:---:|---|
+| **v0.2 — Foundation & Zero-Lag Core** | **Shipped** | Core Audio COM volume, 60 fps Trackpad, Start Menu apps index, Window switcher & task killer, pure offline UDP discovery, 40 KB native host. |
+| **v0.3 — Media & Quick Macros** | **In Progress** | GSMTC Windows media integration (live track title, artist, live album artwork thumbnail on phone), custom one-tap PowerShell/CMD quick action macros. |
+| **v0.4 — Companion & Telemetry** | **Planned** | iOS Companion Client (SwiftUI), Android Lock screen media controls widget, real-time PC telemetry dock (CPU temperature, GPU load, RAM usage). |
+| **v1.0 — Production Suite** | **Future** | Encrypted local TLS/WSS transport with auto-generated self-signed LAN certificates, multi-monitor display switching, bidirectional clipboard bridge. |
+
+<br/>
+
+## 📊 Comparison
 
 | Dimension | Pult | Unified Remote | KDE Connect | TeamViewer / AnyDesk |
 |---|:---:|:---:|:---:|:---:|
@@ -70,42 +137,7 @@ Pult is designed for real everyday moments at home:
 
 <br/>
 
-## Capabilities
-
-### Master Volume & Mute
-* Direct integration with Windows Core Audio (`IAudioEndpointVolume`).
-* Live two-way volume slider: adjust volume on your PC with physical keyboard keys, and the phone slider updates instantaneously.
-* Instant Mute toggle with clear visual badge.
-
-### 60 FPS Wireless Trackpad
-* Smooth relative cursor motion with hardware-assisted touch delta calculation.
-* Native gesture support:
-  * **Single tap:** Left click
-  * **Double tap:** Double click
-  * **Long press:** Right click
-  * **Two-finger swipe / scroll arrows:** Smooth vertical page scrolling
-* Dedicated physical thumb buttons for left and right click.
-
-### Start Menu Launchpad
-* Automatically indexes applications from Windows Start Menu and Desktop shortcuts.
-* Instant fuzzy search as you type.
-* Extracts 96×96 crisp PNG icons directly from executables with in-memory caching.
-* Long-press any app to pin it to your favorites dock.
-
-### Task & Window Switcher
-* Inspect all top-level running application windows on your desktop.
-* Bring any window to the foreground with a single tap.
-* Cleanly terminate hanging or unresponsive processes (`WM_CLOSE`).
-
-### Power & System Deck
-* Lock workstation (`Win + L`) in one touch.
-* Toggle desktop (`Win + D`) and cycle applications (`Alt + Tab`).
-* Power down monitors into energy-saving standby.
-* Sleep, reboot, and timed shutdown with confirmation dialogs and one-click abort (`shutdown /a`).
-
-<br/>
-
-## Quick Start
+## ⚡ Quick Start
 
 ### 1. Windows Host
 1. Download [`Pult.exe`](https://github.com/sailxx/Pult/releases/latest/download/Pult.exe) (single 40 KB executable, zero installer).
@@ -120,7 +152,7 @@ Pult is designed for real everyday moments at home:
 
 <br/>
 
-## Network Architecture
+## 🌐 Network Architecture
 
 ```
 ┌─────────────────────────────────┐                 ┌─────────────────────────────────┐
@@ -144,7 +176,7 @@ Full API endpoints and curl examples are documented in [docs/PROTOCOL.md](docs/P
 
 <br/>
 
-## Building from Source
+## 🛠️ Building from Source
 
 ### Windows Host (Zero SDKs required)
 Compiles directly with the native C# compiler present on every modern Windows installation:
@@ -161,6 +193,6 @@ cd android
 
 <br/>
 
-## License
+## 📄 License
 
 MIT © 2026 [@sailxx](https://github.com/sailxx)

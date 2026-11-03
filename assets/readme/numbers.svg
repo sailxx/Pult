@@ -1,96 +1,74 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="880" height="260" viewBox="0 0 880 260" role="img" aria-label="Pult specifications">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap');
+text { font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 .r{animation:rise .8s cubic-bezier(.2,.8,.2,1) backwards}
-.glow{animation:drift 14s ease-in-out infinite}
-.glow2{animation:drift 18s ease-in-out -6s infinite reverse}
 .sweep{animation:sweep 6s ease-in-out infinite}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-@keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(36px,22px)}}
 @keyframes sweep{0%{transform:translateX(-120%)}60%,100%{transform:translateX(220%)}}
-@media (prefers-reduced-motion:reduce){.r,.glow,.glow2,.sweep{animation:none}}
+@media (prefers-reduced-motion:reduce){.r,.sweep{animation:none}}
 </style>
 <defs>
-<radialGradient id="g1" cx=".5" cy=".5" r=".5">
-  <stop offset="0" stop-color="#3B82F6" stop-opacity="0.18"/>
-  <stop offset="1" stop-color="#3B82F6" stop-opacity="0"/>
-</radialGradient>
-<radialGradient id="g2" cx=".5" cy=".5" r=".5">
-  <stop offset="0" stop-color="#8B5CF6" stop-opacity=".12"/>
-  <stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/>
-</radialGradient>
-<linearGradient id="cg" x1="0" y1="0" x2="1" y2="1">
-  <stop offset="0" stop-color="#181B22"/>
-  <stop offset="1" stop-color="#0B0D11"/>
-</linearGradient>
 <linearGradient id="hl" x1="0" y1="0" x2="1" y2="0">
-  <stop offset="0" stop-color="#FFF" stop-opacity="0"/>
-  <stop offset=".5" stop-color="#FFF" stop-opacity=".25"/>
-  <stop offset="1" stop-color="#FFF" stop-opacity="0"/>
-</linearGradient>
-<linearGradient id="tg" x1="0" y1="0" x2="1" y2="0">
-  <stop offset="0" stop-color="#FFFFFF"/>
-  <stop offset="1" stop-color="#A5B4FC"/>
-</linearGradient>
-<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-  <stop offset="0" stop-color="#0D0F14"/>
-  <stop offset="1" stop-color="#060709"/>
+  <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/>
+  <stop offset=".5" stop-color="#FFFFFF" stop-opacity=".2"/>
+  <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
 </linearGradient>
 <linearGradient id="sw" x1="0" y1="0" x2="1" y2="0">
-  <stop offset="0" stop-color="#FFF" stop-opacity="0"/>
-  <stop offset=".5" stop-color="#FFF" stop-opacity=".06"/>
-  <stop offset="1" stop-color="#FFF" stop-opacity="0"/>
+  <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/>
+  <stop offset=".5" stop-color="#FFFFFF" stop-opacity=".04"/>
+  <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
 </linearGradient>
 <clipPath id="clip"><rect width="880" height="260" rx="20"/></clipPath>
 </defs>
 
+<!-- Pure OLED Background -->
 <g clip-path="url(#clip)">
-  <rect width="880" height="260" fill="url(#bg)"/>
-  <circle class="glow" cx="720" cy="50" r="200" fill="url(#g1)"/>
-  <circle class="glow2" cx="90" cy="240" r="170" fill="url(#g2)"/>
+  <rect width="880" height="260" fill="#000000"/>
   <rect class="sweep" x="0" y="0" width="300" height="260" fill="url(#sw)"/>
 </g>
-<rect x=".5" y=".5" width="879" height="259" rx="20" fill="none" stroke="#222834"/>
+<rect x=".5" y=".5" width="879" height="259" rx="20" fill="none" stroke="#1C1C1E"/>
 
 <!-- Badge -->
 <g class="r">
-  <rect x="36" y="28" width="144" height="26" rx="7" fill="#151922" stroke="#2B3242"/>
+  <rect x="36" y="28" width="144" height="26" rx="7" fill="#0C0C0E" stroke="#27272A"/>
   <circle cx="48" cy="41" r="3.5" fill="#38BDF8"/>
-  <text x="60" y="45" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1" fill="#FFFFFF">SPECIFICATIONS</text>
+  <text x="60" y="45" font-size="11" font-weight="700" letter-spacing="1" fill="#FFFFFF">SPECIFICATIONS</text>
 </g>
 
-<!-- Title -->
+<!-- Title (Solid Text, No Gradients) -->
 <g class="r" style="animation-delay:0.08s">
-  <text x="36" y="90" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="26" font-weight="800" letter-spacing="-.5" fill="#FFFFFF">
-    Instant response. <tspan fill="url(#tg)">Zero cloud overhead.</tspan>
+  <text x="36" y="90" font-size="26" font-weight="800" letter-spacing="-.5" fill="#FFFFFF">
+    Instant response. <tspan fill="#A1A1AA">Zero cloud overhead.</tspan>
   </text>
 </g>
 
-<!-- Cards Grid -->
+<!-- Cards Grid (OLED Dark Cards with Solid Manrope Text) -->
 <g class="r" style="animation-delay:0.16s">
-  <rect x="36" y="118" width="190" height="110" rx="16" fill="url(#cg)" stroke="#262D3D"/>
+  <rect x="36" y="118" width="190" height="110" rx="16" fill="#0A0A0A" stroke="#222222"/>
   <rect x="52" y="118.5" width="158" height="1" fill="url(#hl)"/>
-  <text x="56" y="172" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="700" letter-spacing="-1" fill="url(#tg)">&lt; 2<tspan font-size="16" fill="#8B949E"> ms</tspan></text>
-  <text x="56" y="202" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="500" fill="#8B949E">LAN latency, 60 fps</text>
+  <text x="56" y="172" font-size="34" font-weight="800" letter-spacing="-1" fill="#FFFFFF">&lt; 2<tspan font-size="16" font-weight="600" fill="#71717A"> ms</tspan></text>
+  <text x="56" y="202" font-size="13" font-weight="500" fill="#A1A1AA">LAN latency, 60 fps</text>
 </g>
 
 <g class="r" style="animation-delay:0.24s">
-  <rect x="238" y="118" width="190" height="110" rx="16" fill="url(#cg)" stroke="#262D3D"/>
+  <rect x="238" y="118" width="190" height="110" rx="16" fill="#0A0A0A" stroke="#222222"/>
   <rect x="254" y="118.5" width="158" height="1" fill="url(#hl)"/>
-  <text x="258" y="172" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="700" letter-spacing="-1" fill="url(#tg)">~3<tspan font-size="16" fill="#8B949E"> MB</tspan></text>
-  <text x="258" y="202" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="500" fill="#8B949E">RAM on Windows host</text>
+  <text x="258" y="172" font-size="34" font-weight="800" letter-spacing="-1" fill="#FFFFFF">~3<tspan font-size="16" font-weight="600" fill="#71717A"> MB</tspan></text>
+  <text x="258" y="202" font-size="13" font-weight="500" fill="#A1A1AA">RAM on Windows host</text>
 </g>
 
 <g class="r" style="animation-delay:0.32s">
-  <rect x="440" y="118" width="190" height="110" rx="16" fill="url(#cg)" stroke="#262D3D"/>
+  <rect x="440" y="118" width="190" height="110" rx="16" fill="#0A0A0A" stroke="#222222"/>
   <rect x="456" y="118.5" width="158" height="1" fill="url(#hl)"/>
-  <text x="460" y="172" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="700" letter-spacing="-1" fill="url(#tg)">40<tspan font-size="16" fill="#8B949E"> KB</tspan></text>
-  <text x="460" y="202" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="500" fill="#8B949E">Single .exe, zero install</text>
+  <text x="460" y="172" font-size="34" font-weight="800" letter-spacing="-1" fill="#FFFFFF">40<tspan font-size="16" font-weight="600" fill="#71717A"> KB</tspan></text>
+  <text x="460" y="202" font-size="13" font-weight="500" fill="#A1A1AA">Single .exe, zero install</text>
 </g>
 
 <g class="r" style="animation-delay:0.40s">
-  <rect x="642" y="118" width="190" height="110" rx="16" fill="url(#cg)" stroke="#262D3D"/>
+  <rect x="642" y="118" width="190" height="110" rx="16" fill="#0A0A0A" stroke="#222222"/>
   <rect x="658" y="118.5" width="158" height="1" fill="url(#hl)"/>
-  <text x="662" y="172" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="700" letter-spacing="-1" fill="url(#tg)">0<tspan font-size="16" fill="#8B949E"></tspan></text>
-  <text x="662" y="202" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="500" fill="#8B949E">Cloud accounts, offline</text>
+  <text x="662" y="172" font-size="34" font-weight="800" letter-spacing="-1" fill="#FFFFFF">0<tspan font-size="16" font-weight="600" fill="#71717A"></tspan></text>
+  <text x="662" y="202" font-size="13" font-weight="500" fill="#A1A1AA">Cloud accounts, offline</text>
 </g>
 </svg>

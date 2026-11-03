@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="320" viewBox="0 0 880 320" role="img" aria-label="Pult roadmap">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&amp;display=swap');
+text { font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+.r{animation:rise .8s cubic-bezier(.2,.8,.2,1) backwards}
+.sweep{animation:sweep 7s ease-in-out infinite}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes sweep{0%{transform:translateX(-120%)}50%,100%{transform:translateX(220%)}}
+@media (prefers-reduced-motion:reduce){.r,.sweep{animation:none}}
+</style>
+<defs>
+<linearGradient id="rhl" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/>
+  <stop offset=".5" stop-color="#FFFFFF" stop-opacity=".18"/>
+  <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="rsw" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/>
+  <stop offset=".5" stop-color="#FFFFFF" stop-opacity=".04"/>
+  <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+</linearGradient>
+<clipPath id="rclip"><rect width="880" height="320" rx="20"/></clipPath>
+</defs>
+
+<!-- Pure OLED Background -->
+<g clip-path="url(#rclip)">
+  <rect width="880" height="320" fill="#000000"/>
+  <rect class="sweep" x="0" y="0" width="320" height="320" fill="url(#rsw)"/>
+</g>
+<rect x=".5" y=".5" width="879" height="319" rx="20" fill="none" stroke="#1C1C1E"/>
+
+<!-- Badge -->
+<g class="r">
+  <rect x="36" y="28" width="108" height="26" rx="7" fill="#0C0C0E" stroke="#27272A"/>
+  <circle cx="48" cy="41" r="3.5" fill="#38BDF8"/>
+  <text x="60" y="45" font-size="11" font-weight="700" letter-spacing="1" fill="#FFFFFF">ROADMAP</text>
+</g>
+
+<!-- Title (Solid Manrope Text, No Gradients) -->
+<g class="r" style="animation-delay:0.08s">
+  <text x="36" y="90" font-size="26" font-weight="800" letter-spacing="-.5" fill="#FFFFFF">
+    Ecosystem trajectory. <tspan fill="#A1A1AA">Built in the open.</tspan>
+  </text>
+</g>
+
+<!-- Milestone 1: v0.2 Shipped -->
+<g class="r" style="animation-delay:0.16s">
+  <rect x="36" y="118" width="190" height="170" rx="14" fill="#0A0A0A" stroke="#222222"/>
+  <rect x="52" y="118.5" width="158" height="1" fill="url(#rhl)"/>
+  
+  <rect x="52" y="132" width="68" height="20" rx="5" fill="#14261C" stroke="#1E472D"/>
+  <text x="60" y="146" font-size="10" font-weight="700" fill="#4ADE80">SHIPPED</text>
+  
+  <text x="52" y="176" font-size="17" font-weight="800" fill="#FFFFFF">v0.2 Core</text>
+  <text x="52" y="200" font-size="12" font-weight="500" fill="#A1A1AA">· Core Audio COM volume</text>
+  <text x="52" y="220" font-size="12" font-weight="500" fill="#A1A1AA">· 60 fps Touch trackpad</text>
+  <text x="52" y="240" font-size="12" font-weight="500" fill="#A1A1AA">· App launcher &amp; tasks</text>
+  <text x="52" y="260" font-size="12" font-weight="500" fill="#A1A1AA">· Offline UDP discovery</text>
+</g>
+
+<!-- Milestone 2: v0.3 In Progress -->
+<g class="r" style="animation-delay:0.24s">
+  <rect x="238" y="118" width="190" height="170" rx="14" fill="#0A0A0A" stroke="#222222"/>
+  <rect x="254" y="118.5" width="158" height="1" fill="url(#rhl)"/>
+  
+  <rect x="254" y="132" width="88" height="20" rx="5" fill="#1C2130" stroke="#243452"/>
+  <text x="262" y="146" font-size="10" font-weight="700" fill="#38BDF8">IN PROGRESS</text>
+  
+  <text x="254" y="176" font-size="17" font-weight="800" fill="#FFFFFF">v0.3 Media</text>
+  <text x="254" y="200" font-size="12" font-weight="500" fill="#A1A1AA">· GSMTC now-playing</text>
+  <text x="254" y="220" font-size="12" font-weight="500" fill="#A1A1AA">· Live album artwork</text>
+  <text x="254" y="240" font-size="12" font-weight="500" fill="#A1A1AA">· Quick action macros</text>
+  <text x="254" y="260" font-size="12" font-weight="500" fill="#A1A1AA">· Script triggers (PS/cmd)</text>
+</g>
+
+<!-- Milestone 3: v0.4 Planned -->
+<g class="r" style="animation-delay:0.32s">
+  <rect x="440" y="118" width="190" height="170" rx="14" fill="#0A0A0A" stroke="#222222"/>
+  <rect x="456" y="118.5" width="158" height="1" fill="url(#rhl)"/>
+  
+  <rect x="456" y="132" width="70" height="20" rx="5" fill="#1E1926" stroke="#3D2952"/>
+  <text x="464" y="146" font-size="10" font-weight="700" fill="#C084FC">PLANNED</text>
+  
+  <text x="456" y="176" font-size="17" font-weight="800" fill="#FFFFFF">v0.4 Companion</text>
+  <text x="456" y="200" font-size="12" font-weight="500" fill="#A1A1AA">· iOS client (SwiftUI)</text>
+  <text x="456" y="220" font-size="12" font-weight="500" fill="#A1A1AA">· Lock screen widget</text>
+  <text x="456" y="240" font-size="12" font-weight="500" fill="#A1A1AA">· CPU/GPU live telemetry</text>
+  <text x="456" y="260" font-size="12" font-weight="500" fill="#A1A1AA">· Real-time desk dock</text>
+</g>
+
+<!-- Milestone 4: v1.0 Future -->
+<g class="r" style="animation-delay:0.40s">
+  <rect x="642" y="118" width="190" height="170" rx="14" fill="#0A0A0A" stroke="#222222"/>
+  <rect x="658" y="118.5" width="158" height="1" fill="url(#rhl)"/>
+  
+  <rect x="658" y="132" width="56" height="20" rx="5" fill="#18181B" stroke="#27272A"/>
+  <text x="666" y="146" font-size="10" font-weight="700" fill="#A1A1AA">FUTURE</text>
+  
+  <text x="658" y="176" font-size="17" font-weight="800" fill="#FFFFFF">v1.0 Suite</text>
+  <text x="658" y="200" font-size="12" font-weight="500" fill="#A1A1AA">· Encrypted TLS/WSS LAN</text>
+  <text x="658" y="220" font-size="12" font-weight="500" fill="#A1A1AA">· Auto self-signed certs</text>
+  <text x="658" y="240" font-size="12" font-weight="500" fill="#A1A1AA">· Multi-monitor switch</text>
+  <text x="658" y="260" font-size="12" font-weight="500" fill="#A1A1AA">· Clipboard sync bridge</text>
+</g>
+</svg>
