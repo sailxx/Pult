@@ -23,8 +23,26 @@ static class Program
 
     static NotifyIcon tray;
     internal static string Pin;
+    internal static string LastClientIp;
+    internal static DateTime LastActiveTime;
     internal static readonly string DataDir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pult");
+
+    internal static void OnClientActivity(TcpClient c)
+    {
+        try
+        {
+            var ip = ((IPEndPoint)c.Client.RemoteEndPoint).Address.ToString();
+            bool wasDisconnected = LastClientIp == null || (DateTime.Now - LastActiveTime).TotalSeconds > 20;
+            LastClientIp = ip;
+            LastActiveTime = DateTime.Now;
+            if (wasDisconnected)
+            {
+                Notify("Смартфон подключен: " + ip);
+            }
+        }
+        catch { }
+    }
 
     [STAThread]
     static void Main(string[] args)
@@ -47,12 +65,44 @@ static class Program
             catch { tray.Icon = SystemIcons.Application; }
             tray.Text = "Pult";
             tray.Visible = true;
+
             var menu = new ContextMenuStrip();
-            menu.Items.Add("Адрес и PIN", null, delegate { ShowInfo(); });
-            menu.Items.Add("Разрешить в брандмауэре", null, delegate { Firewall.RunElevated(); });
-            menu.Items.Add("Новый PIN", null, delegate { Pin = NewPin(); ShowInfo(); });
-            menu.Items.Add(new ToolStripSeparator());
-            menu.Items.Add("Выход", null, delegate { tray.Visible = false; Environment.Exit(0); });
+            menu.Opening += delegate
+            {
+                menu.Items.Clear();
+                bool isConnected = LastClientIp != null && (DateTime.Now - LastActiveTime).TotalSeconds < 20;
+                var statusText = isConnected ? "● Подключен: " + LastClientIp : "○ Ожидание подключения...";
+                var statusItem = menu.Items.Add(statusText);
+                statusItem.Enabled = false;
+
+                menu.Items.Add(new ToolStripSeparator());
+
+                var pinItem = menu.Items.Add("PIN: " + Pin + " (скопировать)");
+                pinItem.Click += delegate
+                {
+                    Clipboard.SetText(Pin);
+                    Notify("PIN скопирован в буфер обмена: " + Pin);
+                };
+
+                var firstIp = LocalIps().FirstOrDefault();
+                if (firstIp != null)
+                {
+                    var ipItem = menu.Items.Add("IP: " + firstIp + ":" + HttpPort + " (скопировать)");
+                    ipItem.Click += delegate
+                    {
+                        Clipboard.SetText(firstIp);
+                        Notify("IP скопирован в буфер обмена: " + firstIp);
+                    };
+                }
+
+                menu.Items.Add(new ToolStripSeparator());
+                menu.Items.Add("Все адреса и PIN", null, delegate { ShowInfo(); });
+                menu.Items.Add("Разрешить в брандмауэре", null, delegate { Firewall.RunElevated(); });
+                menu.Items.Add("Новый PIN", null, delegate { Pin = NewPin(); ShowInfo(); });
+                menu.Items.Add(new ToolStripSeparator());
+                menu.Items.Add("Выход", null, delegate { tray.Visible = false; Environment.Exit(0); });
+            };
+
             tray.ContextMenuStrip = menu;
             tray.MouseClick += delegate(object s, MouseEventArgs e) { if (e.Button == MouseButtons.Left) ShowInfo(); };
 
@@ -607,6 +657,7 @@ static class Server
                     return;
                 }
                 if (!Authorized(pin)) { Send(s, 401, "application/json", Json("{\"error\":\"pin\"}")); return; }
+                Program.OnClientActivity(c);
 
                 if (path == "/apps")
                 {
