@@ -136,6 +136,54 @@ class Client(private val ip: String, private val pin: String) {
     suspend fun sendText(text: String) {
         call("/keyboard?text=${URLEncoder.encode(text, "UTF-8")}", "POST")
     }
+
+    suspend fun getClipboard(): String {
+        return try {
+            val text = String(call("/clipboard", timeoutMs = 3000), Charsets.UTF_8)
+            val obj = JSONObject(text)
+            obj.optString("text", "")
+        } catch (_: Exception) { "" }
+    }
+
+    suspend fun setClipboard(text: String) {
+        call("/clipboard?text=${URLEncoder.encode(text, "UTF-8")}", "POST", timeoutMs = 3000)
+    }
+
+    suspend fun clearClipboard() {
+        call("/clipboard?clear=1", "POST", timeoutMs = 3000)
+    }
+
+    suspend fun captureScreen(): ByteArray? {
+        return try {
+            call("/capture", "GET", timeoutMs = 6000)
+        } catch (_: Exception) { null }
+    }
+
+    suspend fun saveCapture(copyToClipboard: Boolean = false): String? {
+        return try {
+            val query = if (copyToClipboard) "/capture?save=1&copy=1" else "/capture?save=1"
+            val text = String(call(query, "POST", timeoutMs = 6000), Charsets.UTF_8)
+            val obj = JSONObject(text)
+            obj.optString("path", null)
+        } catch (_: Exception) { null }
+    }
+
+    suspend fun copyCaptureToClipboard(): Boolean {
+        return try {
+            val text = String(call("/capture?copy=1", "POST", timeoutMs = 6000), Charsets.UTF_8)
+            val obj = JSONObject(text)
+            obj.optBoolean("ok", false)
+        } catch (_: Exception) { false }
+    }
+
+    suspend fun sendSignature(pngBytes: ByteArray, action: String = "all"): String? {
+        return try {
+            val b64 = android.util.Base64.encodeToString(pngBytes, android.util.Base64.NO_WRAP)
+            val text = String(call("/signature?action=$action&data=${URLEncoder.encode(b64, "UTF-8")}", "POST", timeoutMs = 8000), Charsets.UTF_8)
+            val obj = JSONObject(text)
+            obj.optString("path", null)
+        } catch (_: Exception) { null }
+    }
 }
 
 /** Проверка без PIN: отвечает ли по этому адресу хост Pult. */

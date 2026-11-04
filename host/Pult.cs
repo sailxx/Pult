@@ -104,11 +104,24 @@ static class Program
             };
 
             tray.ContextMenuStrip = menu;
-            tray.MouseClick += delegate(object s, MouseEventArgs e) { if (e.Button == MouseButtons.Left) ShowInfo(); };
+            tray.MouseClick += delegate(object s, MouseEventArgs e) {
+                if (e.Button == MouseButtons.Left) ShowCompanionFlyout();
+            };
 
-            if (!File.Exists(Path.Combine(DataDir, "seen"))) { File.WriteAllText(Path.Combine(DataDir, "seen"), "1"); ShowInfo(); }
+            if (!File.Exists(Path.Combine(DataDir, "seen"))) { File.WriteAllText(Path.Combine(DataDir, "seen"), "1"); ShowCompanionFlyout(); }
             Application.Run();
         }
+    }
+
+    internal static void ShowCompanionFlyout()
+    {
+        try
+        {
+            var f = new CompanionFlyout();
+            f.Show();
+            f.Activate();
+        }
+        catch { ShowInfo(); }
     }
 
     internal static void Notify(string text)
@@ -146,7 +159,7 @@ static class Program
         return NewPin();
     }
 
-    static string NewPin()
+    internal static string NewPin()
     {
         var b = new byte[4];
         using (var r = RandomNumberGenerator.Create()) r.GetBytes(b);
@@ -601,6 +614,459 @@ static class WindowTasks
     }
 }
 
+// ----------------- Clipboard (Thread-Safe STA) -----------------
+static class Clip
+{
+    public static string GetText()
+    {
+        string text = "";
+        var t = new Thread(delegate()
+        {
+            try { if (Clipboard.ContainsText()) text = Clipboard.GetText(); }
+            catch { }
+        });
+        t.SetApartmentState(ApartmentState.STA);
+        t.Start();
+        t.Join(800);
+        return text ?? "";
+    }
+
+    public static bool SetText(string text)
+    {
+        bool ok = false;
+        var t = new Thread(delegate()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(text)) Clipboard.Clear();
+                else Clipboard.SetText(text);
+                ok = true;
+            }
+            catch { }
+        });
+        t.SetApartmentState(ApartmentState.STA);
+        t.Start();
+        t.Join(800);
+        return ok;
+    }
+
+    public static bool Clear()
+    {
+        bool ok = false;
+        var t = new Thread(delegate()
+        {
+            try { Clipboard.Clear(); ok = true; } catch { }
+        });
+        t.SetApartmentState(ApartmentState.STA);
+        t.Start();
+        t.Join(800);
+        return ok;
+    }
+}
+
+// ----------------- Desktop Screen Capture -----------------
+static class ScreenCapture
+{
+    public static byte[] CaptureDesktop(bool saveToDisk, bool copyToClipboard, out string savedPath)
+    {
+        savedPath = null;
+        try
+        {
+            var bounds = Screen.PrimaryScreen.Bounds;
+            if (bounds.Width <= 0 || bounds.Height <= 0) bounds = new Rectangle(0, 0, 1920, 1080);
+
+            using (var bmp = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format32bppArgb))
+            {
+                bool captured = false;
+                try
+                {
+                    using (var g = Graphics.FromImage(bmp))
+                    {
+                        g.CopyFromScreen(bounds.X, bounds.Y, 0, 0, bounds.Size, CopyPixelOperation.SourceCopy);
+                        captured = true;
+                    }
+                }
+                catch
+                {
+                    // Fallback for locked desktop / background session
+                    using (var g = Graphics.FromImage(bmp))
+                    {
+                        g.Clear(Color.FromArgb(16, 23, 25));
+                        using (var f = new Font("Segoe UI", 18f, FontStyle.Bold))
+                        using (var b = new SolidBrush(Color.FromArgb(180, 237, 204)))
+                        {
+                            g.DrawString("PULT DESKTOP SCREEN", f, b, new PointF(40, 40));
+                        }
+                        using (var f2 = new Font("Segoe UI", 11f, FontStyle.Regular))
+                        using (var b2 = new SolidBrush(Color.FromArgb(160, 175, 175)))
+                        {
+                            g.DrawString("Экран Windows заблокирован или сессия неактивна (" + DateTime.Now.ToString("HH:mm:ss") + ")", f2, b2, new PointF(40, 80));
+                        }
+                        captured = true;
+                    }
+                }
+
+                if (copyToClipboard && captured)
+                {
+                    var copyBmp = (Bitmap)bmp.Clone();
+                    var t = new Thread(delegate()
+                    {
+                        try { Clipboard.SetImage(copyBmp); } catch { }
+                        finally { copyBmp.Dispose(); }
+                    });
+                    t.SetApartmentState(ApartmentState.STA);
+                    t.Start();
+                    t.Join(1000);
+                }
+
+                if (saveToDisk && captured)
+                {
+                    var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Pult");
+                    Directory.CreateDirectory(dir);
+                    var file = "Pult_Capture_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
+                    savedPath = Path.Combine(dir, file);
+                    bmp.Save(savedPath, ImageFormat.Png);
+                }
+
+                using (var ms = new MemoryStream())
+                {
+                    bmp.Save(ms, ImageFormat.Jpeg);
+                    return ms.ToArray();
+                }
+            }
+        }
+        catch { return new byte[0]; }
+    }
+}
+
+// ----------------- Signature Receiver -----------------
+static class SignatureHandler
+{
+    public static bool Handle(byte[] pngBytes, string action, out string savedPath)
+    {
+        savedPath = null;
+        if (pngBytes == null || pngBytes.Length == 0) return false;
+        bool ok = false;
+        string path = null;
+        var t = new Thread(delegate()
+        {
+            try
+            {
+                using (var ms = new MemoryStream(pngBytes))
+                using (var img = Image.FromStream(ms))
+                using (var bmp = new Bitmap(img))
+                {
+                    if (action == "clipboard" || action == "all")
+                    {
+                        Clipboard.SetImage(bmp);
+                        ok = true;
+                    }
+                    if (action == "save" || action == "all")
+                    {
+                        var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Pult", "Signatures");
+                        Directory.CreateDirectory(dir);
+                        var file = "Signature_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
+                        path = Path.Combine(dir, file);
+                        bmp.Save(path, ImageFormat.Png);
+                        ok = true;
+                    }
+                }
+            } catch { }
+        });
+        t.SetApartmentState(ApartmentState.STA);
+        t.Start();
+        t.Join(2000);
+        savedPath = path;
+        return ok;
+    }
+}
+
+// ----------------- Windows 11 Native Mica Companion Form -----------------
+class CompanionFlyout : Form
+{
+    [DllImport("dwmapi.dll")] static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
+    const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+    const int DWMWA_WINDOW_CORNER_PREFERENCE = 33;
+    const int DWMWA_SYSTEMBACKDROP_TYPE = 38;
+    const int DWMWA_MICA_EFFECT = 1029;
+
+    public CompanionFlyout()
+    {
+        this.FormBorderStyle = FormBorderStyle.None;
+        this.StartPosition = FormStartPosition.Manual;
+        this.ShowInTaskbar = false;
+        this.TopMost = true;
+        this.Width = 330;
+        this.Height = 440;
+        this.BackColor = Color.FromArgb(18, 23, 26);
+        this.ForeColor = Color.White;
+        this.Font = new Font("Segoe UI", 9.5f, FontStyle.Regular);
+
+        var area = Screen.PrimaryScreen.WorkingArea;
+        this.Location = new Point(area.Right - Width - 14, area.Bottom - Height - 14);
+
+        BuildUi();
+        this.Deactivate += delegate { this.Close(); };
+    }
+
+    protected override void OnHandleCreated(EventArgs e)
+    {
+        base.OnHandleCreated(e);
+        try
+        {
+            int dark = 1;
+            DwmSetWindowAttribute(Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref dark, sizeof(int));
+            int round = 2; // DWMWCP_ROUND
+            DwmSetWindowAttribute(Handle, DWMWA_WINDOW_CORNER_PREFERENCE, ref round, sizeof(int));
+
+            int osBuild = Environment.OSVersion.Version.Build;
+            if (osBuild >= 22621)
+            {
+                int backdrop = 2; // Mica
+                DwmSetWindowAttribute(Handle, DWMWA_SYSTEMBACKDROP_TYPE, ref backdrop, sizeof(int));
+            }
+            else if (osBuild >= 22000)
+            {
+                int mica = 1;
+                DwmSetWindowAttribute(Handle, DWMWA_MICA_EFFECT, ref mica, sizeof(int));
+            }
+        }
+        catch { }
+    }
+
+    void BuildUi()
+    {
+        var pad = 14;
+        int y = 14;
+
+        // Header
+        var lblTitle = new Label {
+            Text = "PULT COMPANION",
+            Location = new Point(pad, y),
+            AutoSize = true,
+            Font = new Font("Segoe UI", 11f, FontStyle.Bold),
+            ForeColor = Color.FromArgb(240, 245, 248)
+        };
+        var btnClose = new Button {
+            Text = "✕",
+            Location = new Point(Width - pad - 28, y - 2),
+            Size = new Size(28, 24),
+            FlatStyle = FlatStyle.Flat,
+            ForeColor = Color.FromArgb(160, 175, 175),
+            Cursor = Cursors.Hand
+        };
+        btnClose.FlatAppearance.BorderSize = 0;
+        btnClose.Click += delegate { this.Close(); };
+        Controls.Add(lblTitle);
+        Controls.Add(btnClose);
+        y += 34;
+
+        // Status Card
+        bool isConnected = Program.LastClientIp != null && (DateTime.Now - Program.LastActiveTime).TotalSeconds < 25;
+        var pnlStatus = new Panel {
+            Location = new Point(pad, y),
+            Size = new Size(Width - pad * 2, 34),
+            BackColor = Color.FromArgb(28, 38, 41)
+        };
+        var dot = new Label {
+            Text = isConnected ? "●" : "○",
+            ForeColor = isConnected ? Color.FromArgb(163, 230, 190) : Color.FromArgb(160, 175, 175),
+            Font = new Font("Segoe UI", 11f, FontStyle.Bold),
+            Location = new Point(10, 6),
+            AutoSize = true
+        };
+        var lblStatus = new Label {
+            Text = isConnected ? "Подключен: " + Program.LastClientIp : "Ожидание подключения смартфона...",
+            ForeColor = Color.White,
+            Font = new Font("Segoe UI", 9f, FontStyle.Regular),
+            Location = new Point(28, 8),
+            AutoSize = true
+        };
+        pnlStatus.Controls.Add(dot);
+        pnlStatus.Controls.Add(lblStatus);
+        Controls.Add(pnlStatus);
+        y += 42;
+
+        // PIN Card
+        var pnlPin = new Panel {
+            Location = new Point(pad, y),
+            Size = new Size(Width - pad * 2, 60),
+            BackColor = Color.FromArgb(28, 38, 41)
+        };
+        var lblPinCap = new Label {
+            Text = "PIN ДЛЯ СОПРЯЖЕНИЯ",
+            Location = new Point(10, 8),
+            Font = new Font("Segoe UI", 8f, FontStyle.Bold),
+            ForeColor = Color.FromArgb(160, 175, 175),
+            AutoSize = true
+        };
+        var lblPinVal = new Label {
+            Text = Program.Pin,
+            Location = new Point(10, 26),
+            Font = new Font("Segoe UI", 15f, FontStyle.Bold),
+            ForeColor = Color.FromArgb(180, 237, 204),
+            AutoSize = true
+        };
+        var btnCopyPin = new Button {
+            Text = "Копировать",
+            Location = new Point(pnlPin.Width - 95, 26),
+            Size = new Size(85, 26),
+            FlatStyle = FlatStyle.Flat,
+            BackColor = Color.FromArgb(38, 52, 56),
+            ForeColor = Color.White,
+            Font = new Font("Segoe UI", 8.5f, FontStyle.Regular),
+            Cursor = Cursors.Hand
+        };
+        btnCopyPin.FlatAppearance.BorderSize = 0;
+        btnCopyPin.Click += delegate {
+            Clipboard.SetText(Program.Pin);
+            Program.Notify("PIN скопирован в буфер: " + Program.Pin);
+        };
+        pnlPin.Controls.Add(lblPinCap);
+        pnlPin.Controls.Add(lblPinVal);
+        pnlPin.Controls.Add(btnCopyPin);
+        Controls.Add(pnlPin);
+        y += 68;
+
+        // IP Card
+        var firstIp = Program.LocalIps().FirstOrDefault() ?? "127.0.0.1";
+        var pnlIp = new Panel {
+            Location = new Point(pad, y),
+            Size = new Size(Width - pad * 2, 58),
+            BackColor = Color.FromArgb(28, 38, 41)
+        };
+        var lblIpCap = new Label {
+            Text = "IP АДРЕС В СЕТИ",
+            Location = new Point(10, 8),
+            Font = new Font("Segoe UI", 8f, FontStyle.Bold),
+            ForeColor = Color.FromArgb(160, 175, 175),
+            AutoSize = true
+        };
+        var lblIpVal = new Label {
+            Text = firstIp + ":" + Program.HttpPort,
+            Location = new Point(10, 28),
+            Font = new Font("Segoe UI", 10.5f, FontStyle.Regular),
+            ForeColor = Color.White,
+            AutoSize = true
+        };
+        var btnCopyIp = new Button {
+            Text = "Копировать",
+            Location = new Point(pnlIp.Width - 95, 26),
+            Size = new Size(85, 26),
+            FlatStyle = FlatStyle.Flat,
+            BackColor = Color.FromArgb(38, 52, 56),
+            ForeColor = Color.White,
+            Font = new Font("Segoe UI", 8.5f, FontStyle.Regular),
+            Cursor = Cursors.Hand
+        };
+        btnCopyIp.FlatAppearance.BorderSize = 0;
+        btnCopyIp.Click += delegate {
+            Clipboard.SetText(firstIp);
+            Program.Notify("IP скопирован в буфер: " + firstIp);
+        };
+        pnlIp.Controls.Add(lblIpCap);
+        pnlIp.Controls.Add(lblIpVal);
+        pnlIp.Controls.Add(btnCopyIp);
+        Controls.Add(pnlIp);
+        y += 66;
+
+        // Volume row
+        int curVol; bool curMute;
+        Audio.GetState(out curVol, out curMute);
+        var lblVol = new Label {
+            Text = "Громкость: " + curVol + "%",
+            Location = new Point(pad, y),
+            AutoSize = true,
+            Font = new Font("Segoe UI", 9f, FontStyle.Regular),
+            ForeColor = Color.FromArgb(200, 215, 215)
+        };
+        var tbVol = new TrackBar {
+            Location = new Point(pad, y + 18),
+            Size = new Size(Width - pad * 2, 30),
+            Minimum = 0,
+            Maximum = 100,
+            Value = Math.Max(0, Math.Min(100, curVol)),
+            TickStyle = TickStyle.None
+        };
+        tbVol.ValueChanged += delegate {
+            Audio.SetVolume(tbVol.Value);
+            lblVol.Text = "Громкость: " + tbVol.Value + "%";
+        };
+        Controls.Add(lblVol);
+        Controls.Add(tbVol);
+        y += 50;
+
+        // Buttons row
+        int btnW = (Width - pad * 2 - 8) / 2;
+        var btnFw = new Button {
+            Text = "Брандмауэр",
+            Location = new Point(pad, y),
+            Size = new Size(btnW, 30),
+            FlatStyle = FlatStyle.Flat,
+            BackColor = Color.FromArgb(38, 52, 56),
+            ForeColor = Color.White,
+            Font = new Font("Segoe UI", 8.5f, FontStyle.Regular),
+            Cursor = Cursors.Hand
+        };
+        btnFw.FlatAppearance.BorderSize = 0;
+        btnFw.Click += delegate { Firewall.RunElevated(); };
+
+        var btnNewPin = new Button {
+            Text = "Новый PIN",
+            Location = new Point(pad + btnW + 8, y),
+            Size = new Size(btnW, 30),
+            FlatStyle = FlatStyle.Flat,
+            BackColor = Color.FromArgb(38, 52, 56),
+            ForeColor = Color.White,
+            Font = new Font("Segoe UI", 8.5f, FontStyle.Regular),
+            Cursor = Cursors.Hand
+        };
+        btnNewPin.FlatAppearance.BorderSize = 0;
+        btnNewPin.Click += delegate {
+            Program.Pin = Program.NewPin();
+            lblPinVal.Text = Program.Pin;
+            Program.Notify("Сгенерирован новый PIN: " + Program.Pin);
+        };
+        Controls.Add(btnFw);
+        Controls.Add(btnNewPin);
+        y += 36;
+
+        var btnFolder = new Button {
+            Text = "Папка снимков",
+            Location = new Point(pad, y),
+            Size = new Size(btnW, 30),
+            FlatStyle = FlatStyle.Flat,
+            BackColor = Color.FromArgb(38, 52, 56),
+            ForeColor = Color.White,
+            Font = new Font("Segoe UI", 8.5f, FontStyle.Regular),
+            Cursor = Cursors.Hand
+        };
+        btnFolder.FlatAppearance.BorderSize = 0;
+        btnFolder.Click += delegate {
+            var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Pult");
+            Directory.CreateDirectory(dir);
+            Process.Start("explorer.exe", dir);
+        };
+
+        var btnExit = new Button {
+            Text = "Выход",
+            Location = new Point(pad + btnW + 8, y),
+            Size = new Size(btnW, 30),
+            FlatStyle = FlatStyle.Flat,
+            BackColor = Color.FromArgb(56, 32, 34),
+            ForeColor = Color.FromArgb(255, 180, 180),
+            Font = new Font("Segoe UI", 8.5f, FontStyle.Regular),
+            Cursor = Cursors.Hand
+        };
+        btnExit.FlatAppearance.BorderSize = 0;
+        btnExit.Click += delegate { Environment.Exit(0); };
+
+        Controls.Add(btnFolder);
+        Controls.Add(btnExit);
+    }
+}
+
 // ----------------- HTTP Server -----------------
 static class Server
 {
@@ -810,6 +1276,54 @@ static class Server
                             try { SendKeys.SendWait(text); } catch { }
                         }
                         Send(s, 200, "application/json", Json("{\"ok\":true}"), !closeReq);
+                    }
+                    else if (path == "/clipboard" && method == "GET")
+                    {
+                        var text = Clip.GetText();
+                        Send(s, 200, "application/json", Json("{\"ok\":true,\"hasText\":" + (string.IsNullOrEmpty(text) ? "false" : "true") + ",\"text\":" + Q(text ?? "") + "}"), !closeReq);
+                    }
+                    else if (path == "/clipboard" && method == "POST")
+                    {
+                        if (query.ContainsKey("clear"))
+                        {
+                            Clip.Clear();
+                            Send(s, 200, "application/json", Json("{\"ok\":true}"), !closeReq);
+                        }
+                        else
+                        {
+                            string text;
+                            query.TryGetValue("text", out text);
+                            Clip.SetText(text ?? "");
+                            Send(s, 200, "application/json", Json("{\"ok\":true}"), !closeReq);
+                        }
+                    }
+                    else if (path == "/capture" && method == "GET")
+                    {
+                        string pth;
+                        var bytes = ScreenCapture.CaptureDesktop(false, false, out pth);
+                        if (bytes == null || bytes.Length == 0) Send(s, 500, "text/plain", new byte[0], !closeReq);
+                        else Send(s, 200, "image/jpeg", bytes, !closeReq);
+                    }
+                    else if (path == "/capture" && method == "POST")
+                    {
+                        bool save = query.ContainsKey("save");
+                        bool copy = query.ContainsKey("copy");
+                        string pth;
+                        ScreenCapture.CaptureDesktop(save, copy, out pth);
+                        Send(s, 200, "application/json", Json("{\"ok\":true,\"path\":" + Q(pth ?? "") + "}"), !closeReq);
+                    }
+                    else if (path == "/signature" && method == "POST")
+                    {
+                        string action; query.TryGetValue("action", out action);
+                        string data; query.TryGetValue("data", out data);
+                        byte[] bytes = null;
+                        if (!string.IsNullOrEmpty(data))
+                        {
+                            try { bytes = Convert.FromBase64String(data); } catch { }
+                        }
+                        string pth;
+                        bool ok = SignatureHandler.Handle(bytes, action ?? "all", out pth);
+                        Send(s, ok ? 200 : 400, "application/json", Json("{\"ok\":" + (ok ? "true" : "false") + ",\"path\":" + Q(pth ?? "") + "}"), !closeReq);
                     }
                     else Send(s, 404, "application/json", Json("{\"error\":\"not found\"}"), !closeReq);
 

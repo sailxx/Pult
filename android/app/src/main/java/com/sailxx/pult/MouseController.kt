@@ -19,9 +19,18 @@ class MouseController(
     private val pendingDy = AtomicInteger(0)
     private var isSending = false
 
+    @Volatile
+    var speedMultiplier: Float = 1.6f
+
     fun onMove(dx: Int, dy: Int) {
-        pendingDx.addAndGet(dx)
-        pendingDy.addAndGet(dy)
+        pendingDx.addAndGet((dx * speedMultiplier).toInt())
+        pendingDy.addAndGet((dy * speedMultiplier).toInt())
+        scheduleSend()
+    }
+
+    fun onMove(dx: Float, dy: Float) {
+        pendingDx.addAndGet((dx * speedMultiplier).toInt())
+        pendingDy.addAndGet((dy * speedMultiplier).toInt())
         scheduleSend()
     }
 

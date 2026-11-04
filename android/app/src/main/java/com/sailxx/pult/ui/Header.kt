@@ -17,32 +17,35 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sailxx.pult.PultColors
+import com.sailxx.pult.LocalPultPalette
 import com.sailxx.pult.PultDimens
 
 enum class DeckSection(val title: String) {
-    APPS("Приложения"),
-    MEDIA("Плеер"),
-    CURSOR("Курсор")
+    DOCK("Док"),
+    TOUCHPAD("Тачпад"),
+    CLIPBOARD("Буфер"),
+    SIGNATURE("Подпись"),
+    CAPTURE("Снимок"),
+    APPS("Программы")
 }
 
 /**
- * Компактный верхний бар высотой 42dp по спецификации Pult.
- * Включает статус хоста, переключатель режимов, быстрый регулятор звука и кнопку отключения.
+ * Компактный верхний бар Pult высотой 44dp в стиле Windock.
+ * Включает статус хоста Windows, сегментированный переключатель режимов,
+ * кнопку быстрых настроек и отключение.
  */
 @Composable
 fun PultHeader(
     hostName: String,
     selectedSection: DeckSection,
     onSectionSelect: (DeckSection) -> Unit,
-    volume: Int,
-    isMuted: Boolean,
-    onVolumeStep: (Int) -> Unit,
-    onToggleMute: () -> Unit,
+    onOpenSettings: () -> Unit,
     onDisconnect: () -> Unit,
     onHaptic: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val palette = LocalPultPalette.current
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -55,8 +58,8 @@ fun PultHeader(
             modifier = Modifier
                 .height(34.dp)
                 .clip(PultDimens.shapeInner)
-                .background(PultColors.surface)
-                .border(1.dp, PultColors.border, PultDimens.shapeInner)
+                .background(palette.surface.copy(alpha = 0.85f))
+                .border(1.dp, palette.border, PultDimens.shapeInner)
                 .padding(horizontal = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -64,36 +67,36 @@ fun PultHeader(
             Box(
                 Modifier
                     .size(7.dp)
-                    .background(PultColors.success, CircleShape)
+                    .background(palette.live, CircleShape)
             )
             Text(
                 text = hostName,
-                color = PultColors.textPrimary,
+                color = palette.textPrimary,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 0.2.sp
             )
         }
 
-        // Центральный блок: Переключатель режимов (Apps / Player / Cursor)
+        // Центральный блок: Сегментированный переключатель разделов (Dock, Touchpad, Clipboard, Signature, Capture, Apps)
         Row(
             modifier = Modifier
                 .height(34.dp)
                 .clip(PultDimens.shapeInner)
-                .background(PultColors.surface)
-                .border(1.dp, PultColors.border, PultDimens.shapeInner)
+                .background(palette.surface.copy(alpha = 0.85f))
+                .border(1.dp, palette.border, PultDimens.shapeInner)
                 .padding(2.dp),
             horizontalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             DeckSection.entries.forEach { section ->
                 val active = section == selectedSection
                 val bgCol by animateColorAsState(
-                    targetValue = if (active) PultColors.surfaceLight else Color.Transparent,
+                    targetValue = if (active) palette.surfaceLight else Color.Transparent,
                     animationSpec = tween(180),
                     label = "tabBg"
                 )
                 val borderCol by animateColorAsState(
-                    targetValue = if (active) PultColors.border else Color.Transparent,
+                    targetValue = if (active) palette.accent.copy(alpha = 0.4f) else Color.Transparent,
                     animationSpec = tween(180),
                     label = "tabBorder"
                 )
@@ -110,107 +113,51 @@ fun PultHeader(
                                 onSectionSelect(section)
                             }
                         }
-                        .padding(horizontal = 14.dp),
+                        .padding(horizontal = 11.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = section.title,
-                        color = if (active) PultColors.textPrimary else PultColors.textSecondary,
-                        fontSize = 12.sp,
+                        color = if (active) palette.textPrimary else palette.textSecondary,
+                        fontSize = 11.sp,
                         fontWeight = if (active) FontWeight.Bold else FontWeight.Medium
                     )
                 }
             }
         }
 
-        // Правый блок: Управление громкостью и отключение
+        // Правый блок: Настройки и отключение
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(5.dp)
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            // Кнопка -5%
+            // Кнопка настроек
             Box(
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(34.dp)
                     .clip(PultDimens.shapeBadge)
-                    .background(PultColors.surface)
-                    .border(1.dp, PultColors.border, PultDimens.shapeBadge)
+                    .background(palette.surface.copy(alpha = 0.85f))
+                    .border(1.dp, palette.border, PultDimens.shapeBadge)
                     .clickable {
                         onHaptic()
-                        onVolumeStep(-5)
+                        onOpenSettings()
                     },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "−",
-                    color = PultColors.textSecondary,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            // Бейдж громкости / Mute
-            val badgeBg by animateColorAsState(
-                targetValue = if (isMuted) PultColors.danger.copy(alpha = 0.15f) else PultColors.surface,
-                animationSpec = tween(180),
-                label = "muteBadgeBg"
-            )
-            val badgeBorder by animateColorAsState(
-                targetValue = if (isMuted) PultColors.danger.copy(alpha = 0.5f) else PultColors.border,
-                animationSpec = tween(180),
-                label = "muteBadgeBorder"
-            )
-
-            Box(
-                modifier = Modifier
-                    .height(32.dp)
-                    .clip(PultDimens.shapeBadge)
-                    .background(badgeBg)
-                    .border(1.dp, badgeBorder, PultDimens.shapeBadge)
-                    .clickable {
-                        onHaptic()
-                        onToggleMute()
-                    }
-                    .padding(horizontal = 9.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = if (isMuted) "MUTE" else "$volume%",
-                    color = if (isMuted) PultColors.danger else PultColors.accent,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    letterSpacing = 0.3.sp
-                )
-            }
-
-            // Кнопка +5%
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(PultDimens.shapeBadge)
-                    .background(PultColors.surface)
-                    .border(1.dp, PultColors.border, PultDimens.shapeBadge)
-                    .clickable {
-                        onHaptic()
-                        onVolumeStep(+5)
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "+",
-                    color = PultColors.textSecondary,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold
+                    text = "⚙",
+                    color = palette.textSecondary,
+                    fontSize = 14.sp
                 )
             }
 
             // Кнопка отключения
             Box(
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(34.dp)
                     .clip(PultDimens.shapeBadge)
-                    .background(PultColors.surface)
-                    .border(1.dp, PultColors.border, PultDimens.shapeBadge)
+                    .background(palette.surface.copy(alpha = 0.85f))
+                    .border(1.dp, palette.border, PultDimens.shapeBadge)
                     .clickable {
                         onHaptic()
                         onDisconnect()
@@ -219,7 +166,7 @@ fun PultHeader(
             ) {
                 Text(
                     text = "✕",
-                    color = PultColors.textSecondary,
+                    color = palette.textSecondary,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium
                 )

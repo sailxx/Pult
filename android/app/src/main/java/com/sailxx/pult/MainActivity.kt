@@ -9,7 +9,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -37,8 +36,18 @@ class MainActivity : ComponentActivity() {
 
         val prefs = getSharedPreferences("pult", Context.MODE_PRIVATE)
         setContent {
-            PultTheme {
-                Root(prefs)
+            var themeName by remember { mutableStateOf(prefs.getString("theme", "aurora") ?: "aurora") }
+            val currentPalette = remember(themeName) { PultPalettes.get(themeName) }
+
+            PultTheme(palette = currentPalette) {
+                Root(
+                    prefs = prefs,
+                    currentPalette = currentPalette,
+                    onThemeChange = { newPalette ->
+                        themeName = newPalette.name
+                        prefs.edit().putString("theme", newPalette.name).apply()
+                    }
+                )
             }
         }
     }
@@ -58,7 +67,11 @@ private fun Context.bindToWifi() {
 }
 
 @Composable
-private fun Root(prefs: android.content.SharedPreferences) {
+private fun Root(
+    prefs: android.content.SharedPreferences,
+    currentPalette: PultThemePalette,
+    onThemeChange: (PultThemePalette) -> Unit
+) {
     var ip by remember { mutableStateOf(prefs.getString("ip", "") ?: "") }
     var pin by remember { mutableStateOf(prefs.getString("pin", "") ?: "") }
     var hostName by remember { mutableStateOf(prefs.getString("host_name", "Windows PC") ?: "Windows PC") }
@@ -69,38 +82,44 @@ private fun Root(prefs: android.content.SharedPreferences) {
         try { view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP) } catch (_: Exception) {}
     }
 
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(PultColors.background)
-            .safeDrawingPadding()
-    ) {
-        if (connected) {
-            val client = remember(ip, pin) { Client(ip, pin) }
-            LandscapeDock(
-                client = client,
-                hostName = hostName,
-                prefs = prefs,
-                onDisconnect = { connected = false },
-                onHaptic = ::haptic
-            )
-        } else {
-            ConnectScreen(
-                initIp = ip,
-                initPin = pin,
-                onConnected = { newIp, newPin, name ->
-                    ip = newIp
-                    pin = newPin
-                    hostName = name
-                    prefs.edit()
-                        .putString("ip", newIp)
-                        .putString("pin", newPin)
-                        .putString("host_name", name)
-                        .apply()
-                    connected = true
-                },
-                onHaptic = ::haptic
-            )
+    Box(Modifier.fillMaxSize()) {
+        // Фоновые мягкие радиальные градиенты в стиле Windock
+        PultWallpaper(palette = currentPalette)
+
+        Box(
+            Modifier
+                .fillMaxSize()
+                .safeDrawingPadding()
+        ) {
+            if (connected) {
+                val client = remember(ip, pin) { Client(ip, pin) }
+                LandscapeDock(
+                    client = client,
+                    hostName = hostName,
+                    prefs = prefs,
+                    currentPalette = currentPalette,
+                    onThemeChange = onThemeChange,
+                    onDisconnect = { connected = false },
+                    onHaptic = ::haptic
+                )
+            } else {
+                ConnectScreen(
+                    initIp = ip,
+                    initPin = pin,
+                    onConnected = { newIp, newPin, name ->
+                        ip = newIp
+                        pin = newPin
+                        hostName = name
+                        prefs.edit()
+                            .putString("ip", newIp)
+                            .putString("pin", newPin)
+                            .putString("host_name", name)
+                            .apply()
+                        connected = true
+                    },
+                    onHaptic = ::haptic
+                )
+            }
         }
     }
 }
@@ -110,16 +129,22 @@ private fun LandscapeDock(
     client: Client,
     hostName: String,
     prefs: android.content.SharedPreferences,
+    currentPalette: PultThemePalette,
+    onThemeChange: (PultThemePalette) -> Unit,
     onDisconnect: () -> Unit,
     onHaptic: () -> Unit
 ) {
-    var section by remember { mutableStateOf(DeckSection.APPS) }
+    var section by remember { mutableStateOf(DeckSection.DOCK) }
     var apps by remember { mutableStateOf<List<AppItem>?>(null) }
     var tasks by remember { mutableStateOf<List<TaskItem>>(emptyList()) }
     var query by remember { mutableStateOf("") }
     var favs by remember { mutableStateOf(prefs.getStringSet("favs", emptySet()) ?: emptySet()) }
     var volume by remember { mutableStateOf(50) }
     var isMuted by remember { mutableStateOf(false) }
+
+    var dockSlotsCount by remember { mutableIntStateOf(prefs.getInt("dock_slots", 6)) }
+    var showLabels by remember { mutableStateOf(prefs.getBoolean("show_labels", true)) }
+    var isSettingsOpen by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
     val mouseController = remember(client) { MouseController(client, scope) }
@@ -176,95 +201,123 @@ private fun LandscapeDock(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 14.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        // Компактный 42dp Header
-        PultHeader(
-            hostName = hostName,
-            selectedSection = section,
-            onSectionSelect = { section = it },
-            volume = volume,
-            isMuted = isMuted,
-            onVolumeStep = { step ->
-                fire {
-                    val next = (volume + step).coerceIn(0, 100)
-                    val r = client.setVolume(next)
-                    volume = r.volume
-                    isMuted = r.muted
-                }
-            },
-            onToggleMute = {
-                fire {
-                    val r = client.toggleMute()
-                    volume = r.volume
-                    isMuted = r.muted
-                }
-            },
-            onDisconnect = disconnectAndRelease,
-            onHaptic = onHaptic
-        )
-
-        // Контент секции с плавной анимацией перехода
-        Box(
+    Box(Modifier.fillMaxSize()) {
+        Column(
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
+                .fillMaxSize()
+                .padding(horizontal = 14.dp, vertical = 6.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            AnimatedContent(
-                targetState = section,
-                transitionSpec = { fadeIn() togetherWith fadeOut() },
-                label = "dockSectionTransition"
-            ) { currentSection ->
-                when (currentSection) {
-                    DeckSection.APPS -> AppsDeck(
-                        client = client,
-                        apps = apps,
-                        tasks = tasks,
-                        query = query,
-                        onQueryChange = { query = it },
-                        favs = favs,
-                        onToggleFav = { id ->
-                            favs = if (id in favs) favs - id else favs + id
-                            prefs.edit().putStringSet("favs", favs).apply()
-                        },
-                        onLaunch = { fire { client.launch(it) } },
-                        onSwitchTask = { taskId -> fire { client.switchTask(taskId) } },
-                        onHaptic = onHaptic
-                    )
+            // Компактный верхний бар
+            PultHeader(
+                hostName = hostName,
+                selectedSection = section,
+                onSectionSelect = { section = it },
+                onOpenSettings = { isSettingsOpen = true },
+                onDisconnect = disconnectAndRelease,
+                onHaptic = onHaptic
+            )
 
-                    DeckSection.MEDIA -> MediaDeck(
-                        client = client,
-                        volume = volume,
-                        isMuted = isMuted,
-                        onVolumeChange = { newVol ->
-                            fire {
-                                val r = client.setVolume(newVol)
-                                volume = r.volume
-                                isMuted = r.muted
-                            }
-                        },
-                        onToggleMute = {
-                            fire {
-                                val r = client.toggleMute()
-                                volume = r.volume
-                                isMuted = r.muted
-                            }
-                        },
-                        onKey = { keyName -> fire { client.key(keyName) } },
-                        onSystem = { action -> fire { client.system(action) } },
-                        onHaptic = onHaptic
-                    )
+            // Контент секции с плавной анимацией перехода
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                AnimatedContent(
+                    targetState = section,
+                    transitionSpec = { fadeIn() togetherWith fadeOut() },
+                    label = "dockSectionTransition"
+                ) { currentSection ->
+                    when (currentSection) {
+                        DeckSection.DOCK -> DockScreen(
+                            client = client,
+                            apps = apps,
+                            tasks = tasks,
+                            favs = favs,
+                            onToggleFav = { id ->
+                                favs = if (id in favs) favs - id else favs + id
+                                prefs.edit().putStringSet("favs", favs).apply()
+                            },
+                            onLaunch = { fire { client.launch(it) } },
+                            onSwitchTask = { taskId -> fire { client.switchTask(taskId) } },
+                            volume = volume,
+                            isMuted = isMuted,
+                            onVolumeChange = { newVol ->
+                                fire {
+                                    val r = client.setVolume(newVol)
+                                    volume = r.volume
+                                    isMuted = r.muted
+                                }
+                            },
+                            onToggleMute = {
+                                fire {
+                                    val r = client.toggleMute()
+                                    volume = r.volume
+                                    isMuted = r.muted
+                                }
+                            },
+                            onKey = { keyName -> fire { client.key(keyName) } },
+                            onSystem = { action -> fire { client.system(action) } },
+                            dockSlotsCount = dockSlotsCount,
+                            showLabels = showLabels,
+                            onOpenAllApps = { section = DeckSection.APPS },
+                            onHaptic = onHaptic
+                        )
 
-                    DeckSection.CURSOR -> CursorDeck(
-                        mouseController = mouseController,
-                        onHaptic = onHaptic
-                    )
+                        DeckSection.TOUCHPAD -> TouchpadScreen(
+                            mouseController = mouseController,
+                            onHaptic = onHaptic
+                        )
+
+                        DeckSection.CLIPBOARD -> ClipboardScreen(
+                            client = client,
+                            onHaptic = onHaptic
+                        )
+
+                        DeckSection.SIGNATURE -> SignatureScreen(
+                            client = client,
+                            onHaptic = onHaptic
+                        )
+
+                        DeckSection.CAPTURE -> CaptureScreen(
+                            client = client,
+                            onHaptic = onHaptic
+                        )
+
+                        DeckSection.APPS -> AppsDeck(
+                            client = client,
+                            apps = apps,
+                            tasks = tasks,
+                            query = query,
+                            onQueryChange = { query = it },
+                            favs = favs,
+                            onToggleFav = { id ->
+                                favs = if (id in favs) favs - id else favs + id
+                                prefs.edit().putStringSet("favs", favs).apply()
+                            },
+                            onLaunch = { fire { client.launch(it) } },
+                            onSwitchTask = { taskId -> fire { client.switchTask(taskId) } },
+                            onHaptic = onHaptic
+                        )
+                    }
                 }
             }
+        }
+
+        // Модальное окно настроек внешнего вида
+        if (isSettingsOpen) {
+            SettingsSheet(
+                prefs = prefs,
+                currentPalette = currentPalette,
+                onPaletteSelect = onThemeChange,
+                dockSlotsCount = dockSlotsCount,
+                onDockSlotsSelect = { dockSlotsCount = it },
+                showLabels = showLabels,
+                onShowLabelsToggle = { showLabels = it },
+                onClose = { isSettingsOpen = false },
+                onHaptic = onHaptic
+            )
         }
     }
 }
