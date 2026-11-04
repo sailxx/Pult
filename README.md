@@ -69,7 +69,7 @@ Most remote control apps look like outdated TV remotes or clumsy media players. 
 ## 🖼️ Interface Showcase
 
 ### 1. 🚀 Hero Dock & Apps Library
-Крупные свободно парящие значки приложений без квадратных рамок и обводок, аккуратная светящаяся точка запущенных процессов, верхний бар навигации и компактная парящая нижняя капсула Now Playing в стиле Liquid Glass.
+Prominent freely floating application logos without square cards or borders, subtle glowing indicator dots for active Windows processes, a compact floating navigation header, and a centered Liquid Glass Now Playing capsule.
 
 <div align="center">
   <img src="assets/screenshots/screenshot-dock.png" width="92%" alt="Pult Hero Dock: Liquid Glass & Floating Icons" />
@@ -78,7 +78,7 @@ Most remote control apps look like outdated TV remotes or clumsy media players. 
 <br/>
 
 ### 2. 🖱️ 60 FPS Precision Glass Touchpad
-Сенсорная панель управления мышью с кинетическим скольжением, слайдером чувствительности от 0.5× до 3.0× и стеклянными кнопками ЛКМ и ПКМ.
+Low-latency wireless mouse trackpad with kinetic gliding, customizable sensitivity slider from 0.5× to 3.0×, and frosted glass Left & Right click buttons.
 
 <div align="center">
   <img src="assets/screenshots/screenshot-touchpad.png" width="92%" alt="Pult Precision Glass Touchpad" />
@@ -87,7 +87,7 @@ Most remote control apps look like outdated TV remotes or clumsy media players. 
 <br/>
 
 ### 3. 📋 Bidirectional Clipboard Bridge
-Мгновенная двухсторонняя синхронизация буфера обмена между смартфоном и компьютером без облака и задержек.
+Instant two-way clipboard synchronization between phone and PC with zero cloud dependency. Inspect the current Windows clipboard snippet or inject text directly into Windows memory.
 
 <div align="center">
   <img src="assets/screenshots/screenshot-clipboard.png" width="92%" alt="Pult Bidirectional Clipboard Bridge" />
@@ -96,7 +96,7 @@ Most remote control apps look like outdated TV remotes or clumsy media players. 
 <br/>
 
 ### 4. ✍️ Digital Signature & Inking
-Сглаживание линий кривыми Безье, инструменты выбора цвета и толщины, мгновенная вставка подписи прямо в активный документ на ПК (`Ctrl+V`).
+Smooth drawing canvas powered by quadratic Bézier curves. Color and stroke thickness options with one-tap insertion directly into active PC documents (`Ctrl+V`).
 
 <div align="center">
   <img src="assets/screenshots/screenshot-signature.png" width="92%" alt="Pult Digital Signature Canvas" />
@@ -105,7 +105,7 @@ Most remote control apps look like outdated TV remotes or clumsy media players. 
 <br/>
 
 ### 5. 📸 Desktop Screen Capture
-Трансляция рабочего стола Windows в реальном времени с полноразмерным превью и быстрым сохранением в буфер или на диск.
+Live Windows desktop display monitoring in real time with high-resolution landscape preview and quick actions to copy to clipboard or save to disk.
 
 <div align="center">
   <img src="assets/screenshots/screenshot-capture.png" width="92%" alt="Pult Desktop Screen Capture" />
@@ -117,14 +117,14 @@ Most remote control apps look like outdated TV remotes or clumsy media players. 
 
 ## 🎨 Liquid Glass & Themes
 
-По умолчанию в Pult активирована чистая темная матовая тема **Dark Minimal** (`#0C0E12`) без навязчивых цветных пятен. В настройках доступны опциональные богатые радиальные градиентные палитры:
+By default, Pult features a clean, distraction-free **Dark Minimal** (`#0C0E12`) matte background. Users can also select from rich ambient radial glow palettes in settings:
 
-* **⬛ Dark Minimal (По умолчанию):** Глубокий матовый фон (`#0C0E12`), полупрозрачные парящие стеклянные панели Liquid Glass (`Color.White.copy(0.08f)`), тонкие деликатные границы и акцентный небесный цвет (`#38BDF8`).
-* **🌿 Aurora:** Изумрудная база (`#101719`) с мягким морским свечением (`#71A78A`), глубоким индиго (`#274268`) и мятными акцентами (`#B4EDCC`).
-* **🌆 Dusk:** Сумеречный индиго (`#171228`) с аметистовыми переливами (`#8B578F`) и лавандовыми акцентами (`#E7D4FF`).
-* **🔥 Ember:** Терракотовый графит (`#221615`) с медными полутонами (`#A45F43`) и персиковыми деталями (`#F8DCC0`).
-* **🌌 Midnight:** Глубокий ультрамарин (`#090E17`) с кобальтовыми и ледяными акцентами (`#D0E2FF`).
-* **🖤 OLED Pure:** Абсолютно черный холст (`#000000`) для экономии батареи на AMOLED-экранах.
+* **⬛ Dark Minimal (Default):** Deep matte background (`#0C0E12`), translucent floating Liquid Glass panels (`Color.White.copy(0.08f)`), delicate borders, and electric sky blue accents (`#38BDF8`).
+* **🌿 Aurora:** Emerald foundation (`#101719`) with soft sea-mist radial glows (`#71A78A`), deep navy (`#274268`), and fresh mint accents (`#B4EDCC`).
+* **🌆 Dusk:** Twilight indigo (`#171228`) paired with amethyst radial hues (`#8B578F`) and soft lavender highlights (`#E7D4FF`).
+* **🔥 Ember:** Terracotta charcoal (`#221615`) with warm copper undertones (`#A45F43`) and peach accents (`#F8DCC0`).
+* **🌌 Midnight:** Deep space ultramarine (`#090E17`) with cobalt accents and icy blue highlights (`#D0E2FF`).
+* **🖤 OLED Pure:** Pitch-black canvas (`#000000`) for zero power draw on AMOLED screens.
 
 <br/>
 
@@ -132,7 +132,7 @@ Most remote control apps look like outdated TV remotes or clumsy media players. 
 
 ## 🪟 Windows 11 Modern Flyout Companion
 
-Компаньон Pult для Windows располагается в системном трее и выполнен в нативном стиле Windows 11 Modern Flyouts:
+The Pult Windows companion resides quietly in the notification tray and matches the native Windows 11 Modern Flyouts interface:
 
 <div align="center">
   <img src="assets/screenshots/windows-tray-companion.png" width="340" alt="Pult Windows 11 Modern Flyout Companion" />
@@ -140,10 +140,10 @@ Most remote control apps look like outdated TV remotes or clumsy media players. 
 
 <br/>
 
-* **Слайдеры громкости и яркости:** Управление звуком мастер-устройства `Speakers (Realtek(R) Audio)` с активным вертикальным маркером, ползунок активных программ (Brave Browser), яркость дисплея, фильтр синего света и затемнение.
-* **Быстрый доступ к сопряжению:** Отображение статуса LAN, одно нажатие для копирования PIN-кода и IP-адреса компьютера.
-* **Интеграция с брандмауэром:** Автоматическая настройка входящих правил Windows Defender Firewall в один клик.
-* **Автономный бинарник:** Standalone исполняемый файл размером ~60 КБ без зависимостей от тяжелых фреймворков.
+* **Volume & Display Sliders:** Master audio control for `Speakers (Realtek(R) Audio)` with an active vertical cyan indicator, per-app volume slider (Brave Browser), display brightness, blue light filter, and dimming controls.
+* **Instant Pairing Sharing:** Live LAN status with one-click copying for both the 6-digit PIN and the computer's local IP address.
+* **Firewall Automation:** One-click configuration for Windows Defender Firewall inbound rules.
+* **Standalone Portable Binary:** Single ~60 KB executable with zero runtime dependencies.
 
 <br/>
 
@@ -152,16 +152,16 @@ Most remote control apps look like outdated TV remotes or clumsy media players. 
 ## ⚡ Quick Start
 
 ### 1. Windows Host Setup
-1. Скачайте [`Pult.exe`](https://github.com/sailxx/Pult/releases/latest/download/Pult.exe) (одиночный файл ~60 КБ, установка не требуется).
-2. Запустите `Pult.exe`. Иконка появится в системном трее Windows.
-3. Кликните по иконке в трее, чтобы открыть flyout-окно и узнать 6-значный PIN.
-4. При первом запуске в меню настроек ⚙️ нажмите **«Разрешить в брандмауэре Windows»**.
+1. Download [`Pult.exe`](https://github.com/sailxx/Pult/releases/latest/download/Pult.exe) (single ~60 KB binary, no installation required).
+2. Run `Pult.exe`. The companion icon will appear in your system notification tray.
+3. Left-click the tray icon to open the flyout and check your 6-digit pairing PIN.
+4. If connecting for the first time, open the settings menu ⚙️ and click **"Allow through Windows Firewall"**.
 
 ### 2. Android Client Setup
-1. Скачайте и установите [`Pult.apk`](https://github.com/sailxx/Pult/releases/latest/download/Pult.apk).
-2. Установите смартфон горизонтально на настольную подставку.
-3. Нажмите **«Поиск»** для автоматического обнаружения ПК в локальной сети.
-4. Введите 6-значный PIN-код и нажмите **«Подключить»**.
+1. Download and install [`Pult.apk`](https://github.com/sailxx/Pult/releases/latest/download/Pult.apk).
+2. Place your smartphone horizontally on a desk stand.
+3. Tap **"Search"** to automatically discover your PC on the local network via UDP beacon.
+4. Enter the 6-digit PIN and tap **"Connect"**.
 
 <br/>
 
@@ -186,9 +186,9 @@ Most remote control apps look like outdated TV remotes or clumsy media players. 
 └──────────────────────────────────────────────┘  Local Network  └─────────────────────────────────┘
 ```
 
-* **Discovery (UDP 47801):** Мгновенное P2P обнаружение через широковещательный маяк со сканированием подсети.
-* **Control API (TCP 47800):** Keep-Alive HTTP сервер с криптографическим PIN и защитой от перебора (10 неудачных попыток = блокировка на 60 сек).
-* **Спецификация протокола:** Полный список эндпоинтов и форматов запросов доступен в [docs/PROTOCOL.md](docs/PROTOCOL.md).
+* **Discovery (UDP 47801):** Instant peer-to-peer broadcast beacon with subnet sweep fallback.
+* **Control API (TCP 47800):** Keep-Alive HTTP server with cryptographic PIN security and brute-force lockout (10 failed attempts = 60-second cooldown).
+* **Protocol Reference:** Detailed endpoints, parameter specifications, and sample payloads are available in [docs/PROTOCOL.md](docs/PROTOCOL.md).
 
 <br/>
 
@@ -197,13 +197,13 @@ Most remote control apps look like outdated TV remotes or clumsy media players. 
 ## 🛠️ Building from Source
 
 ### Windows Host (Zero SDKs Required)
-Компилируется стандартным компилятором C#, встроенным в любую версию Windows:
+Compiles directly using the Microsoft C# compiler built into every Windows installation:
 ```cmd
 host\build.cmd
 ```
 
 ### Android Client
-Собирается с помощью Gradle и Android SDK:
+Built with Gradle and Android SDK:
 ```bash
 cd android
 ./gradlew assembleRelease
@@ -215,6 +215,6 @@ cd android
 
 ## 📄 License & Credits
 
-Pult распространяется под лицензией **MIT License**. См. [LICENSE](LICENSE) для подробностей.
+Pult is released under the **MIT License**. See [LICENSE](LICENSE) for full details.
 
-Разработано [@sailxx](https://github.com/sailxx). Вопросы, баг-репорты и предложения приветствуются в [GitHub Issues](https://github.com/sailxx/Pult/issues)!
+Developed with care by [@sailxx](https://github.com/sailxx). Contributions, bug reports, and suggestions are welcome on [GitHub Issues](https://github.com/sailxx/Pult/issues)!

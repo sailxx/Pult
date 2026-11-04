@@ -28,21 +28,21 @@
       <text x="154" y="21" fill="#6B7280" font-size="10" class="mono">LAN</text>
 
       <!-- Center: Segmented Navigation capsule -->
-      <g transform="translate(320 0)">
-        <rect x="0" y="0" width="520" height="34" rx="17" class="liquid-glass"/>
+      <g transform="translate(300 0)">
+        <rect x="0" y="0" width="558" height="34" rx="17" class="liquid-glass"/>
         
-        <text x="39" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Док</text>
+        <text x="44" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Dock</text>
       
-        <text x="122" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Тачпад</text>
+        <text x="136" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Touchpad</text>
       
-        <text x="205" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Буфер</text>
+        <text x="235" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Clipboard</text>
       
-        <rect x="244" y="3" width="88" height="28" rx="14" fill="#FFFFFF" fill-opacity="0.16" stroke="#FFFFFF" stroke-opacity="0.22"/>
-        <text x="288" y="21" fill="#FFFFFF" font-size="11" font-weight="700" text-anchor="middle">Подпись</text>
+        <rect x="286" y="3" width="96" height="28" rx="14" fill="#FFFFFF" fill-opacity="0.16" stroke="#FFFFFF" stroke-opacity="0.22"/>
+        <text x="334" y="21" fill="#FFFFFF" font-size="11" font-weight="700" text-anchor="middle">Signature</text>
       
-        <text x="379" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Снимок</text>
+        <text x="426" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Capture</text>
       
-        <text x="470" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Программы</text>
+        <text x="511" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Apps</text>
       
       </g>
 
@@ -64,8 +64,8 @@
 
     <g transform="translate(24 24)">
       <circle cx="6" cy="6" r="3.5" fill="#38BDF8"/>
-      <text x="18" y="10" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">ЦИФРОВАЯ ПОДПИСЬ ДЛЯ ДОКУМЕНТОВ</text>
-      <text x="850" y="10" fill="#6B7280" font-size="11" text-anchor="end">Сглаживание Безье</text>
+      <text x="18" y="10" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">DIGITAL SIGNATURE FOR DOCUMENTS</text>
+      <text x="850" y="10" fill="#6B7280" font-size="11" text-anchor="end">Bézier smoothing</text>
     </g>
 
     <!-- Drawn vector curve signature -->
@@ -73,7 +73,7 @@
 
     <!-- Bottom baseline -->
     <line x1="80" y1="460" x2="820" y2="460" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="1.5" stroke-dasharray="8 8"/>
-    <text x="450" y="490" fill="#4B5563" font-size="11.5" text-anchor="middle">Линия подписи • Распишитесь пальцем или стилусом</text>
+    <text x="450" y="490" fill="#4B5563" font-size="11.5" text-anchor="middle">Signature baseline • Sign with finger or active stylus</text>
   </g>
 
   <!-- Right: Actions (290px) -->
@@ -81,17 +81,17 @@
     <rect x="0" y="0" width="288" height="610" rx="20" class="liquid-card"/>
 
     <g transform="translate(24 24)">
-      <text x="0" y="16" fill="#6B7280" font-size="11" font-weight="700">ДЕЙСТВИЯ</text>
+      <text x="0" y="16" fill="#6B7280" font-size="11" font-weight="700">ACTIONS</text>
 
       <g transform="translate(0 40)">
         <rect x="0" y="0" width="240" height="50" rx="25" fill="#38BDF8"/>
-        <text x="120" y="30" fill="#0C0E12" font-size="12.5" font-weight="700" text-anchor="middle">Вставить в документ ПК</text>
+        <text x="120" y="30" fill="#0C0E12" font-size="12.5" font-weight="700" text-anchor="middle">Insert into PC Document</text>
 
         <rect x="0" y="64" width="240" height="46" rx="23" class="liquid-btn"/>
-        <text x="120" y="93" fill="#F3F4F6" font-size="12" font-weight="600" text-anchor="middle">Очистить холст</text>
+        <text x="120" y="93" fill="#F3F4F6" font-size="12" font-weight="600" text-anchor="middle">Clear Canvas</text>
 
         <rect x="0" y="122" width="240" height="46" rx="23" class="liquid-btn"/>
-        <text x="120" y="151" fill="#F3F4F6" font-size="12" font-weight="600" text-anchor="middle">Сохранить как PNG</text>
+        <text x="120" y="151" fill="#F3F4F6" font-size="12" font-weight="600" text-anchor="middle">Save as PNG</text>
       </g>
     </g>
   </g>

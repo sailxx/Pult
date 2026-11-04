@@ -1,7 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { execSync } from 'node:child_process';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const outDir = path.resolve(here, '../assets/screenshots');
@@ -46,14 +45,14 @@ function darkMatteBackground(w, h) {
   `;
 }
 
-function headerBar(activeTab = 'Док') {
-  const tabs = ['Док', 'Тачпад', 'Буфер', 'Подпись', 'Снимок', 'Программы'];
+function headerBar(activeTab = 'Dock') {
+  const tabs = ['Dock', 'Touchpad', 'Clipboard', 'Signature', 'Capture', 'Apps'];
   let tabX = 3;
   let tabsSvg = '';
 
   for (const t of tabs) {
     const isActive = t === activeTab;
-    const tw = t.length > 5 ? 88 : 72;
+    const tw = t.length > 7 ? 96 : 82;
     if (isActive) {
       tabsSvg += `
         <rect x="${tabX}" y="3" width="${tw}" height="28" rx="14" fill="#FFFFFF" fill-opacity="0.16" stroke="#FFFFFF" stroke-opacity="0.22"/>
@@ -77,7 +76,7 @@ function headerBar(activeTab = 'Док') {
       <text x="154" y="21" fill="#6B7280" font-size="10" class="mono">LAN</text>
 
       <!-- Center: Segmented Navigation capsule -->
-      <g transform="translate(320 0)">
+      <g transform="translate(300 0)">
         <rect x="0" y="0" width="${tabX + 3}" height="34" rx="17" class="liquid-glass"/>
         ${tabsSvg}
       </g>
@@ -94,22 +93,22 @@ function headerBar(activeTab = 'Док') {
   `;
 }
 
-// 1. DOCK & APPS SCREEN (Pure floating logos, no square card wrappers, floating Liquid Glass Now Playing pill)
+// 1. DOCK & APPS SCREEN
 function buildScreenDock() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Pult Liquid Glass Landscape Dock">
 <style>${STYLES}</style>
 ${darkMatteBackground(1280, 720)}
-${headerBar('Док')}
+${headerBar('Dock')}
 
 <!-- Dock Sub-header -->
 <g transform="translate(36 74)">
-  <text x="0" y="16" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.8">ГЛАВНЫЙ ДОК</text>
-  <rect x="110" y="2" width="94" height="20" rx="10" fill="#FFFFFF" fill-opacity="0.08" stroke="#FFFFFF" stroke-opacity="0.12"/>
-  <text x="157" y="15" fill="#38BDF8" font-size="10" font-weight="600" text-anchor="middle">6 закреплено</text>
+  <text x="0" y="16" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.8">MAIN DOCK</text>
+  <rect x="94" y="2" width="86" height="20" rx="10" fill="#FFFFFF" fill-opacity="0.08" stroke="#FFFFFF" stroke-opacity="0.12"/>
+  <text x="137" y="15" fill="#38BDF8" font-size="10" font-weight="600" text-anchor="middle">6 Pinned</text>
 
   <g transform="translate(1030 0)">
     <rect x="0" y="0" width="178" height="26" rx="13" class="liquid-glass"/>
-    <text x="89" y="17" fill="#38BDF8" font-size="11" font-weight="500" text-anchor="middle">Все программы (42) →</text>
+    <text x="89" y="17" fill="#38BDF8" font-size="11" font-weight="500" text-anchor="middle">All Applications (42) →</text>
   </g>
 </g>
 
@@ -129,35 +128,35 @@ ${headerBar('Док')}
     <text x="72" y="148" fill="#F3F4F6" font-size="13" font-weight="600" text-anchor="middle">Chrome</text>
   </g>
 
-  <!-- App 3: Visual Studio Code (Official 256x256 Ribbon Icon) -->
+  <!-- App 3: Visual Studio Code -->
   <g transform="translate(376 0)">
     <image href="${vscodeIco}" x="18" y="0" width="108" height="108"/>
     <circle cx="72" cy="120" r="4" fill="#38BDF8"/>
     <text x="72" y="148" fill="#F3F4F6" font-size="13" font-weight="600" text-anchor="middle">VS Code</text>
   </g>
 
-  <!-- App 4: Telegram Desktop (Official 256x256 Icon) -->
+  <!-- App 4: Telegram Desktop -->
   <g transform="translate(564 0)">
     <image href="${telegramIco}" x="18" y="0" width="108" height="108"/>
     <circle cx="72" cy="120" r="4" fill="#38BDF8"/>
     <text x="72" y="148" fill="#F3F4F6" font-size="13" font-weight="600" text-anchor="middle">Telegram</text>
   </g>
 
-  <!-- App 5: VLC Media Player (Official 256x256 Cone Icon) -->
+  <!-- App 5: VLC Media Player -->
   <g transform="translate(752 0)">
     <image href="${vlcIco}" x="18" y="0" width="108" height="108"/>
     <text x="72" y="148" fill="#9CA3AF" font-size="13" font-weight="500" text-anchor="middle">VLC Player</text>
   </g>
 
-  <!-- App 6: Windows Explorer (Official 256x256 Folder Icon) -->
+  <!-- App 6: Windows Explorer -->
   <g transform="translate(940 0)">
     <image href="${explorerIco}" x="18" y="0" width="108" height="108"/>
     <circle cx="72" cy="120" r="4" fill="#38BDF8"/>
-    <text x="72" y="148" fill="#F3F4F6" font-size="13" font-weight="600" text-anchor="middle">Проводник</text>
+    <text x="72" y="148" fill="#F3F4F6" font-size="13" font-weight="600" text-anchor="middle">Explorer</text>
   </g>
 </g>
 
-<!-- FLOATING LIQUID GLASS NOW PLAYING & VOLUME PILL -->
+<!-- FLOATING LIQUID GLASS NOW PLAYING AND VOLUME PILL -->
 <g transform="translate(320 626)">
   <rect x="0" y="0" width="640" height="52" rx="26" class="liquid-glass"/>
 
@@ -188,10 +187,10 @@ ${headerBar('Док')}
   <!-- Right: System Actions -->
   <g transform="translate(440 12)">
     <rect x="0" y="0" width="88" height="28" rx="14" class="liquid-btn"/>
-    <text x="44" y="18" fill="#9CA3AF" font-size="10.5" font-weight="500" text-anchor="middle">Рабочий стол</text>
+    <text x="44" y="18" fill="#9CA3AF" font-size="10.5" font-weight="500" text-anchor="middle">Desktop</text>
 
-    <rect x="96" y="0" width="72" height="28" rx="14" class="liquid-btn"/>
-    <text x="132" y="18" fill="#EF4444" font-size="10.5" font-weight="500" text-anchor="middle">Блок ПК</text>
+    <rect x="96" y="0" width="76" height="28" rx="14" class="liquid-btn"/>
+    <text x="134" y="18" fill="#EF4444" font-size="10.5" font-weight="500" text-anchor="middle">Lock PC</text>
   </g>
 </g>
 </svg>`;
@@ -202,7 +201,7 @@ function buildScreenTouchpad() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Pult Touchpad">
 <style>${STYLES}</style>
 ${darkMatteBackground(1280, 720)}
-${headerBar('Тачпад')}
+${headerBar('Touchpad')}
 
 <g transform="translate(36 74)">
   <!-- Left Trackpad Area (880px) -->
@@ -213,15 +212,15 @@ ${headerBar('Тачпад')}
     <circle cx="440" cy="275" r="32" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1" fill="none"/>
     <circle cx="440" cy="275" r="4" fill="#38BDF8" fill-opacity="0.5"/>
 
-    <text x="440" y="335" fill="#4B5563" font-size="12" font-weight="500" text-anchor="middle">Сенсорная область с инерционной кинетикой</text>
+    <text x="440" y="335" fill="#4B5563" font-size="12" font-weight="500" text-anchor="middle">Precision touch surface with kinetic motion</text>
 
     <!-- Bottom Left/Right Mouse Click Buttons in Liquid Glass -->
     <g transform="translate(20 540)">
       <rect x="0" y="0" width="410" height="52" rx="16" class="liquid-glass"/>
-      <text x="205" y="31" fill="#F3F4F6" font-size="12.5" font-weight="600" text-anchor="middle">Левый клик (LMB)</text>
+      <text x="205" y="31" fill="#F3F4F6" font-size="12.5" font-weight="600" text-anchor="middle">Left Click (LMB)</text>
 
       <rect x="430" y="0" width="410" height="52" rx="16" class="liquid-glass"/>
-      <text x="635" y="31" fill="#9CA3AF" font-size="12.5" font-weight="600" text-anchor="middle">Правый клик (RMB)</text>
+      <text x="635" y="31" fill="#9CA3AF" font-size="12.5" font-weight="600" text-anchor="middle">Right Click (RMB)</text>
     </g>
   </g>
 
@@ -230,12 +229,12 @@ ${headerBar('Тачпад')}
     <rect x="0" y="0" width="308" height="610" rx="20" class="liquid-card"/>
 
     <g transform="translate(24 24)">
-      <text x="0" y="16" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">ЖЕСТЫ И ЧУВСТВИТЕЛЬНОСТЬ</text>
+      <text x="0" y="16" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">GESTURES &amp; SENSITIVITY</text>
 
       <!-- Sensitivity Control -->
       <g transform="translate(0 40)">
         <rect x="0" y="0" width="260" height="64" rx="14" class="liquid-glass"/>
-        <text x="16" y="26" fill="#F3F4F6" font-size="12" font-weight="600">Скорость курсора</text>
+        <text x="16" y="26" fill="#F3F4F6" font-size="12" font-weight="600">Pointer Speed</text>
         <text x="244" y="26" fill="#38BDF8" font-size="12" font-weight="700" text-anchor="end">1.4×</text>
         <rect x="16" y="42" width="228" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.12"/>
         <rect x="16" y="42" width="130" height="5" rx="2.5" fill="#38BDF8"/>
@@ -244,19 +243,19 @@ ${headerBar('Тачпад')}
 
       <!-- Gesture Shortcuts -->
       <g transform="translate(0 120)">
-        <text x="0" y="14" fill="#6B7280" font-size="10.5" font-weight="700">МУЛЬТИТАЧ ЖЕСТЫ</text>
+        <text x="0" y="14" fill="#6B7280" font-size="10.5" font-weight="700">MULTITOUCH GESTURES</text>
 
         <rect x="0" y="26" width="260" height="42" rx="12" class="liquid-glass"/>
-        <text x="16" y="52" fill="#F3F4F6" font-size="12">1 палец: перемещение</text>
+        <text x="16" y="52" fill="#F3F4F6" font-size="12">1 finger: move cursor</text>
 
         <rect x="0" y="76" width="260" height="42" rx="12" class="liquid-glass"/>
-        <text x="16" y="102" fill="#F3F4F6" font-size="12">2 пальца: скролл страницы</text>
+        <text x="16" y="102" fill="#F3F4F6" font-size="12">2 fingers: vertical scroll</text>
 
         <rect x="0" y="126" width="260" height="42" rx="12" class="liquid-glass"/>
-        <text x="16" y="152" fill="#F3F4F6" font-size="12">Тап 2 пальцами: контекстное меню</text>
+        <text x="16" y="152" fill="#F3F4F6" font-size="12">2-finger tap: context menu</text>
 
         <rect x="0" y="176" width="260" height="42" rx="12" class="liquid-glass"/>
-        <text x="16" y="202" fill="#F3F4F6" font-size="12">Двойной тап: Drag &amp; Drop</text>
+        <text x="16" y="202" fill="#F3F4F6" font-size="12">Double tap: Drag &amp; Drop</text>
       </g>
     </g>
   </g>
@@ -269,7 +268,7 @@ function buildScreenClipboard() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Pult Clipboard">
 <style>${STYLES}</style>
 ${darkMatteBackground(1280, 720)}
-${headerBar('Буфер')}
+${headerBar('Clipboard')}
 
 <g transform="translate(36 74)">
   <!-- Left Column: Windows Clipboard (760px) -->
@@ -278,19 +277,19 @@ ${headerBar('Буфер')}
 
     <g transform="translate(24 24)">
       <circle cx="6" cy="8" r="3.5" fill="#38BDF8"/>
-      <text x="18" y="12" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">ТЕКУЩИЙ БУФЕР ОБМЕНА WINDOWS</text>
+      <text x="18" y="12" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">CURRENT WINDOWS CLIPBOARD</text>
 
       <!-- Active Clip Preview -->
       <g transform="translate(0 32)">
         <rect x="0" y="0" width="712" height="150" rx="16" class="liquid-glass"/>
-        <text x="24" y="38" fill="#38BDF8" font-size="11" font-weight="600">Синхронизировано • Только что</text>
+        <text x="24" y="38" fill="#38BDF8" font-size="11" font-weight="600">Synced • Just now</text>
         <text x="24" y="74" fill="#F3F4F6" font-size="13.5" class="mono">cd pult &amp;&amp; host\\build.cmd</text>
         <text x="24" y="112" fill="#6B7280" font-size="12" class="mono">// Pult Windows Host: Peer-to-peer keep-alive latency 1.04ms</text>
       </g>
 
       <!-- History Clips -->
       <g transform="translate(0 200)">
-        <text x="0" y="16" fill="#6B7280" font-size="10.5" font-weight="700">ИСТОРИЯ БУФЕРА</text>
+        <text x="0" y="16" fill="#6B7280" font-size="10.5" font-weight="700">CLIPBOARD HISTORY</text>
 
         <rect x="0" y="30" width="712" height="52" rx="14" class="liquid-glass"/>
         <text x="20" y="61" fill="#E5E7EB" font-size="12.5" class="mono">https://github.com/sailxx/Pult</text>
@@ -312,16 +311,16 @@ ${headerBar('Буфер')}
     <rect x="0" y="0" width="428" height="610" rx="20" class="liquid-card"/>
 
     <g transform="translate(24 24)">
-      <text x="0" y="16" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">ОТПРАВИТЬ ТЕКСТ НА ПК</text>
+      <text x="0" y="16" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">PUSH TEXT TO PC</text>
 
       <g transform="translate(0 32)">
         <rect x="0" y="0" width="380" height="240" rx="16" class="liquid-glass"/>
-        <text x="20" y="36" fill="#6B7280" font-size="12">Введите текст или ссылку для быстрой вставки на компьютере...</text>
+        <text x="20" y="36" fill="#6B7280" font-size="12">Type or paste text or links to inject into PC clipboard...</text>
       </g>
 
       <g transform="translate(0 292)">
         <rect x="0" y="0" width="380" height="50" rx="25" fill="#38BDF8"/>
-        <text x="190" y="30" fill="#0C0E12" font-size="13" font-weight="700" text-anchor="middle">Отправить в буфер Windows</text>
+        <text x="190" y="30" fill="#0C0E12" font-size="13" font-weight="700" text-anchor="middle">Inject into Windows Clipboard</text>
       </g>
     </g>
   </g>
@@ -334,7 +333,7 @@ function buildScreenSignature() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Pult Digital Signature">
 <style>${STYLES}</style>
 ${darkMatteBackground(1280, 720)}
-${headerBar('Подпись')}
+${headerBar('Signature')}
 
 <g transform="translate(36 74)">
   <!-- Left: Signature Canvas Area (900px) -->
@@ -343,8 +342,8 @@ ${headerBar('Подпись')}
 
     <g transform="translate(24 24)">
       <circle cx="6" cy="6" r="3.5" fill="#38BDF8"/>
-      <text x="18" y="10" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">ЦИФРОВАЯ ПОДПИСЬ ДЛЯ ДОКУМЕНТОВ</text>
-      <text x="850" y="10" fill="#6B7280" font-size="11" text-anchor="end">Сглаживание Безье</text>
+      <text x="18" y="10" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">DIGITAL SIGNATURE FOR DOCUMENTS</text>
+      <text x="850" y="10" fill="#6B7280" font-size="11" text-anchor="end">Bézier smoothing</text>
     </g>
 
     <!-- Drawn vector curve signature -->
@@ -352,7 +351,7 @@ ${headerBar('Подпись')}
 
     <!-- Bottom baseline -->
     <line x1="80" y1="460" x2="820" y2="460" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="1.5" stroke-dasharray="8 8"/>
-    <text x="450" y="490" fill="#4B5563" font-size="11.5" text-anchor="middle">Линия подписи • Распишитесь пальцем или стилусом</text>
+    <text x="450" y="490" fill="#4B5563" font-size="11.5" text-anchor="middle">Signature baseline • Sign with finger or active stylus</text>
   </g>
 
   <!-- Right: Actions (290px) -->
@@ -360,17 +359,17 @@ ${headerBar('Подпись')}
     <rect x="0" y="0" width="288" height="610" rx="20" class="liquid-card"/>
 
     <g transform="translate(24 24)">
-      <text x="0" y="16" fill="#6B7280" font-size="11" font-weight="700">ДЕЙСТВИЯ</text>
+      <text x="0" y="16" fill="#6B7280" font-size="11" font-weight="700">ACTIONS</text>
 
       <g transform="translate(0 40)">
         <rect x="0" y="0" width="240" height="50" rx="25" fill="#38BDF8"/>
-        <text x="120" y="30" fill="#0C0E12" font-size="12.5" font-weight="700" text-anchor="middle">Вставить в документ ПК</text>
+        <text x="120" y="30" fill="#0C0E12" font-size="12.5" font-weight="700" text-anchor="middle">Insert into PC Document</text>
 
         <rect x="0" y="64" width="240" height="46" rx="23" class="liquid-btn"/>
-        <text x="120" y="93" fill="#F3F4F6" font-size="12" font-weight="600" text-anchor="middle">Очистить холст</text>
+        <text x="120" y="93" fill="#F3F4F6" font-size="12" font-weight="600" text-anchor="middle">Clear Canvas</text>
 
         <rect x="0" y="122" width="240" height="46" rx="23" class="liquid-btn"/>
-        <text x="120" y="151" fill="#F3F4F6" font-size="12" font-weight="600" text-anchor="middle">Сохранить как PNG</text>
+        <text x="120" y="151" fill="#F3F4F6" font-size="12" font-weight="600" text-anchor="middle">Save as PNG</text>
       </g>
     </g>
   </g>
@@ -383,7 +382,7 @@ function buildScreenCapture() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Pult Screen Capture">
 <style>${STYLES}</style>
 ${darkMatteBackground(1280, 720)}
-${headerBar('Снимок')}
+${headerBar('Capture')}
 
 <g transform="translate(36 74)">
   <!-- Left: Screenshot Preview (910px) -->
@@ -392,8 +391,8 @@ ${headerBar('Снимок')}
 
     <g transform="translate(24 20)">
       <circle cx="6" cy="6" r="3.5" fill="#38BDF8"/>
-      <text x="18" y="10" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">СНИМОК ЭКРАНА WINDOWS</text>
-      <text x="860" y="10" fill="#6B7280" font-size="11" text-anchor="end">Время: 12:00:24</text>
+      <text x="18" y="10" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">WINDOWS SCREEN DISPLAY CAPTURE</text>
+      <text x="860" y="10" fill="#6B7280" font-size="11" text-anchor="end">Time: 12:00:24</text>
     </g>
 
     <!-- Desktop Preview Frame -->
@@ -433,17 +432,17 @@ ${headerBar('Снимок')}
     <rect x="0" y="0" width="278" height="610" rx="20" class="liquid-card"/>
 
     <g transform="translate(24 24)">
-      <text x="0" y="16" fill="#6B7280" font-size="11" font-weight="700">ДЕЙСТВИЯ</text>
+      <text x="0" y="16" fill="#6B7280" font-size="11" font-weight="700">ACTIONS</text>
 
       <g transform="translate(0 40)">
         <rect x="0" y="0" width="230" height="50" rx="25" fill="#38BDF8"/>
-        <text x="115" y="30" fill="#0C0E12" font-size="12.5" font-weight="700" text-anchor="middle">Сделать снимок</text>
+        <text x="115" y="30" fill="#0C0E12" font-size="12.5" font-weight="700" text-anchor="middle">Capture Screen</text>
 
         <rect x="0" y="64" width="230" height="46" rx="23" class="liquid-btn"/>
-        <text x="115" y="93" fill="#F3F4F6" font-size="12" font-weight="600" text-anchor="middle">В буфер ПК</text>
+        <text x="115" y="93" fill="#F3F4F6" font-size="12" font-weight="600" text-anchor="middle">To PC Clipboard</text>
 
         <rect x="0" y="122" width="230" height="46" rx="23" class="liquid-btn"/>
-        <text x="115" y="151" fill="#F3F4F6" font-size="12" font-weight="600" text-anchor="middle">Сохранить на ПК</text>
+        <text x="115" y="151" fill="#F3F4F6" font-size="12" font-weight="600" text-anchor="middle">Save to PC Disk</text>
       </g>
     </g>
   </g>
@@ -451,9 +450,9 @@ ${headerBar('Снимок')}
 </svg>`;
 }
 
-// 6. WINDOWS 11 COMPANION TRAY FLYOUT (EXACT MATCH TO USER SCREENSHOT)
+// 6. WINDOWS 11 COMPANION TRAY FLYOUT (SAFE VALID XML - NO BARE AMPERSANDS)
 function buildWindowsTrayFlyout() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="330" viewBox="0 0 320 330" role="img" aria-label="Windows 11 Volume & Pult Companion Flyout">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="330" viewBox="0 0 320 330" role="img" aria-label="Windows 11 Volume and Pult Companion Flyout">
 <style>
   text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 </style>
@@ -534,7 +533,7 @@ function buildWindowsTrayFlyout() {
     <line x1="12" y1="56" x2="308" y2="56" stroke="#2C2C2C" stroke-width="1"/>
   </g>
 
-  <!-- Row 4: Фильтр синего света (Night Light) -->
+  <!-- Row 4: Night Light -->
   <g transform="translate(0 174)">
     <!-- Crescent Moon Icon -->
     <g transform="translate(14 10)">
@@ -542,7 +541,7 @@ function buildWindowsTrayFlyout() {
     </g>
 
     <!-- Title -->
-    <text x="38" y="21" fill="#F3F4F6" font-size="12" font-weight="500">Фильтр синего света</text>
+    <text x="38" y="21" fill="#F3F4F6" font-size="12" font-weight="500">Night light</text>
 
     <!-- Value -->
     <text x="306" y="37" fill="#F3F4F6" font-size="13" font-weight="500" text-anchor="end">0</text>
@@ -555,7 +554,7 @@ function buildWindowsTrayFlyout() {
     <line x1="12" y1="56" x2="308" y2="56" stroke="#2C2C2C" stroke-width="1"/>
   </g>
 
-  <!-- Row 5: Затемнение (Dimming) -->
+  <!-- Row 5: Dimming -->
   <g transform="translate(0 232)">
     <!-- Dimmer Sun Icon -->
     <g transform="translate(14 10)">
@@ -564,7 +563,7 @@ function buildWindowsTrayFlyout() {
     </g>
 
     <!-- Title -->
-    <text x="38" y="21" fill="#F3F4F6" font-size="12" font-weight="500">Затемнение</text>
+    <text x="38" y="21" fill="#F3F4F6" font-size="12" font-weight="500">Dimming</text>
 
     <!-- Value -->
     <text x="306" y="37" fill="#F3F4F6" font-size="13" font-weight="500" text-anchor="end">0</text>
@@ -579,7 +578,7 @@ function buildWindowsTrayFlyout() {
     <rect width="320" height="44" fill="#161616"/>
 
     <!-- Left Label -->
-    <text x="14" y="27" fill="#F3F4F6" font-size="12.5" font-weight="500">Громкость</text>
+    <text x="14" y="27" fill="#F3F4F6" font-size="12.5" font-weight="500">Volume</text>
 
     <!-- Right Icons: Mixer and Settings -->
     <!-- Equalizer / Mixer Glyph -->
@@ -612,4 +611,4 @@ fs.writeFileSync(path.join(outDir, 'screenshot-signature.svg'), buildScreenSigna
 fs.writeFileSync(path.join(outDir, 'screenshot-capture.svg'), buildScreenCapture());
 fs.writeFileSync(path.join(outDir, 'windows-tray-companion.svg'), buildWindowsTrayFlyout());
 
-console.log('Successfully written all SVGs!');
+console.log('Successfully written all SVGs in English with valid XML!');
