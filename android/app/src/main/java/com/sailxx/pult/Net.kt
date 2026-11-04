@@ -44,11 +44,13 @@ class Client(private val ip: String, private val pin: String) {
         withContext(Dispatchers.IO) {
             val c = open(path, method, timeoutMs)
             try {
-                if (c.responseCode == 401) throw WrongPin()
-                if (c.responseCode != 200) throw IllegalStateException("HTTP ${c.responseCode}")
+                val code = c.responseCode
+                if (code == 401) throw WrongPin()
+                if (code != 200) throw IllegalStateException("HTTP $code")
                 c.inputStream.use { it.readBytes() }
-            } finally {
+            } catch (e: Exception) {
                 c.disconnect()
+                throw e
             }
         }
 

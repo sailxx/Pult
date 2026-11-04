@@ -31,6 +31,12 @@ fun CursorDeck(
     onHaptic: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    DisposableEffect(Unit) {
+        onDispose {
+            mouseController.releaseAll()
+        }
+    }
+
     Row(
         modifier = modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.spacedBy(10.dp)

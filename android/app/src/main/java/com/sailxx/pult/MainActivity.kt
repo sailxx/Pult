@@ -123,6 +123,10 @@ private fun LandscapeDock(
 
     val scope = rememberCoroutineScope()
     val mouseController = remember(client) { MouseController(client, scope) }
+    val disconnectAndRelease = {
+        mouseController.releaseAll()
+        onDisconnect()
+    }
 
     fun fire(block: suspend () -> Unit) {
         onHaptic()
@@ -130,7 +134,7 @@ private fun LandscapeDock(
             try {
                 block()
             } catch (e: WrongPin) {
-                onDisconnect()
+                disconnectAndRelease()
             } catch (_: Exception) {}
         }
     }
@@ -146,7 +150,7 @@ private fun LandscapeDock(
         try {
             apps = client.apps()
         } catch (e: WrongPin) {
-            onDisconnect()
+            disconnectAndRelease()
         } catch (_: Exception) {
             apps = emptyList()
         }
@@ -200,7 +204,7 @@ private fun LandscapeDock(
                     isMuted = r.muted
                 }
             },
-            onDisconnect = onDisconnect,
+            onDisconnect = disconnectAndRelease,
             onHaptic = onHaptic
         )
 

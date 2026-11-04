@@ -74,6 +74,14 @@ class MouseController(
         }
     }
 
+    fun releaseAll() {
+        pendingDx.set(0)
+        pendingDy.set(0)
+        scope.launch(Dispatchers.IO) {
+            try { client.mouseUp("all") } catch (_: Exception) {}
+        }
+    }
+
     fun scroll(delta: Int) {
         scope.launch(Dispatchers.IO) {
             try { client.mouseScroll(delta) } catch (_: Exception) {}

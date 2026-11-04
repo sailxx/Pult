@@ -470,6 +470,13 @@ static class Mouse
         }
     }
 
+    public static void ReleaseAll()
+    {
+        mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
+        mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, UIntPtr.Zero);
+        mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, UIntPtr.Zero);
+    }
+
     public static void Down(string btn)
     {
         uint f = btn == "right" ? MOUSEEVENTF_RIGHTDOWN : btn == "middle" ? MOUSEEVENTF_MIDDLEDOWN : MOUSEEVENTF_LEFTDOWN;
@@ -478,6 +485,7 @@ static class Mouse
 
     public static void Up(string btn)
     {
+        if (btn == "all") { ReleaseAll(); return; }
         uint f = btn == "right" ? MOUSEEVENTF_RIGHTUP : btn == "middle" ? MOUSEEVENTF_MIDDLEUP : MOUSEEVENTF_LEFTUP;
         mouse_event(f, 0, 0, 0, UIntPtr.Zero);
     }
@@ -630,170 +638,189 @@ static class Server
         {
             try
             {
-                c.ReceiveTimeout = 6000;
+                c.ReceiveTimeout = 15000;
                 c.SendTimeout = 6000;
+                c.NoDelay = true;
                 var s = c.GetStream();
-                var head = ReadHead(s);
-                if (head == null) return;
-                var lines = head.Split(new[] { "\r\n" }, StringSplitOptions.None);
-                var parts = lines[0].Split(' ');
-                if (parts.Length < 2) return;
-                var method = parts[0];
-                var target = parts[1];
-                var q = target.IndexOf('?');
-                var path = q < 0 ? target : target.Substring(0, q);
-                var query = ParseQuery(q < 0 ? "" : target.Substring(q + 1));
-                string pin = null;
-                foreach (var h in lines.Skip(1))
-                    if (h.StartsWith("X-Pin:", StringComparison.OrdinalIgnoreCase)) pin = h.Substring(6).Trim();
-                if (pin == null) query.TryGetValue("pin", out pin);
-
-                if (path == "/ping")
+                while (true)
                 {
-                    int vol; bool muted;
-                    Audio.GetState(out vol, out muted);
-                    Send(s, 200, "application/json", Json("{\"app\":\"pult\",\"name\":" + Q(Environment.MachineName) +
-                        ",\"port\":" + Program.HttpPort + ",\"version\":\"0.2\",\"volume\":" + vol + ",\"muted\":" + (muted ? "true" : "false") + "}"));
-                    return;
-                }
-                if (!Authorized(pin)) { Send(s, 401, "application/json", Json("{\"error\":\"pin\"}")); return; }
-                Program.OnClientActivity(c);
-
-                if (path == "/apps")
-                {
-                    var sb = new StringBuilder("[");
-                    var list = Apps.List();
-                    for (int i = 0; i < list.Count; i++)
+                    var head = ReadHead(s);
+                    if (head == null) break;
+                    var lines = head.Split(new[] { "\r\n" }, StringSplitOptions.None);
+                    var parts = lines[0].Split(' ');
+                    if (parts.Length < 2) break;
+                    var method = parts[0];
+                    var target = parts[1];
+                    var q = target.IndexOf('?');
+                    var path = q < 0 ? target : target.Substring(0, q);
+                    var query = ParseQuery(q < 0 ? "" : target.Substring(q + 1));
+                    string pin = null;
+                    bool closeReq = false;
+                    foreach (var h in lines.Skip(1))
                     {
-                        if (i > 0) sb.Append(',');
-                        sb.Append("{\"id\":" + Q(list[i].Id) + ",\"name\":" + Q(list[i].Name) + "}");
+                        if (h.StartsWith("X-Pin:", StringComparison.OrdinalIgnoreCase)) pin = h.Substring(6).Trim();
+                        if (h.StartsWith("Connection:", StringComparison.OrdinalIgnoreCase) && h.IndexOf("close", StringComparison.OrdinalIgnoreCase) >= 0) closeReq = true;
                     }
-                    sb.Append(']');
-                    Send(s, 200, "application/json", Json(sb.ToString()));
-                }
-                else if (path == "/icon")
-                {
-                    string id; query.TryGetValue("id", out id);
-                    var a = Apps.Find(id ?? "");
-                    var png = a == null ? new byte[0] : Apps.Icon(a);
-                    if (png.Length == 0) Send(s, 404, "text/plain", new byte[0]);
-                    else Send(s, 200, "image/png", png);
-                }
-                else if (path == "/launch" && method == "POST")
-                {
-                    string id; query.TryGetValue("id", out id);
-                    var a = Apps.Find(id ?? "");
-                    if (a == null) { Send(s, 404, "application/json", Json("{\"error\":\"no app\"}")); return; }
-                    Apps.Launch(a);
-                    Send(s, 200, "application/json", Json("{\"ok\":true}"));
-                }
-                else if (path == "/volume")
-                {
-                    if (method == "POST")
+                    if (pin == null) query.TryGetValue("pin", out pin);
+
+                    if (path == "/ping")
                     {
-                        string setVal;
-                        if (query.TryGetValue("set", out setVal))
+                        int vol; bool muted;
+                        Audio.GetState(out vol, out muted);
+                        Send(s, 200, "application/json", Json("{\"app\":\"pult\",\"name\":" + Q(Environment.MachineName) +
+                            ",\"port\":" + Program.HttpPort + ",\"version\":\"0.2\",\"volume\":" + vol + ",\"muted\":" + (muted ? "true" : "false") + "}"), !closeReq);
+                        if (closeReq) break;
+                        continue;
+                    }
+                    if (!Authorized(pin))
+                    {
+                        Send(s, 401, "application/json", Json("{\"error\":\"pin\"}"), false);
+                        break;
+                    }
+                    Program.OnClientActivity(c);
+
+                    if (path == "/apps")
+                    {
+                        var sb = new StringBuilder("[");
+                        var list = Apps.List();
+                        for (int i = 0; i < list.Count; i++)
                         {
-                            int val;
-                            if (int.TryParse(setVal, out val)) Audio.SetVolume(val);
+                            if (i > 0) sb.Append(',');
+                            sb.Append("{\"id\":" + Q(list[i].Id) + ",\"name\":" + Q(list[i].Name) + "}");
                         }
-                        string muteVal;
-                        if (query.TryGetValue("mute", out muteVal))
+                        sb.Append(']');
+                        Send(s, 200, "application/json", Json(sb.ToString()), !closeReq);
+                    }
+                    else if (path == "/icon")
+                    {
+                        string id; query.TryGetValue("id", out id);
+                        var a = Apps.Find(id ?? "");
+                        var png = a == null ? new byte[0] : Apps.Icon(a);
+                        if (png.Length == 0) Send(s, 404, "text/plain", new byte[0], !closeReq);
+                        else Send(s, 200, "image/png", png, !closeReq);
+                    }
+                    else if (path == "/launch" && method == "POST")
+                    {
+                        string id; query.TryGetValue("id", out id);
+                        var a = Apps.Find(id ?? "");
+                        if (a == null) { Send(s, 404, "application/json", Json("{\"error\":\"no app\"}"), !closeReq); if (closeReq) break; continue; }
+                        Apps.Launch(a);
+                        Send(s, 200, "application/json", Json("{\"ok\":true}"), !closeReq);
+                    }
+                    else if (path == "/volume")
+                    {
+                        if (method == "POST")
                         {
-                            if (muteVal == "toggle") Audio.SetMute(null);
-                            else if (muteVal == "true" || muteVal == "1") Audio.SetMute(true);
-                            else if (muteVal == "false" || muteVal == "0") Audio.SetMute(false);
-                        }
-                        string stepVal;
-                        if (query.TryGetValue("step", out stepVal))
-                        {
-                            int step;
-                            if (int.TryParse(stepVal, out step))
+                            string setVal;
+                            if (query.TryGetValue("set", out setVal))
                             {
-                                int cur; bool m;
-                                Audio.GetState(out cur, out m);
-                                Audio.SetVolume(cur + step);
+                                int val;
+                                if (int.TryParse(setVal, out val)) Audio.SetVolume(val);
+                            }
+                            string muteVal;
+                            if (query.TryGetValue("mute", out muteVal))
+                            {
+                                if (muteVal == "toggle") Audio.SetMute(null);
+                                else if (muteVal == "true" || muteVal == "1") Audio.SetMute(true);
+                                else if (muteVal == "false" || muteVal == "0") Audio.SetMute(false);
+                            }
+                            string stepVal;
+                            if (query.TryGetValue("step", out stepVal))
+                            {
+                                int step;
+                                if (int.TryParse(stepVal, out step))
+                                {
+                                    int cur; bool m;
+                                    Audio.GetState(out cur, out m);
+                                    Audio.SetVolume(cur + step);
+                                }
                             }
                         }
+                        int v; bool isMuted;
+                        Audio.GetState(out v, out isMuted);
+                        Send(s, 200, "application/json", Json("{\"volume\":" + v + ",\"muted\":" + (isMuted ? "true" : "false") + ",\"ok\":true}"), !closeReq);
                     }
-                    int v; bool isMuted;
-                    Audio.GetState(out v, out isMuted);
-                    Send(s, 200, "application/json", Json("{\"volume\":" + v + ",\"muted\":" + (isMuted ? "true" : "false") + ",\"ok\":true}"));
-                }
-                else if (path == "/key" && method == "POST")
-                {
-                    string name; query.TryGetValue("name", out name);
-                    var ok = Keys.Press(name ?? "");
-                    Send(s, ok ? 200 : 400, "application/json", Json("{\"ok\":" + (ok ? "true" : "false") + "}"));
-                }
-                else if (path == "/mouse" && method == "POST")
-                {
-                    string dxStr, dyStr;
-                    if (query.TryGetValue("dx", out dxStr) && query.TryGetValue("dy", out dyStr))
+                    else if (path == "/key" && method == "POST")
                     {
-                        int dx, dy;
-                        if (int.TryParse(dxStr, out dx) && int.TryParse(dyStr, out dy)) Mouse.Move(dx, dy);
+                        string name; query.TryGetValue("name", out name);
+                        var ok = Keys.Press(name ?? "");
+                        Send(s, ok ? 200 : 400, "application/json", Json("{\"ok\":" + (ok ? "true" : "false") + "}"), !closeReq);
                     }
-                    string click;
-                    if (query.TryGetValue("click", out click)) Mouse.Click(click);
-                    string down;
-                    if (query.TryGetValue("down", out down)) Mouse.Down(down);
-                    string up;
-                    if (query.TryGetValue("up", out up)) Mouse.Up(up);
-                    string scrollStr;
-                    if (query.TryGetValue("scroll", out scrollStr))
+                    else if (path == "/mouse" && method == "POST")
                     {
-                        int scroll;
-                        if (int.TryParse(scrollStr, out scroll)) Mouse.Scroll(scroll);
+                        string dxStr, dyStr;
+                        if (query.TryGetValue("dx", out dxStr) && query.TryGetValue("dy", out dyStr))
+                        {
+                            int dx, dy;
+                            if (int.TryParse(dxStr, out dx) && int.TryParse(dyStr, out dy)) Mouse.Move(dx, dy);
+                        }
+                        string click;
+                        if (query.TryGetValue("click", out click)) Mouse.Click(click);
+                        string down;
+                        if (query.TryGetValue("down", out down)) Mouse.Down(down);
+                        string up;
+                        if (query.TryGetValue("up", out up)) Mouse.Up(up);
+                        string scrollStr;
+                        if (query.TryGetValue("scroll", out scrollStr))
+                        {
+                            int scroll;
+                            if (int.TryParse(scrollStr, out scroll)) Mouse.Scroll(scroll);
+                        }
+                        Send(s, 200, "application/json", Json("{\"ok\":true}"), !closeReq);
                     }
-                    Send(s, 200, "application/json", Json("{\"ok\":true}"));
-                }
-                else if (path == "/system" && method == "POST")
-                {
-                    string action; query.TryGetValue("action", out action);
-                    if (!string.IsNullOrEmpty(action)) SystemPower.Execute(action);
-                    Send(s, 200, "application/json", Json("{\"ok\":true}"));
-                }
-                else if (path == "/tasks")
-                {
-                    var tasks = WindowTasks.List();
-                    var sb = new StringBuilder("[");
-                    for (int i = 0; i < tasks.Count; i++)
+                    else if (path == "/system" && method == "POST")
                     {
-                        if (i > 0) sb.Append(',');
-                        sb.Append("{\"id\":" + tasks[i].Hwnd.ToInt64() + ",\"title\":" + Q(tasks[i].Title) + ",\"proc\":" + Q(tasks[i].ProcessName) + "}");
+                        string action; query.TryGetValue("action", out action);
+                        if (!string.IsNullOrEmpty(action)) SystemPower.Execute(action);
+                        Send(s, 200, "application/json", Json("{\"ok\":true}"), !closeReq);
                     }
-                    sb.Append(']');
-                    Send(s, 200, "application/json", Json(sb.ToString()));
-                }
-                else if (path == "/tasks/switch" && method == "POST")
-                {
-                    string idStr; query.TryGetValue("id", out idStr);
-                    long hwnd;
-                    if (long.TryParse(idStr, out hwnd)) WindowTasks.Switch(new IntPtr(hwnd));
-                    Send(s, 200, "application/json", Json("{\"ok\":true}"));
-                }
-                else if (path == "/tasks/close" && method == "POST")
-                {
-                    string idStr; query.TryGetValue("id", out idStr);
-                    long hwnd;
-                    if (long.TryParse(idStr, out hwnd)) WindowTasks.Close(new IntPtr(hwnd));
-                    Send(s, 200, "application/json", Json("{\"ok\":true}"));
-                }
-                else if (path == "/keyboard" && method == "POST")
-                {
-                    string key;
-                    if (query.TryGetValue("key", out key)) Keys.Press(key);
-                    string text;
-                    if (query.TryGetValue("text", out text) && !string.IsNullOrEmpty(text))
+                    else if (path == "/tasks")
                     {
-                        try { SendKeys.SendWait(text); } catch { }
+                        var tasks = WindowTasks.List();
+                        var sb = new StringBuilder("[");
+                        for (int i = 0; i < tasks.Count; i++)
+                        {
+                            if (i > 0) sb.Append(',');
+                            sb.Append("{\"id\":" + tasks[i].Hwnd.ToInt64() + ",\"title\":" + Q(tasks[i].Title) + ",\"proc\":" + Q(tasks[i].ProcessName) + "}");
+                        }
+                        sb.Append(']');
+                        Send(s, 200, "application/json", Json(sb.ToString()), !closeReq);
                     }
-                    Send(s, 200, "application/json", Json("{\"ok\":true}"));
+                    else if (path == "/tasks/switch" && method == "POST")
+                    {
+                        string idStr; query.TryGetValue("id", out idStr);
+                        long hwnd;
+                        if (long.TryParse(idStr, out hwnd)) WindowTasks.Switch(new IntPtr(hwnd));
+                        Send(s, 200, "application/json", Json("{\"ok\":true}"), !closeReq);
+                    }
+                    else if (path == "/tasks/close" && method == "POST")
+                    {
+                        string idStr; query.TryGetValue("id", out idStr);
+                        long hwnd;
+                        if (long.TryParse(idStr, out hwnd)) WindowTasks.Close(new IntPtr(hwnd));
+                        Send(s, 200, "application/json", Json("{\"ok\":true}"), !closeReq);
+                    }
+                    else if (path == "/keyboard" && method == "POST")
+                    {
+                        string key;
+                        if (query.TryGetValue("key", out key)) Keys.Press(key);
+                        string text;
+                        if (query.TryGetValue("text", out text) && !string.IsNullOrEmpty(text))
+                        {
+                            try { SendKeys.SendWait(text); } catch { }
+                        }
+                        Send(s, 200, "application/json", Json("{\"ok\":true}"), !closeReq);
+                    }
+                    else Send(s, 404, "application/json", Json("{\"error\":\"not found\"}"), !closeReq);
+
+                    if (closeReq) break;
                 }
-                else Send(s, 404, "application/json", Json("{\"error\":\"not found\"}"));
             }
             catch { }
+            finally
+            {
+                Mouse.ReleaseAll();
+            }
         }
     }
 
@@ -850,11 +877,12 @@ static class Server
         return sb.Append('"').ToString();
     }
 
-    static void Send(NetworkStream s, int code, string type, byte[] body)
+    static void Send(NetworkStream s, int code, string type, byte[] body, bool keepAlive = true)
     {
         var status = code == 200 ? "OK" : code == 401 ? "Unauthorized" : code == 404 ? "Not Found" : "Bad Request";
+        var conn = keepAlive ? "keep-alive" : "close";
         var head = "HTTP/1.1 " + code + " " + status + "\r\nContent-Type: " + type +
-                   "\r\nContent-Length: " + body.Length + "\r\nConnection: close\r\n\r\n";
+                   "\r\nContent-Length: " + body.Length + "\r\nConnection: " + conn + "\r\n\r\n";
         var h = Encoding.ASCII.GetBytes(head);
         s.Write(h, 0, h.Length);
         s.Write(body, 0, body.Length);
