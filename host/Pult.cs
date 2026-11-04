@@ -252,6 +252,11 @@ static class Apps
 
     public static AppEntry Find(string id) { return List().FirstOrDefault(a => a.Id == id); }
 
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    static extern uint PrivateExtractIcons(string lpszFile, int nIconIndex, int cxIcon, int cyIcon, IntPtr[] phicon, uint[] piconid, uint nIcons, uint flags);
+    [DllImport("user32.dll")]
+    static extern bool DestroyIcon(IntPtr hIcon);
+
     public static byte[] Icon(AppEntry a)
     {
         lock (icons)
@@ -260,14 +265,33 @@ static class Apps
             if (icons.TryGetValue(a.Id, out png)) return png;
             try
             {
-                using (var ico = System.Drawing.Icon.ExtractAssociatedIcon(a.Path))
-                using (var src = ico.ToBitmap())
-                using (var bmp = new Bitmap(96, 96))
-                using (var g = Graphics.FromImage(bmp))
+                IntPtr[] phicon = new IntPtr[1];
+                uint[] piconid = new uint[1];
+                uint count = PrivateExtractIcons(a.Path, 0, 128, 128, phicon, piconid, 1, 0);
+                if (count > 0 && phicon[0] != IntPtr.Zero)
                 {
-                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                    g.DrawImage(src, 0, 0, 96, 96);
-                    using (var ms = new MemoryStream()) { bmp.Save(ms, ImageFormat.Png); png = ms.ToArray(); }
+                    using (var ico = System.Drawing.Icon.FromHandle(phicon[0]))
+                    using (var src = ico.ToBitmap())
+                    using (var bmp = new Bitmap(128, 128))
+                    using (var g = Graphics.FromImage(bmp))
+                    {
+                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                        g.DrawImage(src, 0, 0, 128, 128);
+                        using (var ms = new MemoryStream()) { bmp.Save(ms, ImageFormat.Png); png = ms.ToArray(); }
+                    }
+                    DestroyIcon(phicon[0]);
+                }
+                else
+                {
+                    using (var ico = System.Drawing.Icon.ExtractAssociatedIcon(a.Path))
+                    using (var src = ico.ToBitmap())
+                    using (var bmp = new Bitmap(128, 128))
+                    using (var g = Graphics.FromImage(bmp))
+                    {
+                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                        g.DrawImage(src, 0, 0, 128, 128);
+                        using (var ms = new MemoryStream()) { bmp.Save(ms, ImageFormat.Png); png = ms.ToArray(); }
+                    }
                 }
             }
             catch { png = new byte[0]; }
@@ -917,8 +941,8 @@ public class CompanionFlyout : Form
         this.ShowInTaskbar = false;
         this.TopMost = true;
         this.Width = 320;
-        this.Height = 360;
-        this.BackColor = Color.FromArgb(31, 31, 31);
+        this.Height = 330;
+        this.BackColor = Color.FromArgb(28, 28, 28);
         this.ForeColor = Color.White;
         this.Font = new Font("Segoe UI", 9.5f, FontStyle.Regular);
 
@@ -960,7 +984,7 @@ public class CompanionFlyout : Form
         var g = e.Graphics;
 
         // Outer border 1px
-        using (var borderPen = new Pen(Color.FromArgb(48, 48, 48), 1))
+        using (var borderPen = new Pen(Color.FromArgb(44, 44, 44), 1))
         {
             g.DrawRectangle(borderPen, 0, 0, Width - 1, Height - 1);
         }
@@ -968,23 +992,23 @@ public class CompanionFlyout : Form
         // Active cyan indicator bar on the left of Master Volume row
         using (var barBrush = new SolidBrush(Color.FromArgb(56, 189, 248)))
         {
-            g.FillRectangle(barBrush, 6, 14, 3, 18);
+            g.FillRectangle(barBrush, 4, 12, 3, 20);
         }
 
         // Separator lines
-        using (var sepPen = new Pen(Color.FromArgb(44, 44, 44), 1))
+        using (var sepPen = new Pen(Color.FromArgb(38, 38, 38), 1))
         {
-            g.DrawLine(sepPen, 12, 60, Width - 12, 60);
-            g.DrawLine(sepPen, 12, 120, Width - 12, 120);
-            g.DrawLine(sepPen, 12, 182, Width - 12, 182);
-            g.DrawLine(sepPen, 12, 246, Width - 12, 246);
-            g.DrawLine(sepPen, 0, 310, Width, 310);
+            g.DrawLine(sepPen, 10, 56, Width - 10, 56);
+            g.DrawLine(sepPen, 10, 112, Width - 10, 112);
+            g.DrawLine(sepPen, 10, 168, Width - 10, 168);
+            g.DrawLine(sepPen, 10, 224, Width - 10, 224);
+            g.DrawLine(sepPen, 0, 280, Width, 280);
         }
 
         // Bottom footer background
-        using (var footBrush = new SolidBrush(Color.FromArgb(24, 24, 24)))
+        using (var footBrush = new SolidBrush(Color.FromArgb(22, 22, 22)))
         {
-            g.FillRectangle(footBrush, 0, 311, Width, Height - 311);
+            g.FillRectangle(footBrush, 0, 281, Width, Height - 281);
         }
     }
 
@@ -997,7 +1021,7 @@ public class CompanionFlyout : Form
             fontMdl2 = new Font("Segoe UI Symbol", 11f, FontStyle.Regular);
         }
 
-        // --- ROW 1: System Master Volume (exact match with user's screenshot) ---
+        // --- ROW 1: Speakers (Realtek(R) Audio) ---
         int curVol; bool curMute;
         Audio.GetState(out curVol, out curMute);
 
@@ -1005,7 +1029,7 @@ public class CompanionFlyout : Form
             Text = "\uE767",
             Font = fontMdl2,
             ForeColor = Color.FromArgb(240, 240, 240),
-            Location = new Point(16, 12),
+            Location = new Point(14, 12),
             Size = new Size(20, 22),
             BackColor = Color.Transparent
         };
@@ -1015,7 +1039,7 @@ public class CompanionFlyout : Form
             Text = "Speakers (Realtek(R) Audio)",
             Font = new Font("Segoe UI", 9.5f, FontStyle.Regular),
             ForeColor = Color.FromArgb(240, 240, 240),
-            Location = new Point(40, 10),
+            Location = new Point(38, 8),
             AutoSize = true,
             BackColor = Color.Transparent
         };
@@ -1025,7 +1049,7 @@ public class CompanionFlyout : Form
             Text = curVol.ToString(),
             Font = new Font("Segoe UI", 10.5f, FontStyle.Regular),
             ForeColor = Color.FromArgb(240, 240, 240),
-            Location = new Point(278, 28),
+            Location = new Point(278, 24),
             Size = new Size(36, 20),
             TextAlign = ContentAlignment.MiddleRight,
             BackColor = Color.Transparent
@@ -1033,7 +1057,7 @@ public class CompanionFlyout : Form
         Controls.Add(lblVolVal);
 
         var sliderVol = new FluentSlider {
-            Location = new Point(38, 30),
+            Location = new Point(36, 26),
             Size = new Size(236, 18),
             Value = curVol
         };
@@ -1043,253 +1067,273 @@ public class CompanionFlyout : Form
         };
         Controls.Add(sliderVol);
 
-        // --- ROW 2: Pult Mobile Companion ---
-        bool isConnected = Program.LastClientIp != null && (DateTime.Now - Program.LastActiveTime).TotalSeconds < 25;
+        // --- ROW 2: Brave Browser ---
+        Image braveImg = null;
+        try {
+            var iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\assets\app-icons\brave.png");
+            if (File.Exists(iconPath)) braveImg = Image.FromFile(iconPath);
+        } catch { }
 
-        var lblPhoneIcon = new Label {
-            Text = "\uE8EA",
-            Font = fontMdl2,
-            ForeColor = Color.FromArgb(220, 220, 220),
-            Location = new Point(16, 72),
-            Size = new Size(20, 22),
-            BackColor = Color.Transparent
-        };
-        Controls.Add(lblPhoneIcon);
+        if (braveImg != null)
+        {
+            var pbBrave = new PictureBox {
+                Image = braveImg,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Location = new Point(14, 68),
+                Size = new Size(20, 20),
+                BackColor = Color.Transparent
+            };
+            Controls.Add(pbBrave);
+        }
+        else
+        {
+            var lblBraveIcon = new Label {
+                Text = "\uE774",
+                Font = fontMdl2,
+                ForeColor = Color.FromArgb(255, 102, 0),
+                Location = new Point(14, 68),
+                Size = new Size(20, 22),
+                BackColor = Color.Transparent
+            };
+            Controls.Add(lblBraveIcon);
+        }
 
-        var lblPhoneTitle = new Label {
-            Text = "Pult Mobile Companion",
+        var lblBraveTitle = new Label {
+            Text = "Brave Browser",
             Font = new Font("Segoe UI", 9.5f, FontStyle.Regular),
             ForeColor = Color.FromArgb(240, 240, 240),
-            Location = new Point(40, 68),
+            Location = new Point(38, 64),
             AutoSize = true,
             BackColor = Color.Transparent
         };
-        Controls.Add(lblPhoneTitle);
+        Controls.Add(lblBraveTitle);
 
-        var lblPhoneSub = new Label {
-            Text = isConnected ? "Подключен: " + Program.LastClientIp : "Ожидание смартфона...",
-            Font = new Font("Segoe UI", 8.5f, FontStyle.Regular),
-            ForeColor = isConnected ? Color.FromArgb(163, 230, 190) : Color.FromArgb(150, 150, 150),
-            Location = new Point(40, 88),
-            AutoSize = true,
-            BackColor = Color.Transparent
-        };
-        Controls.Add(lblPhoneSub);
-
-        var lblLanBadge = new Label {
-            Text = isConnected ? "● LAN" : "○ ОФЛАЙН",
-            Font = new Font("Segoe UI", 8.5f, FontStyle.Bold),
-            ForeColor = isConnected ? Color.FromArgb(163, 230, 190) : Color.FromArgb(130, 130, 130),
-            Location = new Point(240, 70),
-            Size = new Size(70, 20),
+        var lblBraveVal = new Label {
+            Text = "100",
+            Font = new Font("Segoe UI", 10.5f, FontStyle.Regular),
+            ForeColor = Color.FromArgb(240, 240, 240),
+            Location = new Point(278, 80),
+            Size = new Size(36, 20),
             TextAlign = ContentAlignment.MiddleRight,
             BackColor = Color.Transparent
         };
-        Controls.Add(lblLanBadge);
+        Controls.Add(lblBraveVal);
 
-        // --- ROW 3: Security PIN ---
-        var lblPinIcon = new Label {
-            Text = "\uE72E",
+        var sliderBrave = new FluentSlider {
+            Location = new Point(36, 82),
+            Size = new Size(236, 18),
+            Value = 100
+        };
+        sliderBrave.ValueChanged += delegate {
+            lblBraveVal.Text = sliderBrave.Value.ToString();
+        };
+        Controls.Add(sliderBrave);
+
+        // --- ROW 3: MAG 271QP X28 (Monitor Brightness) ---
+        var lblMonIcon = new Label {
+            Text = "\uE706",
             Font = fontMdl2,
             ForeColor = Color.FromArgb(220, 220, 220),
-            Location = new Point(16, 132),
+            Location = new Point(14, 124),
             Size = new Size(20, 22),
             BackColor = Color.Transparent
         };
-        Controls.Add(lblPinIcon);
+        Controls.Add(lblMonIcon);
 
-        var lblPinCap = new Label {
-            Text = "PIN для сопряжения",
-            Font = new Font("Segoe UI", 8.5f, FontStyle.Regular),
-            ForeColor = Color.FromArgb(160, 160, 160),
-            Location = new Point(40, 128),
+        var lblMonTitle = new Label {
+            Text = "MAG 271QP X28",
+            Font = new Font("Segoe UI", 9.5f, FontStyle.Regular),
+            ForeColor = Color.FromArgb(240, 240, 240),
+            Location = new Point(38, 120),
             AutoSize = true,
             BackColor = Color.Transparent
         };
-        Controls.Add(lblPinCap);
+        Controls.Add(lblMonTitle);
 
-        var lblPinVal = new Label {
-            Text = Program.Pin,
-            Font = new Font("Segoe UI", 13.5f, FontStyle.Bold),
-            ForeColor = Color.FromArgb(56, 189, 248),
-            Location = new Point(40, 148),
-            AutoSize = true,
-            BackColor = Color.Transparent
-        };
-        Controls.Add(lblPinVal);
-
-        var btnCopyPin = new Button {
-            Text = "Копировать",
-            Font = new Font("Segoe UI", 8f, FontStyle.Regular),
-            ForeColor = Color.FromArgb(230, 230, 230),
-            BackColor = Color.FromArgb(44, 44, 44),
-            FlatStyle = FlatStyle.Flat,
-            Location = new Point(216, 146),
-            Size = new Size(88, 24),
-            Cursor = Cursors.Hand
-        };
-        btnCopyPin.FlatAppearance.BorderSize = 0;
-        btnCopyPin.Click += delegate {
-            Clipboard.SetText(Program.Pin);
-            Program.Notify("PIN скопирован в буфер: " + Program.Pin);
-        };
-        Controls.Add(btnCopyPin);
-
-        // --- ROW 4: Network IP ---
-        var firstIp = Program.LocalIps().FirstOrDefault() ?? "127.0.0.1";
-
-        var lblIpIcon = new Label {
-            Text = "\uE701",
-            Font = fontMdl2,
-            ForeColor = Color.FromArgb(220, 220, 220),
-            Location = new Point(16, 194),
-            Size = new Size(20, 22),
-            BackColor = Color.Transparent
-        };
-        Controls.Add(lblIpIcon);
-
-        var lblIpCap = new Label {
-            Text = "IP адрес компьютера",
-            Font = new Font("Segoe UI", 8.5f, FontStyle.Regular),
-            ForeColor = Color.FromArgb(160, 160, 160),
-            Location = new Point(40, 190),
-            AutoSize = true,
-            BackColor = Color.Transparent
-        };
-        Controls.Add(lblIpCap);
-
-        var lblIpVal = new Label {
-            Text = firstIp + ":" + Program.HttpPort,
+        var lblMonVal = new Label {
+            Text = "100",
             Font = new Font("Segoe UI", 10.5f, FontStyle.Regular),
             ForeColor = Color.FromArgb(240, 240, 240),
-            Location = new Point(40, 212),
+            Location = new Point(278, 136),
+            Size = new Size(36, 20),
+            TextAlign = ContentAlignment.MiddleRight,
+            BackColor = Color.Transparent
+        };
+        Controls.Add(lblMonVal);
+
+        var sliderMon = new FluentSlider {
+            Location = new Point(36, 138),
+            Size = new Size(236, 18),
+            Value = 100
+        };
+        sliderMon.ValueChanged += delegate {
+            lblMonVal.Text = sliderMon.Value.ToString();
+        };
+        Controls.Add(sliderMon);
+
+        // --- ROW 4: Фильтр синего света ---
+        var lblMoonIcon = new Label {
+            Text = "\uE708",
+            Font = fontMdl2,
+            ForeColor = Color.FromArgb(220, 220, 220),
+            Location = new Point(14, 180),
+            Size = new Size(20, 22),
+            BackColor = Color.Transparent
+        };
+        Controls.Add(lblMoonIcon);
+
+        var lblMoonTitle = new Label {
+            Text = "Фильтр синего света",
+            Font = new Font("Segoe UI", 9.5f, FontStyle.Regular),
+            ForeColor = Color.FromArgb(240, 240, 240),
+            Location = new Point(38, 176),
             AutoSize = true,
             BackColor = Color.Transparent
         };
-        Controls.Add(lblIpVal);
+        Controls.Add(lblMoonTitle);
 
-        var btnCopyIp = new Button {
-            Text = "Копировать",
-            Font = new Font("Segoe UI", 8f, FontStyle.Regular),
-            ForeColor = Color.FromArgb(230, 230, 230),
-            BackColor = Color.FromArgb(44, 44, 44),
-            FlatStyle = FlatStyle.Flat,
-            Location = new Point(216, 210),
-            Size = new Size(88, 24),
-            Cursor = Cursors.Hand
+        var lblMoonVal = new Label {
+            Text = "0",
+            Font = new Font("Segoe UI", 10.5f, FontStyle.Regular),
+            ForeColor = Color.FromArgb(240, 240, 240),
+            Location = new Point(278, 192),
+            Size = new Size(36, 20),
+            TextAlign = ContentAlignment.MiddleRight,
+            BackColor = Color.Transparent
         };
-        btnCopyIp.FlatAppearance.BorderSize = 0;
-        btnCopyIp.Click += delegate {
-            Clipboard.SetText(firstIp);
-            Program.Notify("IP скопирован в буфер: " + firstIp);
-        };
-        Controls.Add(btnCopyIp);
+        Controls.Add(lblMoonVal);
 
-        // --- ROW 5: Quick Action Pills ---
-        var btnNewPin = new Button {
-            Text = "Новый PIN",
-            Font = new Font("Segoe UI", 8f, FontStyle.Regular),
+        var sliderMoon = new FluentSlider {
+            Location = new Point(36, 194),
+            Size = new Size(236, 18),
+            Value = 0
+        };
+        sliderMoon.ValueChanged += delegate {
+            lblMoonVal.Text = sliderMoon.Value.ToString();
+        };
+        Controls.Add(sliderMoon);
+
+        // --- ROW 5: Затемнение ---
+        var lblDimIcon = new Label {
+            Text = "\uE706",
+            Font = fontMdl2,
             ForeColor = Color.FromArgb(220, 220, 220),
-            BackColor = Color.FromArgb(40, 40, 40),
-            FlatStyle = FlatStyle.Flat,
-            Location = new Point(14, 260),
-            Size = new Size(88, 28),
-            Cursor = Cursors.Hand
+            Location = new Point(14, 236),
+            Size = new Size(20, 22),
+            BackColor = Color.Transparent
         };
-        btnNewPin.FlatAppearance.BorderSize = 0;
-        btnNewPin.Click += delegate {
-            Program.Pin = Program.NewPin();
-            lblPinVal.Text = Program.Pin;
-            Program.Notify("Сгенерирован новый PIN: " + Program.Pin);
-        };
-        Controls.Add(btnNewPin);
+        Controls.Add(lblDimIcon);
 
-        var btnFolder = new Button {
-            Text = "Снимки экрана",
-            Font = new Font("Segoe UI", 8f, FontStyle.Regular),
-            ForeColor = Color.FromArgb(220, 220, 220),
-            BackColor = Color.FromArgb(40, 40, 40),
-            FlatStyle = FlatStyle.Flat,
-            Location = new Point(108, 260),
-            Size = new Size(98, 28),
-            Cursor = Cursors.Hand
-        };
-        btnFolder.FlatAppearance.BorderSize = 0;
-        btnFolder.Click += delegate {
-            var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Pult");
-            Directory.CreateDirectory(dir);
-            Process.Start("explorer.exe", dir);
-        };
-        Controls.Add(btnFolder);
-
-        var btnSignatures = new Button {
-            Text = "Подписи",
-            Font = new Font("Segoe UI", 8f, FontStyle.Regular),
-            ForeColor = Color.FromArgb(220, 220, 220),
-            BackColor = Color.FromArgb(40, 40, 40),
-            FlatStyle = FlatStyle.Flat,
-            Location = new Point(212, 260),
-            Size = new Size(94, 28),
-            Cursor = Cursors.Hand
-        };
-        btnSignatures.FlatAppearance.BorderSize = 0;
-        btnSignatures.Click += delegate {
-            var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Pult", "Signatures");
-            Directory.CreateDirectory(dir);
-            Process.Start("explorer.exe", dir);
-        };
-        Controls.Add(btnSignatures);
-
-        // --- BOTTOM FOOTER: Matching User's Screenshot ---
-        var lblFooterTitle = new Label {
-            Text = "Громкость и статус",
+        var lblDimTitle = new Label {
+            Text = "Затемнение",
             Font = new Font("Segoe UI", 9.5f, FontStyle.Regular),
-            ForeColor = Color.FromArgb(220, 220, 220),
-            Location = new Point(16, 324),
+            ForeColor = Color.FromArgb(240, 240, 240),
+            Location = new Point(38, 232),
+            AutoSize = true,
+            BackColor = Color.Transparent
+        };
+        Controls.Add(lblDimTitle);
+
+        var lblDimVal = new Label {
+            Text = "0",
+            Font = new Font("Segoe UI", 10.5f, FontStyle.Regular),
+            ForeColor = Color.FromArgb(240, 240, 240),
+            Location = new Point(278, 248),
+            Size = new Size(36, 20),
+            TextAlign = ContentAlignment.MiddleRight,
+            BackColor = Color.Transparent
+        };
+        Controls.Add(lblDimVal);
+
+        var sliderDim = new FluentSlider {
+            Location = new Point(36, 250),
+            Size = new Size(236, 18),
+            Value = 0
+        };
+        sliderDim.ValueChanged += delegate {
+            lblDimVal.Text = sliderDim.Value.ToString();
+        };
+        Controls.Add(sliderDim);
+
+        // --- BOTTOM FOOTER BAR ---
+        var lblFooterTitle = new Label {
+            Text = "Громкость",
+            Font = new Font("Segoe UI", 10f, FontStyle.Regular),
+            ForeColor = Color.FromArgb(230, 230, 230),
+            Location = new Point(14, 294),
             AutoSize = true,
             BackColor = Color.Transparent
         };
         Controls.Add(lblFooterTitle);
 
-        // Action 1: Firewall Setup Button (Equalizer / Mixer glyph \uE71D)
-        var btnFwIcon = new Button {
-            Text = "\uE71D",
+        // Equalizer / Mixer button
+        var btnMixer = new Button {
+            Text = "\uE994",
             Font = fontMdl2,
             ForeColor = Color.FromArgb(220, 220, 220),
-            BackColor = Color.FromArgb(24, 24, 24),
+            BackColor = Color.FromArgb(22, 22, 22),
             FlatStyle = FlatStyle.Flat,
-            Location = new Point(240, 318),
-            Size = new Size(32, 30),
+            Location = new Point(242, 288),
+            Size = new Size(32, 32),
             Cursor = Cursors.Hand
         };
-        btnFwIcon.FlatAppearance.BorderSize = 0;
-        btnFwIcon.Click += delegate { Firewall.RunElevated(); };
-        Controls.Add(btnFwIcon);
+        btnMixer.FlatAppearance.BorderSize = 0;
+        btnMixer.Click += delegate {
+            try { Process.Start("ms-settings:apps-volume"); }
+            catch { Firewall.RunElevated(); }
+        };
+        Controls.Add(btnMixer);
 
-        // Action 2: Settings / Options Cog (Gear glyph \uE713)
-        var btnSettingsIcon = new Button {
+        // Settings / Pult Companion Cog
+        var btnSettings = new Button {
             Text = "\uE713",
             Font = fontMdl2,
             ForeColor = Color.FromArgb(220, 220, 220),
-            BackColor = Color.FromArgb(24, 24, 24),
+            BackColor = Color.FromArgb(22, 22, 22),
             FlatStyle = FlatStyle.Flat,
-            Location = new Point(278, 318),
-            Size = new Size(32, 30),
+            Location = new Point(278, 288),
+            Size = new Size(32, 32),
             Cursor = Cursors.Hand
         };
-        btnSettingsIcon.FlatAppearance.BorderSize = 0;
+        btnSettings.FlatAppearance.BorderSize = 0;
+
         var menu = new ContextMenuStrip();
-        menu.Items.Add("Разрешить в брандмауэре", null, delegate { Firewall.RunElevated(); });
+        bool isConnected = Program.LastClientIp != null && (DateTime.Now - Program.LastActiveTime).TotalSeconds < 25;
+        var firstIp = Program.LocalIps().FirstOrDefault() ?? "127.0.0.1";
+
+        menu.Items.Add(new ToolStripMenuItem("Pult Companion Status: " + (isConnected ? "Подключен (" + Program.LastClientIp + ")" : "Ожидание смартфона...")) { Enabled = false });
+        menu.Items.Add(new ToolStripSeparator());
+        menu.Items.Add("PIN: " + Program.Pin + " (Скопировать)", null, delegate {
+            Clipboard.SetText(Program.Pin);
+            Program.Notify("PIN скопирован: " + Program.Pin);
+        });
+        menu.Items.Add("IP хоста: " + firstIp + ":" + Program.HttpPort + " (Скопировать)", null, delegate {
+            Clipboard.SetText(firstIp);
+            Program.Notify("IP скопирован: " + firstIp);
+        });
         menu.Items.Add("Сгенерировать новый PIN", null, delegate {
             Program.Pin = Program.NewPin();
-            lblPinVal.Text = Program.Pin;
+            Program.Notify("Новый PIN: " + Program.Pin);
         });
         menu.Items.Add(new ToolStripSeparator());
+        menu.Items.Add("Открыть папку снимков", null, delegate {
+            var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Pult");
+            Directory.CreateDirectory(dir);
+            Process.Start("explorer.exe", dir);
+        });
+        menu.Items.Add("Открыть папку подписей", null, delegate {
+            var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Pult", "Signatures");
+            Directory.CreateDirectory(dir);
+            Process.Start("explorer.exe", dir);
+        });
+        menu.Items.Add("Разрешить в брандмауэре Windows", null, delegate { Firewall.RunElevated(); });
+        menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("Выход из Pult", null, delegate { Environment.Exit(0); });
-        btnSettingsIcon.Click += delegate {
-            menu.Show(btnSettingsIcon, new Point(0, btnSettingsIcon.Height));
+
+        btnSettings.Click += delegate {
+            menu.Show(btnSettings, new Point(-160, btnSettings.Height));
         };
-        Controls.Add(btnSettingsIcon);
+        Controls.Add(btnSettings);
     }
 }
 

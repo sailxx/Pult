@@ -82,7 +82,7 @@ fun DockScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 6.dp),
+                .padding(horizontal = 8.dp, vertical = 2.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -100,10 +100,10 @@ fun DockScreen(
                 if (favs.isNotEmpty()) {
                     Box(
                         modifier = Modifier
-                            .clip(PultDimens.shapeBadge)
-                            .background(palette.accent.copy(alpha = 0.12f))
-                            .border(1.dp, palette.accent.copy(alpha = 0.3f), PultDimens.shapeBadge)
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                            .clip(PultDimens.shapePill)
+                            .background(Color.White.copy(alpha = 0.08f))
+                            .border(1.dp, Color.White.copy(alpha = 0.12f), PultDimens.shapePill)
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
                     ) {
                         Text(
                             text = "${favs.size} закреплено",
@@ -119,14 +119,14 @@ fun DockScreen(
             Box(
                 modifier = Modifier
                     .height(28.dp)
-                    .clip(PultDimens.shapeBadge)
-                    .background(palette.surfaceLight)
-                    .border(1.dp, palette.border, PultDimens.shapeBadge)
+                    .clip(PultDimens.shapePill)
+                    .background(Color.White.copy(alpha = 0.08f))
+                    .border(1.dp, Color.White.copy(alpha = 0.12f), PultDimens.shapePill)
                     .clickable {
                         onHaptic()
                         onOpenAllApps()
                     }
-                    .padding(horizontal = 10.dp),
+                    .padding(horizontal = 12.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -149,16 +149,15 @@ fun DockScreen(
             if (apps == null) {
                 // Плейсхолдер загрузки
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     repeat(dockSlotsCount) {
                         Box(
                             modifier = Modifier
                                 .size(76.dp)
-                                .clip(PultDimens.shapeCard)
-                                .background(palette.surface.copy(alpha = 0.6f))
-                                .border(1.dp, palette.border, PultDimens.shapeCard)
+                                .clip(CircleShape)
+                                .background(Color.White.copy(alpha = 0.04f))
                         )
                     }
                 }
@@ -172,8 +171,8 @@ fun DockScreen(
 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(columnsCount),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(28.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.wrapContentSize(),
                     userScrollEnabled = false
                 ) {
@@ -198,23 +197,12 @@ fun DockScreen(
 
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            // Сама стеклянная плитка дока
+                            // Сама свободно парящая иконка без карточки и обводки
                             Box(
                                 modifier = Modifier
                                     .size(76.dp)
-                                    .clip(PultDimens.shapeCard)
-                                    .background(if (isFav) palette.surfaceLight else palette.surface.copy(alpha = 0.85f))
-                                    .border(
-                                        width = if (isRunning || isFav) 1.5.dp else 1.dp,
-                                        color = when {
-                                            isRunning -> palette.live
-                                            isFav -> palette.accent.copy(alpha = 0.6f)
-                                            else -> palette.border
-                                        },
-                                        shape = PultDimens.shapeCard
-                                    )
                                     .combinedClickable(
                                         onClick = {
                                             onHaptic()
@@ -237,26 +225,26 @@ fun DockScreen(
                                     Image(
                                         bitmap = bmp,
                                         contentDescription = app.name,
-                                        modifier = Modifier.size(46.dp)
+                                        modifier = Modifier.size(72.dp)
                                     )
                                 } else {
                                     Box(
                                         modifier = Modifier
-                                            .size(42.dp)
-                                            .clip(PultDimens.shapeInner)
-                                            .background(palette.surfaceLight)
+                                            .size(64.dp)
+                                            .clip(CircleShape)
+                                            .background(Color.White.copy(alpha = 0.05f))
                                     )
                                 }
 
-                                // Индикатор запущенного процесса (светящаяся точка снизу)
+                                // Точка запущенного процесса (аккуратная круглая точка снизу)
                                 if (isRunning) {
                                     Box(
                                         modifier = Modifier
                                             .align(Alignment.BottomCenter)
-                                            .padding(bottom = 5.dp)
-                                            .size(6.dp)
+                                            .padding(bottom = 1.dp)
+                                            .size(5.dp)
                                             .clip(CircleShape)
-                                            .background(palette.live)
+                                            .background(palette.accent)
                                     )
                                 }
                             }
@@ -265,13 +253,13 @@ fun DockScreen(
                             if (showLabels) {
                                 Text(
                                     text = app.name,
-                                    color = palette.textPrimary,
-                                    fontSize = 10.sp,
-                                    fontWeight = if (isFav) FontWeight.Bold else FontWeight.Medium,
+                                    color = palette.textSecondary,
+                                    fontSize = 11.sp,
+                                    fontWeight = if (isFav) FontWeight.SemiBold else FontWeight.Normal,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     textAlign = TextAlign.Center,
-                                    modifier = Modifier.width(76.dp)
+                                    modifier = Modifier.width(84.dp)
                                 )
                             }
                         }
@@ -280,179 +268,182 @@ fun DockScreen(
             }
         }
 
-        // НИЖНЯЯ ПАНЕЛЬ: Управление звуком и мультимедиа (Now Playing bar)
-        PultCard(
+        // НИЖНЯЯ ПАНЕЛЬ: Компактная парящая Liquid Glass капсула по центру
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp),
-            backgroundColor = palette.surface.copy(alpha = 0.90f),
-            borderColor = palette.border
+                .padding(bottom = 2.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Row(
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .height(42.dp)
+                    .clip(PultDimens.shapePill)
+                    .background(Color.White.copy(alpha = 0.08f))
+                    .border(1.dp, Color.White.copy(alpha = 0.12f), PultDimens.shapePill)
+                    .padding(horizontal = 14.dp)
             ) {
-                // Левая группа: Статус громкости и кнопка Mute
                 Row(
+                    modifier = Modifier.fillMaxHeight(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .height(30.dp)
-                            .clip(PultDimens.shapeBadge)
-                            .background(if (isMuted) palette.danger.copy(alpha = 0.2f) else palette.surfaceLight)
-                            .border(1.dp, if (isMuted) palette.danger else palette.border, PultDimens.shapeBadge)
-                            .clickable {
-                                onHaptic()
-                                onToggleMute()
-                            }
-                            .padding(horizontal = 8.dp),
-                        contentAlignment = Alignment.Center
+                    // Левая группа: Статус громкости и кнопка Mute
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        Text(
-                            text = if (isMuted) "MUTE" else "$volume%",
-                            color = if (isMuted) palette.danger else palette.accent,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                        Box(
+                            modifier = Modifier
+                                .height(26.dp)
+                                .clip(PultDimens.shapePill)
+                                .background(if (isMuted) palette.danger.copy(alpha = 0.2f) else Color.White.copy(alpha = 0.08f))
+                                .border(1.dp, if (isMuted) palette.danger else Color.White.copy(alpha = 0.14f), PultDimens.shapePill)
+                                .clickable {
+                                    onHaptic()
+                                    onToggleMute()
+                                }
+                                .padding(horizontal = 8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = if (isMuted) "MUTE" else "$volume%",
+                                color = if (isMuted) palette.danger else palette.accent,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+
+                        // Кнопки быстрой подстройки звука
+                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Box(
+                                modifier = Modifier
+                                    .size(26.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.White.copy(alpha = 0.08f))
+                                    .border(1.dp, Color.White.copy(alpha = 0.12f), CircleShape)
+                                    .clickable {
+                                        onHaptic()
+                                        onVolumeChange((volume - 5).coerceIn(0, 100))
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("−", color = palette.textPrimary, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .size(26.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.White.copy(alpha = 0.08f))
+                                    .border(1.dp, Color.White.copy(alpha = 0.12f), CircleShape)
+                                    .clickable {
+                                        onHaptic()
+                                        onVolumeChange((volume + 5).coerceIn(0, 100))
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("+", color = palette.textPrimary, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            }
+                        }
                     }
 
-                    // Кнопки быстрой подстройки звука
-                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    // Центральная группа: Медиа-кнопки (Prev, Play/Pause, Next)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
                         Box(
                             modifier = Modifier
                                 .size(28.dp)
-                                .clip(PultDimens.shapeBadge)
-                                .background(palette.surfaceLight)
-                                .border(1.dp, palette.border, PultDimens.shapeBadge)
+                                .clip(CircleShape)
+                                .background(Color.White.copy(alpha = 0.08f))
+                                .border(1.dp, Color.White.copy(alpha = 0.12f), CircleShape)
                                 .clickable {
                                     onHaptic()
-                                    onVolumeChange((volume - 5).coerceIn(0, 100))
+                                    onKey("MEDIA_PREV")
                                 },
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("−", color = palette.textPrimary, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                            PultIconPrev(Modifier.size(11.dp), color = palette.textPrimary)
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                                .background(palette.accent)
+                                .clickable {
+                                    onHaptic()
+                                    onKey("SPACE")
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            PultIconPlay(Modifier.size(13.dp), color = Color(0xFF0C0E12))
                         }
 
                         Box(
                             modifier = Modifier
                                 .size(28.dp)
-                                .clip(PultDimens.shapeBadge)
-                                .background(palette.surfaceLight)
-                                .border(1.dp, palette.border, PultDimens.shapeBadge)
+                                .clip(CircleShape)
+                                .background(Color.White.copy(alpha = 0.08f))
+                                .border(1.dp, Color.White.copy(alpha = 0.12f), CircleShape)
                                 .clickable {
                                     onHaptic()
-                                    onVolumeChange((volume + 5).coerceIn(0, 100))
+                                    onKey("MEDIA_NEXT")
                                 },
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("+", color = palette.textPrimary, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                            PultIconNext(Modifier.size(11.dp), color = palette.textPrimary)
                         }
                     }
-                }
 
-                // Центральная группа: Медиа-кнопки (Prev, Play/Pause, Next)
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    // Предыдущий трек
-                    Box(
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clip(CircleShape)
-                            .background(palette.surfaceLight)
-                            .border(1.dp, palette.border, CircleShape)
-                            .clickable {
-                                onHaptic()
-                                onKey("MEDIA_PREV")
-                            },
-                        contentAlignment = Alignment.Center
+                    // Правая группа: Системные действия (Рабочий стол, Блок ПК)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        PultIconPrev(Modifier.size(12.dp), color = palette.textPrimary)
-                    }
+                        Box(
+                            modifier = Modifier
+                                .height(26.dp)
+                                .clip(PultDimens.shapePill)
+                                .background(Color.White.copy(alpha = 0.08f))
+                                .border(1.dp, Color.White.copy(alpha = 0.12f), PultDimens.shapePill)
+                                .clickable {
+                                    onHaptic()
+                                    onKey("WIN_D")
+                                }
+                                .padding(horizontal = 8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Рабочий стол",
+                                color = palette.textSecondary,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
 
-                    // Воспроизведение / Пауза (Space)
-                    Box(
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .background(palette.accent)
-                            .clickable {
-                                onHaptic()
-                                onKey("SPACE")
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        PultIconPlay(Modifier.size(14.dp), color = Color(0xFF030712))
-                    }
-
-                    // Следующий трек
-                    Box(
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clip(CircleShape)
-                            .background(palette.surfaceLight)
-                            .border(1.dp, palette.border, CircleShape)
-                            .clickable {
-                                onHaptic()
-                                onKey("MEDIA_NEXT")
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        PultIconNext(Modifier.size(12.dp), color = palette.textPrimary)
-                    }
-                }
-
-                // Правая группа: Системные действия (Win+D Свернуть все, Lock PC)
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .height(28.dp)
-                            .clip(PultDimens.shapeBadge)
-                            .background(palette.surfaceLight)
-                            .border(1.dp, palette.border, PultDimens.shapeBadge)
-                            .clickable {
-                                onHaptic()
-                                onKey("WIN_D")
-                            }
-                            .padding(horizontal = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Рабочий стол",
-                            color = palette.textSecondary,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .height(28.dp)
-                            .clip(PultDimens.shapeBadge)
-                            .background(palette.surfaceLight)
-                            .border(1.dp, palette.border, PultDimens.shapeBadge)
-                            .clickable {
-                                onHaptic()
-                                onSystem("lock")
-                            }
-                            .padding(horizontal = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Блок ПК",
-                            color = palette.danger,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                        Box(
+                            modifier = Modifier
+                                .height(26.dp)
+                                .clip(PultDimens.shapePill)
+                                .background(Color.White.copy(alpha = 0.08f))
+                                .border(1.dp, Color.White.copy(alpha = 0.12f), PultDimens.shapePill)
+                                .clickable {
+                                    onHaptic()
+                                    onSystem("lock")
+                                }
+                                .padding(horizontal = 8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Блок ПК",
+                                color = palette.danger,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                 }
             }

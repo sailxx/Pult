@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
 
         val prefs = getSharedPreferences("pult", Context.MODE_PRIVATE)
         setContent {
-            var themeName by remember { mutableStateOf(prefs.getString("theme", "aurora") ?: "aurora") }
+            var themeName by remember { mutableStateOf(prefs.getString("theme", "dark") ?: "dark") }
             val currentPalette = remember(themeName) { PultPalettes.get(themeName) }
 
             PultTheme(palette = currentPalette) {

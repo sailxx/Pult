@@ -27,6 +27,22 @@ data class PultThemePalette(
 )
 
 object PultPalettes {
+    val DarkMinimal = PultThemePalette(
+        name = "dark",
+        backgroundBase = Color(0xFF0C0E12),
+        gradientA = Color(0xFF14171F),
+        gradientB = Color(0xFF101216),
+        gradientC = Color(0xFF181B22),
+        accent = Color(0xFF4CC2FF),
+        live = Color(0xFF38BDF8),
+        surface = Color(0x18FFFFFF),
+        surfaceLight = Color(0x28FFFFFF),
+        border = Color(0x1FFFFFFF),
+        textPrimary = Color(0xFFF5F7FA),
+        textSecondary = Color(0xFF9CA3AF),
+        textTertiary = Color(0xFF6B7280)
+    )
+
     val Aurora = PultThemePalette(
         name = "aurora",
         backgroundBase = Color(0xFF101719),
@@ -93,15 +109,16 @@ object PultPalettes {
     )
 
     fun get(name: String): PultThemePalette = when (name.lowercase()) {
+        "aurora" -> Aurora
         "dusk" -> Dusk
         "ember" -> Ember
         "midnight" -> Midnight
         "oled" -> Oled
-        else -> Aurora
+        else -> DarkMinimal
     }
 }
 
-val LocalPultPalette = staticCompositionLocalOf { PultPalettes.Aurora }
+val LocalPultPalette = staticCompositionLocalOf { PultPalettes.DarkMinimal }
 
 /**
  * Динамический доступ к цветам активной темы Pult.
@@ -121,23 +138,25 @@ object PultColors {
 }
 
 object PultDimens {
-    val radiusCard   = 16.dp
+    val radiusCard   = 18.dp
     val radiusButton = 12.dp
     val radiusTile   = 14.dp
     val radiusInner  = 10.dp
+    val radiusPill   = 24.dp
     val radiusBadge  = 8.dp
-    val headerHeight = 44.dp
+    val headerHeight = 40.dp
 
     val shapeCard   = RoundedCornerShape(radiusCard)
     val shapeButton = RoundedCornerShape(radiusButton)
     val shapeTile   = RoundedCornerShape(radiusTile)
     val shapeInner  = RoundedCornerShape(radiusInner)
+    val shapePill   = RoundedCornerShape(radiusPill)
     val shapeBadge  = RoundedCornerShape(radiusBadge)
 }
 
 @Composable
 fun PultTheme(
-    palette: PultThemePalette = PultPalettes.Aurora,
+    palette: PultThemePalette = PultPalettes.DarkMinimal,
     content: @Composable () -> Unit
 ) {
     val colorScheme = darkColorScheme(

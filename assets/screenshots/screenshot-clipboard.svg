@@ -2,128 +2,113 @@
 <style>
   text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
   .mono { font-family: 'Consolas', 'Courier New', monospace; }
-  .glass { fill: #1B2629; fill-opacity: 0.85; stroke: #354449; stroke-width: 1; }
-  .glass-card { fill: #1B2629; fill-opacity: 0.88; stroke: #354449; stroke-width: 1; }
-  .tile { fill: #1B2629; fill-opacity: 0.85; stroke: #354449; stroke-width: 1; }
-  .tile-fav { fill: #202E33; fill-opacity: 0.95; stroke: #B4EDCC; stroke-opacity: 0.6; stroke-width: 1.5; }
-  .tile-run { fill: #1B2629; fill-opacity: 0.90; stroke: #A3E6BE; stroke-opacity: 0.85; stroke-width: 1.5; }
-  .btn { fill: #263438; stroke: #354449; stroke-width: 1; }
-  .btn-accent { fill: #B4EDCC; }
-  .badge { fill: #263438; stroke: #354449; stroke-width: 1; }
+  .liquid-glass { fill: #FFFFFF; fill-opacity: 0.08; stroke: #FFFFFF; stroke-opacity: 0.12; stroke-width: 1; }
+  .liquid-card { fill: #FFFFFF; fill-opacity: 0.06; stroke: #FFFFFF; stroke-opacity: 0.10; stroke-width: 1; }
+  .liquid-active { fill: #FFFFFF; fill-opacity: 0.16; stroke: #FFFFFF; stroke-opacity: 0.20; stroke-width: 1; }
+  .liquid-btn { fill: #FFFFFF; fill-opacity: 0.08; stroke: #FFFFFF; stroke-opacity: 0.12; stroke-width: 1; }
+  .accent-fill { fill: #38BDF8; }
 </style>
 
     <defs>
-      <radialGradient id="auroraA" cx="15%" cy="10%" r="55%">
-        <stop offset="0%" stop-color="#71A78A" stop-opacity="0.50"/>
-        <stop offset="60%" stop-color="#71A78A" stop-opacity="0.12"/>
-        <stop offset="100%" stop-color="#71A78A" stop-opacity="0"/>
-      </radialGradient>
-      <radialGradient id="auroraB" cx="82%" cy="88%" r="52%">
-        <stop offset="0%" stop-color="#274268" stop-opacity="0.48"/>
-        <stop offset="60%" stop-color="#274268" stop-opacity="0.10"/>
-        <stop offset="100%" stop-color="#274268" stop-opacity="0"/>
-      </radialGradient>
-      <radialGradient id="auroraC" cx="65%" cy="25%" r="42%">
-        <stop offset="0%" stop-color="#273F45" stop-opacity="0.38"/>
-        <stop offset="100%" stop-color="#273F45" stop-opacity="0"/>
+      <radialGradient id="darkVignette" cx="50%" cy="50%" r="70%">
+        <stop offset="0%" stop-color="#141820" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#0A0C10" stop-opacity="1"/>
       </radialGradient>
     </defs>
-    <rect width="1280" height="720" fill="#101719"/>
-    <rect width="1280" height="720" fill="url(#auroraA)"/>
-    <rect width="1280" height="720" fill="url(#auroraB)"/>
-    <rect width="1280" height="720" fill="url(#auroraC)"/>
+    <rect width="1280" height="720" fill="#0C0E12"/>
+    <rect width="1280" height="720" fill="url(#darkVignette)"/>
   
 
-    <!-- Top 44dp Header Bar -->
-    <g transform="translate(24 16)">
-      <!-- Left: Host status -->
-      <rect x="0" y="0" width="180" height="34" rx="10" class="glass"/>
-      <circle cx="16" cy="17" r="3.5" fill="#A3E6BE"/>
-      <text x="28" y="21" fill="#EEF3F1" font-size="11.5" font-weight="700">DESKTOP-6T5OKAJ</text>
-      <text x="148" y="21" fill="#758585" font-size="10" class="mono">LAN</text>
+    <!-- Floating Liquid Glass Header Bar -->
+    <g transform="translate(28 16)">
+      <!-- Left: Host status pill -->
+      <rect x="0" y="0" width="186" height="34" rx="17" class="liquid-glass"/>
+      <circle cx="16" cy="17" r="3.5" fill="#38BDF8"/>
+      <text x="28" y="21" fill="#F3F4F6" font-size="11.5" font-weight="600">DESKTOP-6T5OKAJ</text>
+      <text x="154" y="21" fill="#6B7280" font-size="10" class="mono">LAN</text>
 
-      <!-- Center: Segmented Navigation -->
+      <!-- Center: Segmented Navigation capsule -->
       <g transform="translate(320 0)">
-        <rect x="0" y="0" width="525" height="34" rx="10" class="glass"/>
+        <rect x="0" y="0" width="520" height="34" rx="17" class="liquid-glass"/>
         
-        <text x="39" y="21" fill="#A0AFAF" font-size="11" font-weight="600" text-anchor="middle">Док</text>
+        <text x="39" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Док</text>
       
-        <text x="123" y="21" fill="#A0AFAF" font-size="11" font-weight="600" text-anchor="middle">Тачпад</text>
+        <text x="122" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Тачпад</text>
       
-        <rect x="171" y="3" width="72" height="28" rx="8" fill="#263438" stroke="#B4EDCC" stroke-opacity="0.5"/>
-        <text x="207" y="21" fill="#B4EDCC" font-size="11" font-weight="800" text-anchor="middle">Буфер</text>
+        <rect x="169" y="3" width="72" height="28" rx="14" fill="#FFFFFF" fill-opacity="0.16" stroke="#FFFFFF" stroke-opacity="0.22"/>
+        <text x="205" y="21" fill="#FFFFFF" font-size="11" font-weight="700" text-anchor="middle">Буфер</text>
       
-        <text x="291" y="21" fill="#A0AFAF" font-size="11" font-weight="600" text-anchor="middle">Подпись</text>
+        <text x="288" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Подпись</text>
       
-        <text x="383" y="21" fill="#A0AFAF" font-size="11" font-weight="600" text-anchor="middle">Снимок</text>
+        <text x="379" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Снимок</text>
       
-        <text x="475" y="21" fill="#A0AFAF" font-size="11" font-weight="600" text-anchor="middle">Программы</text>
+        <text x="470" y="21" fill="#9CA3AF" font-size="11" font-weight="500" text-anchor="middle">Программы</text>
       
       </g>
 
       <!-- Right: Settings and Disconnect -->
       <g transform="translate(1148 0)">
-        <rect x="0" y="0" width="34" height="34" rx="10" class="glass"/>
-        <text x="17" y="22" fill="#A0AFAF" font-size="14" text-anchor="middle">⚙</text>
+        <rect x="0" y="0" width="34" height="34" rx="17" class="liquid-glass"/>
+        <text x="17" y="22" fill="#9CA3AF" font-size="13" text-anchor="middle">⚙</text>
 
-        <rect x="42" y="0" width="34" height="34" rx="10" class="glass"/>
-        <text x="59" y="21" fill="#A0AFAF" font-size="12" font-weight="700" text-anchor="middle">✕</text>
+        <rect x="42" y="0" width="34" height="34" rx="17" class="liquid-glass"/>
+        <text x="59" y="21" fill="#9CA3AF" font-size="11" font-weight="600" text-anchor="middle">✕</text>
       </g>
     </g>
   
 
-<g transform="translate(24 76)">
-  <!-- Left Column: Windows Clipboard (670px) -->
+<g transform="translate(36 74)">
+  <!-- Left Column: Windows Clipboard (760px) -->
   <g transform="translate(0 0)">
-    <rect x="0" y="0" width="670" height="610" rx="16" class="glass"/>
-    <g transform="translate(24 20)">
-      <circle cx="6" cy="8" r="4" fill="#B4EDCC"/>
-      <text x="18" y="12" fill="#758585" font-size="11" font-weight="800" letter-spacing="0.5">БУФЕР ОБМЕНА WINDOWS</text>
+    <rect x="0" y="0" width="760" height="610" rx="20" class="liquid-card"/>
 
-      <rect x="520" y="-4" width="90" height="28" rx="8" fill="#263438" stroke="#354449"/>
-      <text x="565" y="14" fill="#EEF3F1" font-size="11" font-weight="600" text-anchor="middle">Обновить</text>
-    </g>
+    <g transform="translate(24 24)">
+      <circle cx="6" cy="8" r="3.5" fill="#38BDF8"/>
+      <text x="18" y="12" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">ТЕКУЩИЙ БУФЕР ОБМЕНА WINDOWS</text>
 
-    <!-- Clipboard content box -->
-    <g transform="translate(24 64)">
-      <rect x="0" y="0" width="622" height="440" rx="12" fill="#131B1E" stroke="#2B3A3F"/>
-      <text x="20" y="36" fill="#B4EDCC" font-size="13" class="mono font-weight-700">git clone https://github.com/sailxx/Pult.git</text>
-      <text x="20" y="64" fill="#A0AFAF" font-size="13" class="mono">cd pult &amp;&amp; host\build.cmd</text>
-      <text x="20" y="100" fill="#758585" font-size="12" class="mono">// Pult Windows Host: Peer-to-peer keep-alive latency 1.04ms</text>
-    </g>
+      <!-- Active Clip Preview -->
+      <g transform="translate(0 32)">
+        <rect x="0" y="0" width="712" height="150" rx="16" class="liquid-glass"/>
+        <text x="24" y="38" fill="#38BDF8" font-size="11" font-weight="600">Синхронизировано • Только что</text>
+        <text x="24" y="74" fill="#F3F4F6" font-size="13.5" class="mono">cd pult &amp;&amp; host\build.cmd</text>
+        <text x="24" y="112" fill="#6B7280" font-size="12" class="mono">// Pult Windows Host: Peer-to-peer keep-alive latency 1.04ms</text>
+      </g>
 
-    <!-- Actions -->
-    <g transform="translate(24 524)">
-      <rect x="0" y="0" width="300" height="54" rx="12" fill="#263438" stroke="#354449"/>
-      <text x="150" y="32" fill="#B4EDCC" font-size="13" font-weight="700" text-anchor="middle">В буфер телефона</text>
+      <!-- History Clips -->
+      <g transform="translate(0 200)">
+        <text x="0" y="16" fill="#6B7280" font-size="10.5" font-weight="700">ИСТОРИЯ БУФЕРА</text>
 
-      <rect x="322" y="0" width="300" height="54" rx="12" fill="#3D2024" stroke="#EF4444" stroke-opacity="0.4"/>
-      <text x="472" y="32" fill="#EF4444" font-size="13" font-weight="700" text-anchor="middle">Очистить буфер ПК</text>
+        <rect x="0" y="30" width="712" height="52" rx="14" class="liquid-glass"/>
+        <text x="20" y="61" fill="#E5E7EB" font-size="12.5" class="mono">https://github.com/sailxx/Pult</text>
+        <text x="692" y="61" fill="#6B7280" font-size="11" text-anchor="end">12:02</text>
+
+        <rect x="0" y="90" width="712" height="52" rx="14" class="liquid-glass"/>
+        <text x="20" y="121" fill="#E5E7EB" font-size="12.5" class="mono">git commit -m "feat(ui): Liquid Glass Apple standard"</text>
+        <text x="692" y="121" fill="#6B7280" font-size="11" text-anchor="end">11:58</text>
+
+        <rect x="0" y="150" width="712" height="52" rx="14" class="liquid-glass"/>
+        <text x="20" y="181" fill="#E5E7EB" font-size="12.5" class="mono">DESKTOP-6T5OKAJ:4848</text>
+        <text x="692" y="181" fill="#6B7280" font-size="11" text-anchor="end">11:45</text>
+      </g>
     </g>
   </g>
 
-  <!-- Right Column: Send to PC (540px) -->
-  <g transform="translate(692 0)">
-    <rect x="0" y="0" width="540" height="610" rx="16" class="glass"/>
-    <g transform="translate(24 20)">
-      <circle cx="6" cy="8" r="4" fill="#A3E6BE"/>
-      <text x="18" y="12" fill="#758585" font-size="11" font-weight="800" letter-spacing="0.5">ОТПРАВИТЬ НА ПК</text>
+  <!-- Right Column: Quick Send (430px) -->
+  <g transform="translate(780 0)">
+    <rect x="0" y="0" width="428" height="610" rx="20" class="liquid-card"/>
 
-      <rect x="330" y="-4" width="160" height="28" rx="8" fill="#263438" stroke="#354449"/>
-      <text x="410" y="14" fill="#B4EDCC" font-size="11" font-weight="600" text-anchor="middle">Вставить из телефона</text>
-    </g>
+    <g transform="translate(24 24)">
+      <text x="0" y="16" fill="#6B7280" font-size="11" font-weight="700" letter-spacing="0.6">ОТПРАВИТЬ ТЕКСТ НА ПК</text>
 
-    <!-- Input text area -->
-    <g transform="translate(24 64)">
-      <rect x="0" y="0" width="492" height="440" rx="12" fill="#131B1E" stroke="#2B3A3F"/>
-      <text x="20" y="36" fill="#EEF3F1" font-size="13" class="mono">https://windock.vercel.app/</text>
-      <rect x="235" y="22" width="2" height="18" fill="#B4EDCC"/>
-    </g>
+      <g transform="translate(0 32)">
+        <rect x="0" y="0" width="380" height="240" rx="16" class="liquid-glass"/>
+        <text x="20" y="36" fill="#6B7280" font-size="12">Введите текст или ссылку для быстрой вставки на компьютере...</text>
+      </g>
 
-    <!-- Send button -->
-    <g transform="translate(24 524)">
-      <rect x="0" y="0" width="492" height="54" rx="12" fill="#B4EDCC"/>
-      <text x="246" y="33" fill="#101719" font-size="14" font-weight="800" text-anchor="middle">Скопировать в буфер ПК</text>
+      <g transform="translate(0 292)">
+        <rect x="0" y="0" width="380" height="50" rx="25" fill="#38BDF8"/>
+        <text x="190" y="30" fill="#0C0E12" font-size="13" font-weight="700" text-anchor="middle">Отправить в буфер Windows</text>
+      </g>
     </g>
   </g>
 </g>

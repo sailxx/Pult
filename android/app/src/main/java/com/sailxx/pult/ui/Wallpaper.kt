@@ -75,37 +75,40 @@ fun PultWallpaper(
                 val w = size.width
                 val h = size.height
 
-                // Радиальное свечение Сфера A: верхний левый угол
-                drawRect(
-                    brush = Brush.radialGradient(
-                        colors = listOf(gradA.copy(alpha = 0.50f), gradA.copy(alpha = 0.15f), Color.Transparent),
-                        center = Offset(w * 0.15f, h * 0.10f),
-                        radius = (w + h) * 0.45f
+                // Если выбрана градиентная тема из настроек (Aurora, Dusk, Ember, Midnight)
+                if (palette.name != "dark" && palette.name != "oled") {
+                    // Радиальное свечение Сфера A: верхний левый угол
+                    drawRect(
+                        brush = Brush.radialGradient(
+                            colors = listOf(gradA.copy(alpha = 0.45f), gradA.copy(alpha = 0.12f), Color.Transparent),
+                            center = Offset(w * 0.15f, h * 0.10f),
+                            radius = (w + h) * 0.45f
+                        )
                     )
-                )
 
-                // Радиальное свечение Сфера B: нижний правый сектор
-                drawRect(
-                    brush = Brush.radialGradient(
-                        colors = listOf(gradB.copy(alpha = 0.45f), gradB.copy(alpha = 0.12f), Color.Transparent),
-                        center = Offset(w * 0.82f, h * 0.88f),
-                        radius = (w + h) * 0.42f
+                    // Радиальное свечение Сфера B: нижний правый сектор
+                    drawRect(
+                        brush = Brush.radialGradient(
+                            colors = listOf(gradB.copy(alpha = 0.40f), gradB.copy(alpha = 0.10f), Color.Transparent),
+                            center = Offset(w * 0.82f, h * 0.88f),
+                            radius = (w + h) * 0.42f
+                        )
                     )
-                )
 
-                // Радиальное свечение Сфера C: центр-справа для гармоничной глубины
-                drawRect(
-                    brush = Brush.radialGradient(
-                        colors = listOf(gradC.copy(alpha = 0.35f), Color.Transparent),
-                        center = Offset(w * 0.65f, h * 0.25f),
-                        radius = (w + h) * 0.35f
+                    // Радиальное свечение Сфера C: центр-справа для гармоничной глубины
+                    drawRect(
+                        brush = Brush.radialGradient(
+                            colors = listOf(gradC.copy(alpha = 0.30f), Color.Transparent),
+                            center = Offset(w * 0.65f, h * 0.25f),
+                            radius = (w + h) * 0.35f
+                        )
                     )
-                )
+                }
 
-                // Тонкий виньеточный градиент по краям для фокуса на доке и контенте
+                // Мягкая темная виньетка по краям для идеального контраста и глубины
                 drawRect(
                     brush = Brush.radialGradient(
-                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.35f)),
+                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.40f)),
                         center = Offset(w * 0.5f, h * 0.5f),
                         radius = (w + h) * 0.55f
                     )

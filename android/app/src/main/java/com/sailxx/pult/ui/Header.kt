@@ -53,50 +53,50 @@ fun PultHeader(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // Левый блок: Имя хоста и индикатор статуса
+        // Левый блок: Имя хоста и индикатор статуса в стиле Liquid Glass Pill
         Row(
             modifier = Modifier
-                .height(34.dp)
-                .clip(PultDimens.shapeInner)
-                .background(palette.surface.copy(alpha = 0.85f))
-                .border(1.dp, palette.border, PultDimens.shapeInner)
-                .padding(horizontal = 10.dp),
+                .height(32.dp)
+                .clip(PultDimens.shapePill)
+                .background(Color.White.copy(alpha = 0.08f))
+                .border(1.dp, Color.White.copy(alpha = 0.12f), PultDimens.shapePill)
+                .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Box(
                 Modifier
-                    .size(7.dp)
+                    .size(6.dp)
                     .background(palette.live, CircleShape)
             )
             Text(
                 text = hostName,
                 color = palette.textPrimary,
-                fontSize = 12.sp,
+                fontSize = 11.5.sp,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 0.2.sp
             )
         }
 
-        // Центральный блок: Сегментированный переключатель разделов (Dock, Touchpad, Clipboard, Signature, Capture, Apps)
+        // Центральный блок: Сегментированный переключатель разделов
         Row(
             modifier = Modifier
-                .height(34.dp)
-                .clip(PultDimens.shapeInner)
-                .background(palette.surface.copy(alpha = 0.85f))
-                .border(1.dp, palette.border, PultDimens.shapeInner)
+                .height(32.dp)
+                .clip(PultDimens.shapePill)
+                .background(Color.White.copy(alpha = 0.08f))
+                .border(1.dp, Color.White.copy(alpha = 0.12f), PultDimens.shapePill)
                 .padding(2.dp),
             horizontalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             DeckSection.entries.forEach { section ->
                 val active = section == selectedSection
                 val bgCol by animateColorAsState(
-                    targetValue = if (active) palette.surfaceLight else Color.Transparent,
+                    targetValue = if (active) Color.White.copy(alpha = 0.16f) else Color.Transparent,
                     animationSpec = tween(180),
                     label = "tabBg"
                 )
                 val borderCol by animateColorAsState(
-                    targetValue = if (active) palette.accent.copy(alpha = 0.4f) else Color.Transparent,
+                    targetValue = if (active) Color.White.copy(alpha = 0.22f) else Color.Transparent,
                     animationSpec = tween(180),
                     label = "tabBorder"
                 )
@@ -104,16 +104,16 @@ fun PultHeader(
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .clip(PultDimens.shapeBadge)
+                        .clip(PultDimens.shapePill)
                         .background(bgCol)
-                        .then(if (active) Modifier.border(1.dp, borderCol, PultDimens.shapeBadge) else Modifier)
+                        .then(if (active) Modifier.border(1.dp, borderCol, PultDimens.shapePill) else Modifier)
                         .clickable {
                             if (!active) {
                                 onHaptic()
                                 onSectionSelect(section)
                             }
                         }
-                        .padding(horizontal = 11.dp),
+                        .padding(horizontal = 12.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -134,10 +134,10 @@ fun PultHeader(
             // Кнопка настроек
             Box(
                 modifier = Modifier
-                    .size(34.dp)
-                    .clip(PultDimens.shapeBadge)
-                    .background(palette.surface.copy(alpha = 0.85f))
-                    .border(1.dp, palette.border, PultDimens.shapeBadge)
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(Color.White.copy(alpha = 0.08f))
+                    .border(1.dp, Color.White.copy(alpha = 0.12f), CircleShape)
                     .clickable {
                         onHaptic()
                         onOpenSettings()
@@ -147,17 +147,17 @@ fun PultHeader(
                 Text(
                     text = "⚙",
                     color = palette.textSecondary,
-                    fontSize = 14.sp
+                    fontSize = 13.sp
                 )
             }
 
             // Кнопка отключения
             Box(
                 modifier = Modifier
-                    .size(34.dp)
-                    .clip(PultDimens.shapeBadge)
-                    .background(palette.surface.copy(alpha = 0.85f))
-                    .border(1.dp, palette.border, PultDimens.shapeBadge)
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(Color.White.copy(alpha = 0.08f))
+                    .border(1.dp, Color.White.copy(alpha = 0.12f), CircleShape)
                     .clickable {
                         onHaptic()
                         onDisconnect()
@@ -167,7 +167,7 @@ fun PultHeader(
                 Text(
                     text = "✕",
                     color = palette.textSecondary,
-                    fontSize = 12.sp,
+                    fontSize = 11.sp,
                     fontWeight = FontWeight.Medium
                 )
             }
