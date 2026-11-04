@@ -7,7 +7,7 @@
 
 <p>
   <b>Turn your phone into a landscape desk companion and control dock for Windows PC.</b><br/>
-  App launchpad, bidirectional clipboard bridge, 60&nbsp;fps glass trackpad, stylus signature canvas, and live desktop capture over local Wi-Fi.
+  Apple-grade Liquid Glass launchpad, bidirectional clipboard bridge, 60&nbsp;fps glass trackpad, stylus signature canvas, and live desktop capture over local Wi-Fi.
 </p>
 
 <p>
@@ -24,14 +24,14 @@
   <img alt="Local Latency" src="https://img.shields.io/badge/latency-%3C1.5ms%20LAN-emerald?style=flat-square" />
 </p>
 
-[⚡ Quick Start](#-quick-start) • [✨ Key Features](#-key-features) • [🖼️ Interface Showcase](#️-interface-showcase) • [🎨 Palettes](#-5-curated-themes) • [🪟 Windows Companion](#-windows-11-mica-companion) • [🌐 Protocol](docs/PROTOCOL.md) • [🛠️ Build](#️-building-from-source)
+[⚡ Quick Start](#-quick-start) • [✨ Key Features](#-key-features) • [🖼️ Interface Showcase](#️-interface-showcase) • [🎨 Liquid Glass & Themes](#-liquid-glass--themes) • [🪟 Windows Companion](#-windows-11-modern-flyout-companion) • [🌐 Protocol](docs/PROTOCOL.md) • [🛠️ Build](#️-building-from-source)
 
 </div>
 
 <br/>
 
 <div align="center">
-  <img src="assets/screenshots/pult-hero-dock.svg" width="100%" alt="Pult Hero Landscape Dock with active applications and now-playing controls" />
+  <img src="assets/screenshots/screenshot-dock.png" width="100%" alt="Pult Hero Landscape Dock with Liquid Glass Apple standard and official app icons" />
 </div>
 
 <br/><br/>
@@ -40,8 +40,9 @@
 
 Most remote control apps look like outdated TV remotes or clumsy media players. **Pult** reimagines your smartphone as an elegant, horizontal desk companion resting beside your computer:
 
-* **Horizontal Desk Companion:** Dock your phone in landscape on a wireless charging stand. Launch frequent tools (VS Code, Chrome, Terminal, Steam) with one tap on crisp, real extracted `.exe` icons.
-* **Instant Media & Hardware Audio:** Master Windows Core Audio control (`0–100%`) with ±5 steppers, mute badge, and tactile media keys directly on the main dock strip.
+* **Horizontal Desk Companion:** Dock your phone in landscape on a wireless charging stand. Launch frequent tools (VS Code, Brave, Chrome, Telegram, Terminal) with one tap on crisp, authentic high-resolution extracted icons.
+* **Apple-Grade Liquid Glass Aesthetics:** Clean dark matte background (`#0C0E12`), floating frosted glass capsules, zero square card borders, and glowing active process indicators.
+* **Instant Media & Hardware Audio:** Master Windows Core Audio control (`0–100%`) with ±5 steppers, mute badge, and tactile media keys directly on the floating Now Playing pill.
 * **Two-Way Clipboard Synchronization:** Effortlessly push snippets, code blocks, or URLs from your phone into the Windows clipboard, or inspect and grab whatever is currently copied on your PC.
 * **Zero Cloud & Zero Accounts:** Pult is 100% peer-to-peer over local LAN/Wi-Fi. No accounts, no telemetry, no relays, no external servers.
 * **Ultra-Low Latency:** Persistent HTTP Keep-Alive connection pooling with `TCP_NODELAY` delivers **~1.04 ms/req** response times.
@@ -54,12 +55,12 @@ Most remote control apps look like outdated TV remotes or clumsy media players. 
 
 | Tool | Capability | Windows Host Integration |
 |---|---|---|
-| **🚀 Hero Dock & Apps** | 4, 6, or 8 configurable glass tiles with real EXE icons, process indicators, favorite pinning, and full app search | `Process.Start()`, Shell indexing, Win32 window switching |
-| **📋 Bidirectional Clipboard** | Live PC clipboard inspection, one-tap copy to phone, push text to PC, clear PC clipboard | Win32 STA Clipboard API (`GetText` / `SetText`) |
+| **🚀 Hero Dock & Apps** | Pure floating official EXE icons, active process indicators, favorite pinning, and full app library search | `Process.Start()`, Shell indexing, Win32 window switching |
+| **📋 Bidirectional Clipboard** | Live PC clipboard inspection, one-tap copy to phone, push text to PC, clear remote PC buffer | Win32 STA Clipboard API (`GetText` / `SetText`) |
 | **🖱️ Precision Glass Touchpad** | Smooth 60 fps mouse navigation, tap-to-click, double tap, hold Drag & Drop mode, scroll strip | Conflated atomic delta dispatcher & `mouse_event` |
 | **✍️ Stylus & Finger Signature** | Quadratic Bézier curve inking, 5-color palette, stroke width, undo, direct clipboard injection | Injected as native `Bitmap` object for instant `Ctrl+V` |
 | **📸 Desktop Screen Capture** | Real-time screenshot fetch with landscape preview, save to `Pictures\Pult`, or copy to clipboard | Direct GDI+ desktop capture (`CopyFromScreen`) |
-| **🪟 Windows 11 Companion** | Native Mica backdrop flyout from system notification tray; PIN generation, IP sharing, firewall setup | DWM Mica Win32 API (`DWMWA_SYSTEMBACKDROP_TYPE`) |
+| **🪟 Windows 11 Companion** | Modern Flyouts Mica window in system tray; Volume mixer, app volume, monitor brightness, PIN and IP sharing | DWM Mica Win32 API (`DWMWA_SYSTEMBACKDROP_TYPE`) |
 
 <br/>
 
@@ -67,79 +68,82 @@ Most remote control apps look like outdated TV remotes or clumsy media players. 
 
 ## 🖼️ Interface Showcase
 
+### 1. 🚀 Hero Dock & Apps Library
+Крупные свободно парящие значки приложений без квадратных рамок и обводок, аккуратная светящаяся точка запущенных процессов, верхний бар навигации и компактная парящая нижняя капсула Now Playing в стиле Liquid Glass.
+
 <div align="center">
-  <img src="assets/screenshots/pult-suite-showcase.svg" width="100%" alt="Pult Suite: Clipboard Bridge, Glass Touchpad, Digital Signature, and Screen Capture" />
+  <img src="assets/screenshots/screenshot-dock.png" width="92%" alt="Pult Hero Dock: Liquid Glass & Floating Icons" />
 </div>
 
 <br/>
 
-### 1. 🚀 Hero Dock & Apps Library
-* **Custom Slot Sizing:** Seamlessly toggle between **4**, **6**, or **8** prominent glass tiles.
-* **Original EXE Icons:** Automatically extracted from Windows shortcuts and cached on-device with high-DPI clarity.
-* **Process Status Dots:** Glowing indicators highlight currently active Windows processes.
-* **Full Apps Library:** Search through every installed desktop software and game with instant fuzzy filtering.
+### 2. 🖱️ 60 FPS Precision Glass Touchpad
+Сенсорная панель управления мышью с кинетическим скольжением, слайдером чувствительности от 0.5× до 3.0× и стеклянными кнопками ЛКМ и ПКМ.
 
-### 2. 📋 Bidirectional Clipboard Bridge
-* **Read PC Clipboard:** Inspect the active clipboard contents of your computer in real time.
-* **Copy to Mobile:** Copy PC snippets directly into Android's native `ClipboardManager`.
-* **Push to PC:** Type or paste on your smartphone and inject directly into the Windows clipboard with a single tap.
-* **Clear Remote Clipboard:** Securely wipe the PC clipboard buffer whenever necessary.
+<div align="center">
+  <img src="assets/screenshots/screenshot-touchpad.png" width="92%" alt="Pult Precision Glass Touchpad" />
+</div>
 
-### 3. 🖱️ 60 FPS Precision Glass Touchpad
-* **Conflated Motion Dispatcher:** Atomic delta accumulation prevents packet backlog and cursor drift.
-* **Sensitivity Slider:** Real-time speed adjustment from **0.5×** to **3.0×**.
-* **Gestures & Buttons:** Single tap for Left Click, double-tap, long-press for Right Click, Middle Click (SCM), and a dedicated **Drag & Drop lock** toggle.
-* **Dedicated Scroll Strip:** Smooth vertical scrolling with haptic tactile feedback.
+<br/>
+
+### 3. 📋 Bidirectional Clipboard Bridge
+Мгновенная двухсторонняя синхронизация буфера обмена между смартфоном и компьютером без облака и задержек.
+
+<div align="center">
+  <img src="assets/screenshots/screenshot-clipboard.png" width="92%" alt="Pult Bidirectional Clipboard Bridge" />
+</div>
+
+<br/>
 
 ### 4. ✍️ Digital Signature & Inking
-* **Stylus & Finger Inking:** Smooth drawing canvas with Bézier path smoothing.
-* **Ink Customization:** 5 ink colors (White, Sky Accent, Green, Amber, Dark) with variable stroke widths.
-* **Insert to PC:** Copies the signature directly as a bitmap to the PC clipboard for immediate `Ctrl+V` pasting into Word, PDF, Figma, or Photoshop.
-* **Save to Disk:** Saves a clean PNG to `Pictures\Pult\Signatures`.
+Сглаживание линий кривыми Безье, инструменты выбора цвета и толщины, мгновенная вставка подписи прямо в активный документ на ПК (`Ctrl+V`).
+
+<div align="center">
+  <img src="assets/screenshots/screenshot-signature.png" width="92%" alt="Pult Digital Signature Canvas" />
+</div>
+
+<br/>
 
 ### 5. 📸 Desktop Screen Capture
-* **Live Display Preview:** View the active desktop screen right on your mobile display.
-* **Copy to PC Clipboard:** One-tap button to capture the screenshot and place it in the PC clipboard.
-* **Save to PC Disk:** Automatically timestamped and stored in `Pictures\Pult\`.
+Трансляция рабочего стола Windows в реальном времени с полноразмерным превью и быстрым сохранением в буфер или на диск.
+
+<div align="center">
+  <img src="assets/screenshots/screenshot-capture.png" width="92%" alt="Pult Desktop Screen Capture" />
+</div>
 
 <br/>
 
 ---
 
-## 🎨 5 Curated Themes
+## 🎨 Liquid Glass & Themes
 
-Pult features an Apple × Claude × Okto design triad aesthetic, built upon rich ambient radial glow spheres and pure dark contrast surfaces:
+По умолчанию в Pult активирована чистая темная матовая тема **Dark Minimal** (`#0C0E12`) без навязчивых цветных пятен. В настройках доступны опциональные богатые радиальные градиентные палитры:
 
-<div align="center">
-  <img src="assets/screenshots/pult-themes.svg" width="100%" alt="Pult 5 Curated Themes: Aurora, Dusk, Ember, Midnight, and OLED Pure" />
-</div>
-
-<br/>
-
-* **🌿 Aurora (Default):** Deep emerald base (`#101719`) with soft sea-mist glows (`#71A78A`), deep navy (`#274268`), and fresh mint accents (`#B4EDCC`).
-* **🌆 Dusk:** Twilight indigo (`#171228`) paired with soft amethyst glows (`#8B578F`) and lavender focal points (`#E7D4FF`).
-* **🔥 Ember:** Warm terracotta charcoal (`#221615`) with amber copper undertones (`#A45F43`) and peach accents (`#F8DCC0`).
-* **🌌 Midnight:** Deep space ultramarine (`#090E17`) with cobalt accents and icy blue highlights (`#D0E2FF`).
-* **⬛ OLED Pure:** Pitch-black canvas (`#000000`) with high-contrast surfaces (`#0C0E14`) and electric sky accents (`#38BDF8`).
+* **⬛ Dark Minimal (По умолчанию):** Глубокий матовый фон (`#0C0E12`), полупрозрачные парящие стеклянные панели Liquid Glass (`Color.White.copy(0.08f)`), тонкие деликатные границы и акцентный небесный цвет (`#38BDF8`).
+* **🌿 Aurora:** Изумрудная база (`#101719`) с мягким морским свечением (`#71A78A`), глубоким индиго (`#274268`) и мятными акцентами (`#B4EDCC`).
+* **🌆 Dusk:** Сумеречный индиго (`#171228`) с аметистовыми переливами (`#8B578F`) и лавандовыми акцентами (`#E7D4FF`).
+* **🔥 Ember:** Терракотовый графит (`#221615`) с медными полутонами (`#A45F43`) и персиковыми деталями (`#F8DCC0`).
+* **🌌 Midnight:** Глубокий ультрамарин (`#090E17`) с кобальтовыми и ледяными акцентами (`#D0E2FF`).
+* **🖤 OLED Pure:** Абсолютно черный холст (`#000000`) для экономии батареи на AMOLED-экранах.
 
 <br/>
 
 ---
 
-## 🪟 Windows 11 Mica Companion
+## 🪟 Windows 11 Modern Flyout Companion
 
-Unlike traditional heavy desktop applications, the Pult Windows companion stays unobtrusively in your system notification tray:
+Компаньон Pult для Windows располагается в системном трее и выполнен в нативном стиле Windows 11 Modern Flyouts:
 
 <div align="center">
-  <img src="assets/screenshots/windows-tray-companion.png" width="340" alt="Pult Windows 11 Native Mica Companion Tray Flyout" />
+  <img src="assets/screenshots/windows-tray-companion.png" width="340" alt="Pult Windows 11 Modern Flyout Companion" />
 </div>
 
 <br/>
 
-* **Native Windows 11 DWM Mica:** Renders with authentic Mica materials, dark mode, and soft rounded window geometry (`DwmSetWindowAttribute`).
-* **One-Click Connection Sharing:** Easily copy your PC's local LAN IP address and current 6-digit security PIN.
-* **Firewall Helper:** Automated one-click Windows Defender Firewall inbound rule configuration (`advfirewall`).
-* **Single Portable Binary:** Single standalone ~40 KB executable with zero runtime dependencies.
+* **Слайдеры громкости и яркости:** Управление звуком мастер-устройства `Speakers (Realtek(R) Audio)` с активным вертикальным маркером, ползунок активных программ (Brave Browser), яркость дисплея, фильтр синего света и затемнение.
+* **Быстрый доступ к сопряжению:** Отображение статуса LAN, одно нажатие для копирования PIN-кода и IP-адреса компьютера.
+* **Интеграция с брандмауэром:** Автоматическая настройка входящих правил Windows Defender Firewall в один клик.
+* **Автономный бинарник:** Standalone исполняемый файл размером ~60 КБ без зависимостей от тяжелых фреймворков.
 
 <br/>
 
@@ -148,16 +152,16 @@ Unlike traditional heavy desktop applications, the Pult Windows companion stays 
 ## ⚡ Quick Start
 
 ### 1. Windows Host Setup
-1. Download [`Pult.exe`](https://github.com/sailxx/Pult/releases/latest/download/Pult.exe) (single 40 KB executable, no installer needed).
-2. Run `Pult.exe`. The remote icon will appear in your system notification tray.
-3. Left-click the tray icon to open the **Pult Companion** flyout and check your 6-digit PIN.
-4. If connecting for the first time, click **«Брандмауэр»** to permit local network traffic.
+1. Скачайте [`Pult.exe`](https://github.com/sailxx/Pult/releases/latest/download/Pult.exe) (одиночный файл ~60 КБ, установка не требуется).
+2. Запустите `Pult.exe`. Иконка появится в системном трее Windows.
+3. Кликните по иконке в трее, чтобы открыть flyout-окно и узнать 6-значный PIN.
+4. При первом запуске в меню настроек ⚙️ нажмите **«Разрешить в брандмауэре Windows»**.
 
 ### 2. Android Client Setup
-1. Download and install [`Pult.apk`](https://github.com/sailxx/Pult/releases/latest/download/Pult.apk).
-2. Place your smartphone horizontally on your desk stand.
-3. Tap **«Поиск»** to automatically discover your PC via local UDP beacon.
-4. Enter the 6-digit PIN displayed on your PC and tap **«Подключить»**.
+1. Скачайте и установите [`Pult.apk`](https://github.com/sailxx/Pult/releases/latest/download/Pult.apk).
+2. Установите смартфон горизонтально на настольную подставку.
+3. Нажмите **«Поиск»** для автоматического обнаружения ПК в локальной сети.
+4. Введите 6-значный PIN-код и нажмите **«Подключить»**.
 
 <br/>
 
@@ -182,9 +186,9 @@ Unlike traditional heavy desktop applications, the Pult Windows companion stays 
 └──────────────────────────────────────────────┘  Local Network  └─────────────────────────────────┘
 ```
 
-* **Discovery (UDP 47801):** Fast peer-to-peer broadcast beacon with subnet sweep fallback.
-* **Control API (TCP 47800):** Keep-Alive HTTP server with cryptographic PIN security and brute-force lockout (10 failed attempts = 60-second cooldown).
-* **Protocol Reference:** Detailed endpoints, parameter specifications, and sample payloads are available in [docs/PROTOCOL.md](docs/PROTOCOL.md).
+* **Discovery (UDP 47801):** Мгновенное P2P обнаружение через широковещательный маяк со сканированием подсети.
+* **Control API (TCP 47800):** Keep-Alive HTTP сервер с криптографическим PIN и защитой от перебора (10 неудачных попыток = блокировка на 60 сек).
+* **Спецификация протокола:** Полный список эндпоинтов и форматов запросов доступен в [docs/PROTOCOL.md](docs/PROTOCOL.md).
 
 <br/>
 
@@ -193,16 +197,16 @@ Unlike traditional heavy desktop applications, the Pult Windows companion stays 
 ## 🛠️ Building from Source
 
 ### Windows Host (Zero SDKs Required)
-Compiles directly with the Microsoft C# compiler present on every modern Windows installation:
+Компилируется стандартным компилятором C#, встроенным в любую версию Windows:
 ```cmd
 host\build.cmd
 ```
 
 ### Android Client
-Built with Kotlin and Jetpack Compose:
+Собирается с помощью Gradle и Android SDK:
 ```bash
 cd android
-./gradlew assembleDebug
+./gradlew assembleRelease
 ```
 
 <br/>
@@ -211,6 +215,6 @@ cd android
 
 ## 📄 License & Credits
 
-Pult is licensed under the **MIT License**. See [LICENSE](LICENSE) for full details.
+Pult распространяется под лицензией **MIT License**. См. [LICENSE](LICENSE) для подробностей.
 
-Developed with care by [@sailxx](https://github.com/sailxx). Contributions, bug reports, and suggestions are welcome on [GitHub Issues](https://github.com/sailxx/Pult/issues)!
+Разработано [@sailxx](https://github.com/sailxx). Вопросы, баг-репорты и предложения приветствуются в [GitHub Issues](https://github.com/sailxx/Pult/issues)!
