@@ -1,0 +1,181 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Pult Landscape Dock">
+<style>
+  text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  .mono { font-family: 'Consolas', 'Courier New', monospace; }
+  .glass { fill: #1B2629; fill-opacity: 0.85; stroke: #354449; stroke-width: 1; }
+  .glass-card { fill: #1B2629; fill-opacity: 0.88; stroke: #354449; stroke-width: 1; }
+  .tile { fill: #1B2629; fill-opacity: 0.85; stroke: #354449; stroke-width: 1; }
+  .tile-fav { fill: #202E33; fill-opacity: 0.95; stroke: #B4EDCC; stroke-opacity: 0.6; stroke-width: 1.5; }
+  .tile-run { fill: #1B2629; fill-opacity: 0.90; stroke: #A3E6BE; stroke-opacity: 0.85; stroke-width: 1.5; }
+  .btn { fill: #263438; stroke: #354449; stroke-width: 1; }
+  .btn-accent { fill: #B4EDCC; }
+  .badge { fill: #263438; stroke: #354449; stroke-width: 1; }
+</style>
+
+    <defs>
+      <radialGradient id="auroraA" cx="15%" cy="10%" r="55%">
+        <stop offset="0%" stop-color="#71A78A" stop-opacity="0.50"/>
+        <stop offset="60%" stop-color="#71A78A" stop-opacity="0.12"/>
+        <stop offset="100%" stop-color="#71A78A" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="auroraB" cx="82%" cy="88%" r="52%">
+        <stop offset="0%" stop-color="#274268" stop-opacity="0.48"/>
+        <stop offset="60%" stop-color="#274268" stop-opacity="0.10"/>
+        <stop offset="100%" stop-color="#274268" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="auroraC" cx="65%" cy="25%" r="42%">
+        <stop offset="0%" stop-color="#273F45" stop-opacity="0.38"/>
+        <stop offset="100%" stop-color="#273F45" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1280" height="720" fill="#101719"/>
+    <rect width="1280" height="720" fill="url(#auroraA)"/>
+    <rect width="1280" height="720" fill="url(#auroraB)"/>
+    <rect width="1280" height="720" fill="url(#auroraC)"/>
+  
+
+    <!-- Top 44dp Header Bar -->
+    <g transform="translate(24 16)">
+      <!-- Left: Host status -->
+      <rect x="0" y="0" width="180" height="34" rx="10" class="glass"/>
+      <circle cx="16" cy="17" r="3.5" fill="#A3E6BE"/>
+      <text x="28" y="21" fill="#EEF3F1" font-size="11.5" font-weight="700">DESKTOP-6T5OKAJ</text>
+      <text x="148" y="21" fill="#758585" font-size="10" class="mono">LAN</text>
+
+      <!-- Center: Segmented Navigation -->
+      <g transform="translate(320 0)">
+        <rect x="0" y="0" width="525" height="34" rx="10" class="glass"/>
+        
+        <rect x="3" y="3" width="72" height="28" rx="8" fill="#263438" stroke="#B4EDCC" stroke-opacity="0.5"/>
+        <text x="39" y="21" fill="#B4EDCC" font-size="11" font-weight="800" text-anchor="middle">Док</text>
+      
+        <text x="123" y="21" fill="#A0AFAF" font-size="11" font-weight="600" text-anchor="middle">Тачпад</text>
+      
+        <text x="207" y="21" fill="#A0AFAF" font-size="11" font-weight="600" text-anchor="middle">Буфер</text>
+      
+        <text x="291" y="21" fill="#A0AFAF" font-size="11" font-weight="600" text-anchor="middle">Подпись</text>
+      
+        <text x="383" y="21" fill="#A0AFAF" font-size="11" font-weight="600" text-anchor="middle">Снимок</text>
+      
+        <text x="475" y="21" fill="#A0AFAF" font-size="11" font-weight="600" text-anchor="middle">Программы</text>
+      
+      </g>
+
+      <!-- Right: Settings and Disconnect -->
+      <g transform="translate(1148 0)">
+        <rect x="0" y="0" width="34" height="34" rx="10" class="glass"/>
+        <text x="17" y="22" fill="#A0AFAF" font-size="14" text-anchor="middle">⚙</text>
+
+        <rect x="42" y="0" width="34" height="34" rx="10" class="glass"/>
+        <text x="59" y="21" fill="#A0AFAF" font-size="12" font-weight="700" text-anchor="middle">✕</text>
+      </g>
+    </g>
+  
+
+<!-- Dock Sub-header -->
+<g transform="translate(30 76)">
+  <text x="0" y="16" fill="#758585" font-size="11" font-weight="800" letter-spacing="0.6">ГЛАВНЫЙ ДОК</text>
+  <rect x="110" y="2" width="100" height="20" rx="6" fill="#B4EDCC" fill-opacity="0.12" stroke="#B4EDCC" stroke-opacity="0.3"/>
+  <text x="160" y="15" fill="#B4EDCC" font-size="10" font-weight="700" text-anchor="middle">★ 6 в фокусе</text>
+
+  <g transform="translate(1040 0)">
+    <rect x="0" y="0" width="180" height="26" rx="8" class="glass"/>
+    <text x="90" y="17" fill="#B4EDCC" font-size="11" font-weight="600" text-anchor="middle">Все программы (42) →</text>
+  </g>
+</g>
+
+<!-- 6 Large Dock Tiles -->
+<g transform="translate(100 160)">
+  <!-- Tile 1: Brave Browser (Real EXE icon) -->
+  <g transform="translate(0 0)">
+    <rect x="0" y="0" width="144" height="144" class="tile-fav"/>
+    <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAATdSURBVFhHtZYLbBRVFIZPoS0F5CHQ1iKU3aWWFmh5thRLeZSIIG0tymyBpKg8WhElQsCaaCLEAAJBTDBBtDEQSkiASCmBhBiJMRIjhkisogmCSCSCPEXtu/uZ2buzM3OnEB76JSezO3Pn/P+cc++dEblLmNZ3GfmDQowfAHmPQs4jMDYZxiTCyD4w4mHI7gXDe8KQLnX6/Q8EM/oVMzG1nfxUwgbG9YfcFGVgdD8Y1VcZyDIN9ICh3UOkd3lXz3PPADHMShrB5NRWJvggfxCMH6gZSHQbGGYaeAiGdA2RHrfUyqPnvi0YCX5K+pxixsB2CtNCFAbamRhAGYhUwGxBrtmCpEgLIgbCLQhXADK7ma0IkRYfItA5hC/mIgGZquu5YI74CMoFDEFFJ5iRSNhAgd82MM40kAI5STDWqkBvZwsgoys8Fg+BGPCJFY345QldNwyGJGLIOVs8Ei/54FA1rFsMCwqgJBMqC6HuY2hpIcznR2BhsTI5bThUzoIPNsL86eCPiFtHnzSQJnm6vrBAemDIXy7xeQlw9qQSuR9uXocJfmcFlJHBkq/rhyEoNS4Dn27XU9479SdVK+wqnNN1oxCU+qj4hhKVoK0VDm6EzbNh3VOwvRK+2geNf9sibW1w/DNYt0q1YnEprF0J166o69vesSsQkBYypK+ubc6BrKh4eQ+4cckWaG+HU0dhyxyYG6/GrDfs6zu32AJzpsAnu6DhH/f9RWOc86BS1zcNLIka2PSMfbPOzcuwegpUr7DPHd2v9oef6p0j3Xy02VmFXbq+uQRHRQ0sSoZrF/UUNvvWwLFd9v8LZ6F8mnOEG3O1BAucEzG8QbkNIDEE5UrUxPJhcOuqngqaG+HFgfDLd/a5UAhG9IEzp50jFeb8WDLbvQrSJUPXD0NQ9rpWQdVYaLjlTli7AcpioTWyB1iU5sGiyMS1MI2tWuAW98lvum4UDKlwGTDjrUnqqS3MiWjuD6ePQ0uzEjnzAzyZBY+nOuVhzatOYev3Tl03CmUy2GPAjO0VdtLWZtjzJpTEwdRYyE+ATIGXy+DKZXvc/h22qLMCfinXdV1gyHmPga3ldmKL89/D/EyY0huO1elXoWabXnp1HCL9dU0XGFLtMfD1AT294tCHsOZ5/azCrIZeAZ/8qOt5IChzPQZOHtbTQ/0XMLMn5MTA7vf1q/DnDb30ZmzV9TwwV5I9Bl4bDU2Rna25Afa/DaXxUBgLBd1hqMCK+fDH77aBlS/oT2++hEp1vQ5xvROsqBoD1UthYRIsToG96+HmVWhqhNqdMD0b0hNgeblajnr/fdLOSOmta3UIhrznMWCGufwOblJV0DGX4+G9kDfALWwdA3JC17ktlEmRR9wycKJWl7Yx3wX5Pm/pVazXdW4L5dIdQ5o8BsIRAzVVaot1cqAGMrq5Rd0b0ERd545gyG6vuCPemKrmQGsrrH1Ff1p3BORnVksnXeOOUCbpGHLLI2xFkUDZIHguV60CXdRZgYA8q+e/KzCkkKBc94hbBiYL5IjainVxFW0MlmV63nuCeRIgKF96DMx0GOioAn75lTSZrOe7LzCkM4a8jiHNd2XALzsISC89zwMT+W781tMCy4BfLuGTp/X7/lOokDiCsppiadEM7Onwa/f/ghLJplCOkCvfMPT+n/pfoNVbzjoLaJYAAAAASUVORK5CYII=" x="38" y="28" width="68" height="68"/>
+    <circle cx="72" cy="130" r="3.5" fill="#A3E6BE"/>
+    <text x="72" y="176" fill="#EEF3F1" font-size="13" font-weight="700" text-anchor="middle">Brave</text>
+  </g>
+
+  <!-- Tile 2: Google Chrome (Real EXE icon) -->
+  <g transform="translate(188 0)">
+    <rect x="0" y="0" width="144" height="144" class="tile-run"/>
+    <image href="data:image/png;base64,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" x="38" y="28" width="68" height="68"/>
+    <circle cx="72" cy="130" r="3.5" fill="#A3E6BE"/>
+    <text x="72" y="176" fill="#EEF3F1" font-size="13" font-weight="700" text-anchor="middle">Chrome</text>
+  </g>
+
+  <!-- Tile 3: VS Code -->
+  <g transform="translate(376 0)">
+    <rect x="0" y="0" width="144" height="144" class="tile-fav"/>
+    <!-- Realistic VS Code vector path -->
+    <g transform="translate(40 28) scale(1.4)">
+      <path d="M33 46 L45 36 L45 12 L33 2 Z" fill="#0065A9"/>
+      <path d="M33 46 L14 31 L3 40 L1 38 L1 10 L3 8 L14 17 L33 2 Z" fill="#007ACC"/>
+      <path d="M33 34 L18 24 L33 14 Z" fill="#1F9CF0"/>
+    </g>
+    <circle cx="72" cy="130" r="3.5" fill="#A3E6BE"/>
+    <text x="72" y="176" fill="#EEF3F1" font-size="13" font-weight="700" text-anchor="middle">VS Code</text>
+  </g>
+
+  <!-- Tile 4: VLC Media Player (Real EXE icon) -->
+  <g transform="translate(564 0)">
+    <rect x="0" y="0" width="144" height="144" class="tile"/>
+    <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAY4SURBVFhH1Zd7UFTXHce/QrSPjIkmU2c605pM/nDSTDuZTjtNa5zUWFQGaw3iqMUYfEJEVwJGg+8go5KwEdSAIAYULHSVl4+EVctjhd2FXRaWfSC77i4i7oIEFsGVh8vut7MsQ8xtM+1EmE4/M785Z+79/s73d869c+65wP8rsvUzPrRF4XaraIpFFvHjj4T3J5Xza1+aoY0M6BncB44cAbXrpvRlr/jJi0LdpHE+dOafrTGgazc4lAi2bgHzls18R6ibNErDfpjeGQu6YsHhA2DPdrBk2Y8yhLpJIfkz8bTLOWJrmySKnbnv8X7eCtoKtjJPvMeYlJz8jFA/4eRfLJ5fek3msTl62GR10NfKdVaWy9Ve8cmMXwv1E474RPo+raGZ+ltmtrbbqW+5TZP1DouuXmNBYUmyUD/hXC67ppOrNaPmTc3+IlRaA9WNeqaknZYJ9RNK7t+LXjt7oXTQN2PdEytgtrXxukzBqzeqho6mps8W5k0YmZvf3FBX+SXVOiNt9i42Wuy0OZxUGW3UGk3MTxfzC9HiDcK8CaNgUUCRPnIq2z99lfa0IDoyw9h5Noz3s4NoPzKH9asCee7tAIkwb0I4s/rl6ZeXBjpMUWDXTvDBdtC1DRyIBwc/Bvt2g8Y1oORPgR2nV/78eWH+U3P6L7MWVISClq1gVzzo/ADsiwNd+8BHiWDfftC8AbwSBGYseXGxMP+pyVn8bLJyNWj1FfAR6Nz+RAGHwP6DYGskWB4Cnlk0PUWY/1ScEC0NLAj+QVNjONi6DezaBfaI/AU83Au6EsD+j8H2aFCxFDw7f5rx+LYlE7crHv08+1clnx/waKNn8e4WsDsG7I0E+0Wgayc4sNcfndFgbcQspsW968krvDpPOM73Jq9AcvhMfiHr1XXUlJ6gOU9E24nlvHcymI5TwWzPCaP5b9GsvZjKosILvCQtZ2KSOF44zvfm4NFjN2TVckorq2mwtLHWYOWtOx1UN9tovttJpd5KnaWdZTdVrKnTMDP7HPMkxRrhOP817crcZxzHfx9h/+T1HbKdv9wvKS4dLLx0hQ1NOsrr6tlisVKp0dJkbaWqUccWi43VtWo26PQsufIVr1dUMfHTYwN5Ea8m3AifsaNy48/WFSe+M1Xo853YssMW9saC99aCl/46mymnc6moU/FGRRWbTWYq1RreMltGzX1FKOsbabhl4vUKGZWqeubmS3jhspTpwS9T/jZoCgOlu95YIPT5TjpSXk9zxoDmd8ELf5zKQvFOFksr2GAwsUbVwGaThQqVZnQlajXa0WJkChU1OiNLrlWxXK5i1p7NzJw7nWXzweZQUB3zSqrQ599y56u907oTXzD53vSmcDB/LnhzGajY8xZr8pOpb6hlTZ2KTSYrFdoW6sx3WK0xsFFnZIW0lJqr2azc8SbLgsCs34BfLgD1oWBz5HPNlakr//NjsBdvfKN3H7w9H4KKFWDBPFAZBhpWgdb1YFvcc7TFz6H10B9oEy9k67GFvCueS/vhOezaO52O90HdCvAfwWDO70DpItC4EmzdAI8xM/S3Qr9/4etzbyX6ttXeeNC8yT8DRShoWAtaN4PtW8B7EWBnBNi9CXS+D/aKwAexoDMOdGwFjeFgRTBYPA80vAd2xIB9B8D+0iUHhX7fovNmUkB/xk81riNg/yHwYQLYFgk2Lgd1q8DbvhXYDN5dBzo2gvejwK+j/YfS7g/ALhFojwJb1oDaMLBtC/joCPjoE3DoODiY/1Jdnz5zitB3HGfljteGTgW4feKBz8ChFHAoyX/87haBjk3gvXX+FehYD3ZuBLsix4oQgc5Y8MEu8OEB/xdyOBkcPuk3f5wBus8HDru0R+cIfcdxSZfHer4A3Vmg25eQBT5O85/93UmgJwkcOQw+TgCH9oMDu0Hfz8lwAjjiu58Ceo6BI77iD4PuU+BIDjiSDXpyQa8EHFaGbxX6jjMi/YWURSAvgpSMtYWgJxN0i/0Dj5ocB72C8F3zpIIjKaDbp8kCWQKyFOQlkFdAloFe2Wyl0HccZ3rAA688hN6aEHqrQzjaV4y1shB6K8ai/Im+MKrGcmtD6K37JqgKIetD6C4Bhb7jZC58IU6+GpzMyAl6fo/Q93/KPwGQg60ncRPUSwAAAABJRU5ErkJggg==" x="38" y="28" width="68" height="68"/>
+    <text x="72" y="176" fill="#A0AFAF" font-size="13" font-weight="600" text-anchor="middle">VLC Player</text>
+  </g>
+
+  <!-- Tile 5: File Explorer (Real EXE icon) -->
+  <g transform="translate(752 0)">
+    <rect x="0" y="0" width="144" height="144" class="tile-run"/>
+    <image href="data:image/png;base64,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" x="38" y="28" width="68" height="68"/>
+    <circle cx="72" cy="130" r="3.5" fill="#A3E6BE"/>
+    <text x="72" y="176" fill="#EEF3F1" font-size="13" font-weight="700" text-anchor="middle">Проводник</text>
+  </g>
+
+  <!-- Tile 6: Windows Terminal (Real EXE icon) -->
+  <g transform="translate(940 0)">
+    <rect x="0" y="0" width="144" height="144" class="tile"/>
+    <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIGSURBVFhH7ZdNaxpRFIYPVSpSgoLiQhD8QgQVQRRRRBBREVH/Rveli0Ap2CZao8EONZqS9Pe0iR8ZV+kq3fUv2FXfckYdHJ20Uhwt1BceRs/cmfPM5S7uJTpk32m2hVe1k3fYJSf1Vo2InhLRE2o0Wz+/PnzH5P4bJvcPW+X5saB6ZQkiskkSHeFiOhYnkLmbYKSKiNFYxFDmDoPRDK7zc2NRlMbxfa7fDse4GYzw5XaIzzcDmbmAh4ieUf/y07RarYKpVCool8solUooFosoFArI5XLIZrPIZDJIp9NIpVJIJpOIx+OIRqOIRCIIh8MIhUIIBALw+/3w+XxwuVyw2+2wWCwwGo3cUGYu4COiI+pfXu9XoNe/2q9At/fxx6rAIo8JcDQT4CxmgLMQ4GgiIHT7UnM1gd/NAGchEAwG4fV64Xa74XQ64XA4YLVaYTabYTKZYDAYtiOQSCSkL/V4PLKEXq9XvHwTNhbgcFP+Ms7qi9Rqm6AQeP+hpxBYXoQ8fasPL7Ms8Kc8KtARLhQCsVhsbdFsG1WBfD4Pm822NlgL1gR4da+uVC1RCDSa59DpdGuDtEQhMP+zUw4CB4GDwL8lwHv017XTKRf/hrf1M9SbbTTbHTTOOjhttPBGZdwyL14ed+Vd8fyAwHt0LrDVLuBes3OBdDqZ/WCbox3BvWYno/8+vwDIRuZfRlCqlQAAAABJRU5ErkJggg==" x="38" y="28" width="68" height="68"/>
+    <text x="72" y="176" fill="#A0AFAF" font-size="13" font-weight="600" text-anchor="middle">Терминал</text>
+  </g>
+</g>
+
+<!-- NOW PLAYING & VOLUME BOTTOM BAR -->
+<g transform="translate(24 590)">
+  <rect x="0" y="0" width="1232" height="96" rx="18" class="glass"/>
+
+  <!-- Volume Group -->
+  <g transform="translate(24 24)">
+    <rect x="0" y="0" width="88" height="48" rx="10" fill="#263438" stroke="#354449"/>
+    <text x="44" y="30" fill="#B4EDCC" font-size="14" font-weight="800" text-anchor="middle">70%</text>
+
+    <rect x="100" y="0" width="46" height="48" rx="10" fill="#263438" stroke="#354449"/>
+    <text x="123" y="31" fill="#EEF3F1" font-size="18" font-weight="700" text-anchor="middle">−</text>
+
+    <rect x="154" y="0" width="46" height="48" rx="10" fill="#263438" stroke="#354449"/>
+    <text x="177" y="31" fill="#EEF3F1" font-size="18" font-weight="700" text-anchor="middle">+</text>
+  </g>
+
+  <!-- Center Media Controls -->
+  <g transform="translate(540 22)">
+    <!-- Prev -->
+    <circle cx="26" cy="26" r="22" fill="#263438" stroke="#354449"/>
+    <path d="M30 18 L20 26 L30 34 M18 18 L18 34" stroke="#EEF3F1" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+
+    <!-- Play/Pause -->
+    <circle cx="86" cy="26" r="28" fill="#B4EDCC"/>
+    <path d="M82 17 L95 26 L82 35 Z" fill="#101719"/>
+
+    <!-- Next -->
+    <circle cx="146" cy="26" r="22" fill="#263438" stroke="#354449"/>
+    <path d="M142 18 L152 26 L142 34 M154 18 L154 34" stroke="#EEF3F1" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <!-- Right Actions: Desktop & Lock -->
+  <g transform="translate(970 24)">
+    <rect x="0" y="0" width="130" height="48" rx="10" fill="#263438" stroke="#354449"/>
+    <text x="65" y="29" fill="#A0AFAF" font-size="12" font-weight="600" text-anchor="middle">Рабочий стол</text>
+
+    <rect x="142" y="0" width="100" height="48" rx="10" fill="#3D2024" stroke="#EF4444" stroke-opacity="0.4"/>
+    <text x="192" y="29" fill="#EF4444" font-size="12" font-weight="700" text-anchor="middle">Блок ПК</text>
+  </g>
+</g>
+</svg>
