@@ -24,7 +24,7 @@
   <img alt="Local Latency" src="https://img.shields.io/badge/latency-%3C1.5ms%20LAN-emerald?style=flat-square" />
 </p>
 
-[⚡ Quick Start](#-quick-start) • [✨ Key Features](#-key-features) • [🖼️ Interface Showcase](#️-interface-showcase) • [🎨 Liquid Glass & Themes](#-liquid-glass--themes) • [🪟 Windows Companion](#-windows-11-modern-flyout-companion) • [🌐 Protocol](docs/PROTOCOL.md) • [🛠️ Build](#️-building-from-source)
+[⚡ Quick Start](#-quick-start) • [✨ Key Features](#-key-features) • [🖼️ Interface Showcase](#️-interface-showcase) • [🎨 Liquid Glass & Themes](#-liquid-glass--themes) • [🌐 Protocol](docs/PROTOCOL.md) • [🛠️ Build](#️-building-from-source)
 
 </div>
 
@@ -128,24 +128,6 @@ By default, Pult features a clean, distraction-free **Dark Minimal** (`#0C0E12`)
 
 <br/>
 
----
-
-## 🪟 Windows 11 Modern Flyout Companion
-
-The Pult Windows companion resides quietly in the notification tray and matches the native Windows 11 Modern Flyouts interface:
-
-<div align="center">
-  <img src="assets/screenshots/windows-tray-companion.png" width="340" alt="Pult Windows 11 Modern Flyout Companion" />
-</div>
-
-<br/>
-
-* **Volume & Display Sliders:** Master audio control for `Speakers (Realtek(R) Audio)` with an active vertical cyan indicator, per-app volume slider (Brave Browser), display brightness, blue light filter, and dimming controls.
-* **Instant Pairing Sharing:** Live LAN status with one-click copying for both the 6-digit PIN and the computer's local IP address.
-* **Firewall Automation:** One-click configuration for Windows Defender Firewall inbound rules.
-* **Standalone Portable Binary:** Single ~60 KB executable with zero runtime dependencies.
-
-<br/>
 
 ---
 
