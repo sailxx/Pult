@@ -166,3 +166,56 @@ X-Pin: 123456
 POST /tasks/close?id=65542 HTTP/1.1
 X-Pin: 123456
 ```
+
+---
+
+### 2.8 Bidirectional Clipboard
+#### Get Current PC Clipboard Text
+```http
+GET /clipboard HTTP/1.1
+X-Pin: 123456
+```
+**Response (200 OK)**:
+```json
+{"ok": true, "hasText": true, "text": "Copied snippet from Windows"}
+```
+
+#### Set PC Clipboard Text
+```http
+POST /clipboard?text=Hello+from+Pult HTTP/1.1
+X-Pin: 123456
+```
+
+#### Clear PC Clipboard
+```http
+POST /clipboard?clear=1 HTTP/1.1
+X-Pin: 123456
+```
+
+---
+
+### 2.9 Desktop Screen Capture
+#### Stream Fullscreen JPEG
+```http
+GET /capture HTTP/1.1
+X-Pin: 123456
+```
+**Response (200 OK)**: `image/jpeg` (Native desktop screen frame)
+
+#### Save / Copy Desktop Screenshot
+```http
+POST /capture?save=1&copy=1 HTTP/1.1
+X-Pin: 123456
+```
+- `?save=1`: Saves to `Pictures\Pult\Screenshot_yyyyMMdd_HHmmss.jpg`
+- `?copy=1`: Injects screenshot into Windows clipboard
+
+---
+
+### 2.10 Digital Signature & Inking
+#### Insert Signature into Windows Clipboard / Disk
+```http
+POST /signature?action=clipboard&data=<base64_png> HTTP/1.1
+X-Pin: 123456
+```
+- Actions: `clipboard` (injects bitmap into clipboard for Ctrl+V paste into Word/PDF), `save` (saves to `Pictures\Pult\Signatures`), `all` (both).

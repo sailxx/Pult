@@ -6,167 +6,194 @@
 </picture>
 
 <p>
-  <b>Phone as a landscape desk dock and second screen for your Windows PC.</b><br/>
-  Fullscreen apps grid, hardware volume &amp; media player, and wireless trackpad over local Wi-Fi.
+  <b>Turn your phone into a landscape desk companion and control dock for Windows PC.</b><br/>
+  App launchpad, bidirectional clipboard bridge, 60&nbsp;fps glass trackpad, stylus signature canvas, and live desktop capture over local Wi-Fi.
 </p>
 
 <p>
-  <a href="https://github.com/sailxx/Pult/releases/latest/download/Pult.exe"><img src="assets/readme/cta-windows.svg" height="48" alt="Download for Windows"></a>
+  <a href="https://github.com/sailxx/Pult/releases/latest/download/Pult.exe"><img src="assets/readme/cta-windows.svg" height="46" alt="Download for Windows"></a>
   &nbsp;
-  <a href="https://github.com/sailxx/Pult/releases/latest/download/Pult.apk"><img src="assets/readme/cta-android.svg" height="48" alt="Download for Android"></a>
+  <a href="https://github.com/sailxx/Pult/releases/latest/download/Pult.apk"><img src="assets/readme/cta-android.svg" height="46" alt="Download for Android"></a>
 </p>
 
 <p>
-  <a href="https://github.com/sailxx/Pult/releases/latest"><img alt="Latest release" src="https://img.shields.io/badge/release-v0.2.0-orange?style=flat-square" /></a>
+  <a href="https://github.com/sailxx/Pult/releases/latest"><img alt="Latest release" src="https://img.shields.io/badge/release-v0.3.0-orange?style=flat-square" /></a>
   <a href="https://github.com/sailxx/Pult/releases/latest"><img alt="Platforms" src="https://img.shields.io/badge/platform-Windows%20%7C%20Android-blue?style=flat-square" /></a>
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-black?style=flat-square" /></a>
   <a href="https://github.com/sailxx/Pult/actions/workflows/ci.yml"><img alt="CI status" src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square" /></a>
+  <img alt="Local Latency" src="https://img.shields.io/badge/latency-%3C1.5ms%20LAN-emerald?style=flat-square" />
 </p>
 
-[⚡ Quick Start](#-quick-start) • [💡 Why Pult](#-why-pult) • [📸 Interface](#-interface-screenshots) • [🎛️ 3 Sections](#️-the-3-dock-sections) • [🗺️ Roadmap](#️-roadmap) • [📊 Comparison](#-comparison) • [🌐 Protocol](docs/PROTOCOL.md) • [🛠️ Build](#️-building-from-source)
+[⚡ Quick Start](#-quick-start) • [✨ Key Features](#-key-features) • [🖼️ Interface Showcase](#️-interface-showcase) • [🎨 Palettes](#-5-curated-themes) • [🪟 Windows Companion](#-windows-11-mica-companion) • [🌐 Protocol](docs/PROTOCOL.md) • [🛠️ Build](#️-building-from-source)
 
 </div>
 
 <br/>
 
-<img src="assets/hero.png" width="100%" alt="Pult - landscape desk dock for Windows PC" />
+<div align="center">
+  <img src="assets/screenshots/pult-hero-dock.svg" width="100%" alt="Pult Hero Landscape Dock with active applications and now-playing controls" />
+</div>
 
 <br/><br/>
 
 ## 💡 Why Pult
 
-Pult is not a TV remote with cluttered buttons. It turns your phone on a desk stand into a **minimalist, fullscreen landscape dock** for your Windows PC:
+Most remote control apps look like outdated TV remotes or clumsy media players. **Pult** reimagines your smartphone as an elegant, horizontal desk companion resting beside your computer:
 
-* **Phone on a desk stand:** Place your phone horizontally beside your keyboard. Instantly launch Chrome, Spotify, VS Code, Steam, or Terminal with a single tap on crisp 96×96 cached icons.
-* **Bedside media control:** One swipe to the Media deck to adjust master hardware volume with the Core Audio slider, toggle mute, or pause videos without touching your keyboard.
-* **Wireless mouse anywhere:** One swipe to the Cursor deck turns the entire widescreen display into a smooth 60 fps precision trackpad with tap-to-click, two-finger scrolling, and thumb buttons.
-* **100% offline & local:** Pult communicates strictly peer-to-peer over your local Wi-Fi router or mobile hotspot. Zero cloud servers, zero telemetry, zero accounts.
-
-<br/>
-
-<img src="assets/readme/features.svg" width="100%" alt="Pult capabilities" />
-
-<br/><br/>
-
-<img src="assets/readme/numbers.svg" width="100%" alt="Pult specifications" />
-
-<br/><br/>
-
-## 📸 Interface Screenshots
-
-The application runs in **fullscreen landscape mode** on AMOLED black (`#000000`), divided into 3 dedicated, focused sections:
+* **Horizontal Desk Companion:** Dock your phone in landscape on a wireless charging stand. Launch frequent tools (VS Code, Chrome, Terminal, Steam) with one tap on crisp, real extracted `.exe` icons.
+* **Instant Media & Hardware Audio:** Master Windows Core Audio control (`0–100%`) with ±5 steppers, mute badge, and tactile media keys directly on the main dock strip.
+* **Two-Way Clipboard Synchronization:** Effortlessly push snippets, code blocks, or URLs from your phone into the Windows clipboard, or inspect and grab whatever is currently copied on your PC.
+* **Zero Cloud & Zero Accounts:** Pult is 100% peer-to-peer over local LAN/Wi-Fi. No accounts, no telemetry, no relays, no external servers.
+* **Ultra-Low Latency:** Persistent HTTP Keep-Alive connection pooling with `TCP_NODELAY` delivers **~1.04 ms/req** response times.
 
 <br/>
 
-<img src="assets/screenshots/screens-showcase.svg" width="100%" alt="Pult Landscape Dock Screens: Fullscreen Apps, Media Player, and Cursor Trackpad" />
+---
+
+## ✨ Key Features
+
+| Tool | Capability | Windows Host Integration |
+|---|---|---|
+| **🚀 Hero Dock & Apps** | 4, 6, or 8 configurable glass tiles with real EXE icons, process indicators, favorite pinning, and full app search | `Process.Start()`, Shell indexing, Win32 window switching |
+| **📋 Bidirectional Clipboard** | Live PC clipboard inspection, one-tap copy to phone, push text to PC, clear PC clipboard | Win32 STA Clipboard API (`GetText` / `SetText`) |
+| **🖱️ Precision Glass Touchpad** | Smooth 60 fps mouse navigation, tap-to-click, double tap, hold Drag & Drop mode, scroll strip | Conflated atomic delta dispatcher & `mouse_event` |
+| **✍️ Stylus & Finger Signature** | Quadratic Bézier curve inking, 5-color palette, stroke width, undo, direct clipboard injection | Injected as native `Bitmap` object for instant `Ctrl+V` |
+| **📸 Desktop Screen Capture** | Real-time screenshot fetch with landscape preview, save to `Pictures\Pult`, or copy to clipboard | Direct GDI+ desktop capture (`CopyFromScreen`) |
+| **🪟 Windows 11 Companion** | Native Mica backdrop flyout from system notification tray; PIN generation, IP sharing, firewall setup | DWM Mica Win32 API (`DWMWA_SYSTEMBACKDROP_TYPE`) |
 
 <br/>
 
-* **1. Приложения (Fullscreen Apps Grid):** A 7-column wide application launchpad and switcher. Displays all installed Windows Start Menu and Desktop shortcuts with cached icons, instant fuzzy search, and long-press favorite pinning.
-* **2. Плеер (Hardware Audio & Media Player):** Direct Windows Core Audio COM master volume slider (0–100%) with ±5 stepper buttons, quick MUTE toggle, large tactile Play/Pause, Next/Prev, Space, and instant PC shortcuts (`Win+L`, `Win+D`, `Alt+Tab`, Monitors Standby).
-* **3. Курсор (Wireless Touchpad):** An expansive 60 fps touch surface for fluid mouse cursor control, double-tap click, right-click, smooth vertical scroll strip, and ergonomic hardware `LKM` / `PKM` buttons.
+---
+
+## 🖼️ Interface Showcase
+
+<div align="center">
+  <img src="assets/screenshots/pult-suite-showcase.svg" width="100%" alt="Pult Suite: Clipboard Bridge, Glass Touchpad, Digital Signature, and Screen Capture" />
+</div>
 
 <br/>
 
-## 🎛️ The 3 Dock Sections
+### 1. 🚀 Hero Dock & Apps Library
+* **Custom Slot Sizing:** Seamlessly toggle between **4**, **6**, or **8** prominent glass tiles.
+* **Original EXE Icons:** Automatically extracted from Windows shortcuts and cached on-device with high-DPI clarity.
+* **Process Status Dots:** Glowing indicators highlight currently active Windows processes.
+* **Full Apps Library:** Search through every installed desktop software and game with instant fuzzy filtering.
 
-### 📱 1. Fullscreen Apps Deck
-* Automatically indexes applications and games from the Windows Start Menu and Desktop shortcuts.
-* High-density 7-column widescreen grid optimized for desk stands.
-* Extracts 96×96 crisp PNG icons directly from executables with in-memory caching.
-* Instant fuzzy search as you type.
-* Long-press any app to pin it to your favorites dock with priority positioning.
+### 2. 📋 Bidirectional Clipboard Bridge
+* **Read PC Clipboard:** Inspect the active clipboard contents of your computer in real time.
+* **Copy to Mobile:** Copy PC snippets directly into Android's native `ClipboardManager`.
+* **Push to PC:** Type or paste on your smartphone and inject directly into the Windows clipboard with a single tap.
+* **Clear Remote Clipboard:** Securely wipe the PC clipboard buffer whenever necessary.
 
-### 🎵 2. Media Player Deck
-* Master volume integration via native Windows Core Audio COM API (`IAudioEndpointVolume`).
-* Live two-way volume slider: adjust volume on your PC with physical keyboard keys, and the phone updates instantaneously.
-* Large, tactile Play / Pause, Next, Prev, Stop, and Space controls.
-* Quick desktop system actions: Lock (`Win + L`), Desktop (`Win + D`), App cycle (`Alt + Tab`), and display standby.
+### 3. 🖱️ 60 FPS Precision Glass Touchpad
+* **Conflated Motion Dispatcher:** Atomic delta accumulation prevents packet backlog and cursor drift.
+* **Sensitivity Slider:** Real-time speed adjustment from **0.5×** to **3.0×**.
+* **Gestures & Buttons:** Single tap for Left Click, double-tap, long-press for Right Click, Middle Click (SCM), and a dedicated **Drag & Drop lock** toggle.
+* **Dedicated Scroll Strip:** Smooth vertical scrolling with haptic tactile feedback.
 
-### 🖱️ 3. Finger Cursor Control
-* 60 fps ultra-low-latency mouse control over local TCP sockets.
-* Native gesture support:
-  * **Single tap:** Left click
-  * **Double tap:** Double click
-  * **Long press:** Right click
-  * **Dedicated scroll strip:** Smooth vertical document and web browsing
-* Physical landscape thumb buttons for left and right click.
+### 4. ✍️ Digital Signature & Inking
+* **Stylus & Finger Inking:** Smooth drawing canvas with Bézier path smoothing.
+* **Ink Customization:** 5 ink colors (White, Sky Accent, Green, Amber, Dark) with variable stroke widths.
+* **Insert to PC:** Copies the signature directly as a bitmap to the PC clipboard for immediate `Ctrl+V` pasting into Word, PDF, Figma, or Photoshop.
+* **Save to Disk:** Saves a clean PNG to `Pictures\Pult\Signatures`.
 
-<br/>
-
-## 🗺️ Roadmap
-
-<img src="assets/readme/roadmap.svg" width="100%" alt="Pult Roadmap" />
-
-<br/>
-
-| Milestone | Status | Key Deliverables |
-|---|:---:|---|
-| **v0.2 — Landscape Dock & Zero-Lag Core** | **Shipped** | Fullscreen landscape dock, Core Audio COM volume, 60 fps Trackpad, Start Menu apps index, pure offline UDP discovery, 40 KB native host. |
-| **v0.3 — Media Art & Quick Macros** | **In Progress** | GSMTC Windows media integration (live track title, artist, live album artwork thumbnail on phone), custom one-tap PowerShell/CMD quick action macros. |
-| **v0.4 — Companion & Telemetry** | **Planned** | iOS Companion Client (SwiftUI), Android Lock screen media controls widget, real-time PC telemetry dock (CPU temperature, GPU load, RAM usage). |
-| **v1.0 — Production Suite** | **Future** | Encrypted local TLS/WSS transport with auto-generated self-signed LAN certificates, multi-monitor display switching, bidirectional clipboard bridge. |
+### 5. 📸 Desktop Screen Capture
+* **Live Display Preview:** View the active desktop screen right on your mobile display.
+* **Copy to PC Clipboard:** One-tap button to capture the screenshot and place it in the PC clipboard.
+* **Save to PC Disk:** Automatically timestamped and stored in `Pictures\Pult\`.
 
 <br/>
 
-## 📊 Comparison
+---
 
-| Dimension | Pult | Unified Remote | KDE Connect | TeamViewer / AnyDesk |
-|---|:---:|:---:|:---:|:---:|
-| **Form factor** | Landscape Desk Dock | Vertical remote | Vertical remote | Remote desktop stream |
-| **Accounts or sign-up** | None | Optional | None | Mandatory |
-| **Network path** | 100% offline LAN | Local + Telemetry | Local | Cloud relay |
-| **PC Host binary** | **40 KB** | ~45 MB | ~110 MB | ~55 MB |
-| **Host dependencies** | None (Native Win32/C#) | .NET Runtimes | KDE runtime pack | Proprietary drivers |
-| **Volume control** | Core Audio COM (0-100%) | Blind key simulation | Blind key simulation | None |
-| **Start menu launchpad** | Automatic with cached icons | Paid addon | None | None |
-| **Wireless trackpad** | 60 fps relative delta | 60 fps | 60 fps | High video stream lag |
-| **License** | Open source (MIT) | Proprietary | Open source (GPL) | Proprietary |
+## 🎨 5 Curated Themes
+
+Pult features an Apple × Claude × Okto design triad aesthetic, built upon rich ambient radial glow spheres and pure dark contrast surfaces:
+
+<div align="center">
+  <img src="assets/screenshots/pult-themes.svg" width="100%" alt="Pult 5 Curated Themes: Aurora, Dusk, Ember, Midnight, and OLED Pure" />
+</div>
 
 <br/>
+
+* **🌿 Aurora (Default):** Deep emerald base (`#101719`) with soft sea-mist glows (`#71A78A`), deep navy (`#274268`), and fresh mint accents (`#B4EDCC`).
+* **🌆 Dusk:** Twilight indigo (`#171228`) paired with soft amethyst glows (`#8B578F`) and lavender focal points (`#E7D4FF`).
+* **🔥 Ember:** Warm terracotta charcoal (`#221615`) with amber copper undertones (`#A45F43`) and peach accents (`#F8DCC0`).
+* **🌌 Midnight:** Deep space ultramarine (`#090E17`) with cobalt accents and icy blue highlights (`#D0E2FF`).
+* **⬛ OLED Pure:** Pitch-black canvas (`#000000`) with high-contrast surfaces (`#0C0E14`) and electric sky accents (`#38BDF8`).
+
+<br/>
+
+---
+
+## 🪟 Windows 11 Mica Companion
+
+Unlike traditional heavy desktop applications, the Pult Windows companion stays unobtrusively in your system notification tray:
+
+<div align="center">
+  <img src="assets/screenshots/windows-tray-companion.png" width="340" alt="Pult Windows 11 Native Mica Companion Tray Flyout" />
+</div>
+
+<br/>
+
+* **Native Windows 11 DWM Mica:** Renders with authentic Mica materials, dark mode, and soft rounded window geometry (`DwmSetWindowAttribute`).
+* **One-Click Connection Sharing:** Easily copy your PC's local LAN IP address and current 6-digit security PIN.
+* **Firewall Helper:** Automated one-click Windows Defender Firewall inbound rule configuration (`advfirewall`).
+* **Single Portable Binary:** Single standalone ~40 KB executable with zero runtime dependencies.
+
+<br/>
+
+---
 
 ## ⚡ Quick Start
 
-### 1. Windows Host
-1. Download [`Pult.exe`](https://github.com/sailxx/Pult/releases/latest/download/Pult.exe) (single 40 KB executable, zero installer).
+### 1. Windows Host Setup
+1. Download [`Pult.exe`](https://github.com/sailxx/Pult/releases/latest/download/Pult.exe) (single 40 KB executable, no installer needed).
 2. Run `Pult.exe`. The remote icon will appear in your system notification tray.
-3. Right-click the tray icon and select **«Разрешить в брандмауэре»** for automatic Windows Firewall setup.
-4. Left-click the tray icon to see your PC's local IP and current 6-digit security PIN.
+3. Left-click the tray icon to open the **Pult Companion** flyout and check your 6-digit PIN.
+4. If connecting for the first time, click **«Брандмауэр»** to permit local network traffic.
 
-### 2. Android Client
+### 2. Android Client Setup
 1. Download and install [`Pult.apk`](https://github.com/sailxx/Pult/releases/latest/download/Pult.apk).
-2. Place phone on your desk stand in landscape orientation.
-3. Tap **«Поиск»** for automatic UDP discovery, enter your PIN, and tap **«Подключить»**.
+2. Place your smartphone horizontally on your desk stand.
+3. Tap **«Поиск»** to automatically discover your PC via local UDP beacon.
+4. Enter the 6-digit PIN displayed on your PC and tap **«Подключить»**.
 
 <br/>
 
-## 🌐 Network Architecture
+---
+
+## 🌐 Architecture & Protocol
 
 ```
 ┌──────────────────────────────────────────────┐                 ┌─────────────────────────────────┐
 │           Android Phone (Landscape)         │                 │           Windows PC            │
 │          (Kotlin + Jetpack Compose)          │                 │        (Native C# Host)         │
 │                                              │                 │                                 │
-│  UDP Broadcast: PULT?                        │ ──────────────> │  UDP 47801 Discovery Listener   │
+│  UDP Broadcast: PULT?                        │ ──────────────> │  UDP 47801 Discovery Beacon     │
 │                                              │ <────────────── │  Answers: PULT!47800|DESKTOP-PC │
 │                                              │                 │                                 │
-│  1. Apps Dock:     POST /launch?id=...       │ ──────────────> │  Process.Start()                │
-│  2. Media Player:  GET/POST /volume, /key    │ ──────────────> │  Core Audio COM API, keybd_event│
-│  3. Cursor Deck:   POST /mouse?dx=..&dy=..   │ ──────────────> │  mouse_event() Win32            │
+│  1. Hero Dock:     POST /launch?id=...       │ ──────────────> │  Process.Start()                │
+│  2. Audio Strip:   GET/POST /volume, /key    │ ──────────────> │  Core Audio COM API             │
+│  3. Clipboard:     GET/POST /clipboard       │ ──────────────> │  Win32 STA Clipboard Thread     │
+│  4. Touchpad:      POST /mouse?dx=..&dy=..   │ ──────────────> │  mouse_event() Win32            │
+│  5. Signature:     POST /signature?action=.. │ ──────────────> │  System.Drawing Bitmap buffer   │
+│  6. Capture:       GET/POST /capture         │ ──────────────> │  GDI+ CopyFromScreen            │
 └──────────────────────────────────────────────┘  Local Network  └─────────────────────────────────┘
 ```
 
-* **Discovery (UDP 47801):** Broadcast beacon with automatic subnet sweep fallback if router client isolation is active.
-* **REST API (TCP 47800):** Lightweight HTTP server with cryptographically secure PIN authentication (`RandomNumberGenerator`) and brute-force lockout (10 failed tries = 60-second lock).
-
-Full API endpoints and curl examples are documented in [docs/PROTOCOL.md](docs/PROTOCOL.md).
+* **Discovery (UDP 47801):** Fast peer-to-peer broadcast beacon with subnet sweep fallback.
+* **Control API (TCP 47800):** Keep-Alive HTTP server with cryptographic PIN security and brute-force lockout (10 failed attempts = 60-second cooldown).
+* **Protocol Reference:** Detailed endpoints, parameter specifications, and sample payloads are available in [docs/PROTOCOL.md](docs/PROTOCOL.md).
 
 <br/>
 
+---
+
 ## 🛠️ Building from Source
 
-### Windows Host (Zero SDKs required)
-Compiles directly with the native C# compiler present on every modern Windows installation:
+### Windows Host (Zero SDKs Required)
+Compiles directly with the Microsoft C# compiler present on every modern Windows installation:
 ```cmd
 host\build.cmd
 ```
@@ -175,11 +202,15 @@ host\build.cmd
 Built with Kotlin and Jetpack Compose:
 ```bash
 cd android
-./gradlew assembleRelease
+./gradlew assembleDebug
 ```
 
 <br/>
 
-## 📄 License
+---
 
-MIT © 2026 [@sailxx](https://github.com/sailxx)
+## 📄 License & Credits
+
+Pult is licensed under the **MIT License**. See [LICENSE](LICENSE) for full details.
+
+Developed with care by [@sailxx](https://github.com/sailxx). Contributions, bug reports, and suggestions are welcome on [GitHub Issues](https://github.com/sailxx/Pult/issues)!

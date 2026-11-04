@@ -782,7 +782,7 @@ static class SignatureHandler
 }
 
 // ----------------- Windows 11 Native Mica Companion Form -----------------
-class CompanionFlyout : Form
+public class CompanionFlyout : Form
 {
     [DllImport("dwmapi.dll")] static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 

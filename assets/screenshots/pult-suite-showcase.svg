@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="840" viewBox="0 0 1280 840" role="img" aria-label="Pult Feature Suite">
+<defs>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+  text { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .glass { fill: #1B2629; fill-opacity: 0.82; stroke: #354449; stroke-width: 1; }
+  .glass-card { fill: #172124; fill-opacity: 0.88; stroke: #2D3A3F; stroke-width: 1; rx: 14; }
+  .tile { fill: #1D2A2E; stroke: #38494F; stroke-width: 1; rx: 14; }
+  .tile-fav { fill: #23343A; stroke: #B4EDCC; stroke-opacity: 0.55; stroke-width: 1.5; rx: 14; }
+  .tile-run { fill: #1D2A2E; stroke: #A3E6BE; stroke-opacity: 0.85; stroke-width: 1.5; rx: 14; }
+  .btn { fill: #263438; stroke: #3B4D53; stroke-width: 1; rx: 8; }
+  .btn-accent { fill: #B4EDCC; rx: 8; }
+  .badge { fill: #263438; stroke: #3B4D53; stroke-width: 1; rx: 6; }
+</style>
+  <clipPath id="c1"><rect x="40" y="80" width="575" height="340" rx="20"/></clipPath>
+  <clipPath id="c2"><rect x="665" y="80" width="575" height="340" rx="20"/></clipPath>
+  <clipPath id="c3"><rect x="40" y="460" width="575" height="340" rx="20"/></clipPath>
+  <clipPath id="c4"><rect x="665" y="460" width="575" height="340" rx="20"/></clipPath>
+</defs>
+
+<rect width="1280" height="840" fill="#080C0D"/>
+
+<!-- TITLE -->
+<text x="640" y="44" fill="#EEF3F1" font-size="18" font-weight="800" text-anchor="middle" letter-spacing="1">PULT WORKSPACE SUITE</text>
+<text x="640" y="64" fill="#758585" font-size="11" font-weight="600" text-anchor="middle">WINDOCK-INSPIRED MULTI-TOOL DESK COMPANION FOR WINDOWS PC</text>
+
+<!-- PANEL 1: CLIPBOARD SYNC -->
+<g clip-path="url(#c1)">
+  <rect x="40" y="80" width="575" height="340" fill="#171228"/>
+  <rect x="40" y="80" width="575" height="340" stroke="#463A68" stroke-width="1.5" rx="20" fill="none"/>
+  
+  <text x="65" y="112" fill="#E7D4FF" font-size="12" font-weight="800">1. ДВУХСТОРОННИЙ БУФЕР ОБМЕНА</text>
+  <text x="65" y="128" fill="#AF7FA0" font-size="10">Синхронизация текстов и ссылок ПК ↔ Смартфон без облака</text>
+
+  <!-- Left Card: PC Clipboard -->
+  <rect x="65" y="145" width="250" height="250" rx="12" fill="#231B38" stroke="#463A68"/>
+  <text x="80" y="170" fill="#E7D4FF" font-size="10" font-weight="700">БУФЕР ОБМЕНА WINDOWS</text>
+  <rect x="80" y="184" width="220" height="150" rx="8" fill="#130D20"/>
+  <text x="92" y="210" fill="#EEF3F1" font-size="10" class="mono">git commit -m "feat: pult"</text>
+  <text x="92" y="228" fill="#A0AFAF" font-size="10" class="mono">https://github.com/sailxx/Pult</text>
+  <rect x="80" y="348" width="105" height="34" rx="6" fill="#31274C" stroke="#463A68"/>
+  <text x="132" y="369" fill="#E7D4FF" font-size="10" font-weight="600" text-anchor="middle">В телефон</text>
+  <rect x="195" y="348" width="105" height="34" rx="6" fill="#421C24" stroke="#EF4444" stroke-opacity="0.5"/>
+  <text x="247" y="369" fill="#EF4444" font-size="10" font-weight="700" text-anchor="middle">Очистить ПК</text>
+
+  <!-- Right Card: Send to PC -->
+  <rect x="335" y="145" width="255" height="250" rx="12" fill="#231B38" stroke="#463A68"/>
+  <text x="350" y="170" fill="#D1B3F3" font-size="10" font-weight="700">ОТПРАВИТЬ НА ПК</text>
+  <rect x="350" y="184" width="225" height="150" rx="8" fill="#130D20"/>
+  <text x="362" y="210" fill="#AF7FA0" font-size="10">Вставьте скопированный текст...</text>
+  <rect x="350" y="348" width="225" height="34" rx="6" fill="#E7D4FF"/>
+  <text x="462" y="369" fill="#171228" font-size="11" font-weight="800" text-anchor="middle">Скопировать в буфер ПК</text>
+</g>
+
+<!-- PANEL 2: PRECISION GLASS TOUCHPAD -->
+<g clip-path="url(#c2)">
+  <rect x="665" y="80" width="575" height="340" fill="#101719"/>
+  <rect x="665" y="80" width="575" height="340" stroke="#354449" stroke-width="1.5" rx="20" fill="none"/>
+
+  <text x="690" y="112" fill="#B4EDCC" font-size="12" font-weight="800">2. СТЕКЛЯННЫЙ ТАЧПАД 60 FPS</text>
+  <text x="690" y="128" fill="#758585" font-size="10">Плавное движение, жесты, Drag &amp; Drop и аппаратные кнопки мыши</text>
+
+  <!-- Touchpad surface -->
+  <rect x="690" y="145" width="410" height="190" rx="14" fill="#162225" stroke="#2B3A3F"/>
+  <circle cx="895" cy="240" r="38" stroke="#354449" stroke-dasharray="3 3" fill="none"/>
+  <circle cx="895" cy="240" r="4" fill="#B4EDCC" fill-opacity="0.6"/>
+  <text x="895" y="266" fill="#758585" font-size="10" text-anchor="middle">1 палец — курсор • 2 пальца — скролл</text>
+
+  <!-- Speed control pill -->
+  <rect x="960" y="155" width="130" height="24" rx="6" fill="#202F33"/>
+  <text x="1025" y="171" fill="#B4EDCC" font-size="10" font-weight="700" text-anchor="middle">Скорость: 1.6×</text>
+
+  <!-- Mouse Buttons -->
+  <rect x="690" y="345" width="160" height="50" rx="10" fill="#202F33" stroke="#354449"/>
+  <text x="770" y="375" fill="#EEF3F1" font-size="13" font-weight="800" text-anchor="middle">ЛКМ</text>
+
+  <rect x="860" y="345" width="90" height="50" rx="10" fill="#202F33" stroke="#354449"/>
+  <text x="905" y="370" fill="#B4EDCC" font-size="10" font-weight="700" text-anchor="middle">Drag&amp;Drop</text>
+  <text x="905" y="384" fill="#758585" font-size="8" text-anchor="middle">Зажать</text>
+
+  <rect x="960" y="345" width="60" height="50" rx="10" fill="#202F33" stroke="#354449"/>
+  <text x="990" y="375" fill="#A0AFAF" font-size="11" font-weight="700" text-anchor="middle">СКМ</text>
+
+  <rect x="1030" y="345" width="70" height="50" rx="10" fill="#202F33" stroke="#354449"/>
+  <text x="1065" y="375" fill="#EEF3F1" font-size="13" font-weight="800" text-anchor="middle">ПКМ</text>
+
+  <!-- Right Scroll Strip -->
+  <rect x="1115" y="145" width="105" height="250" rx="14" fill="#162225" stroke="#2B3A3F"/>
+  <text x="1167" y="240" fill="#B4EDCC" font-size="16" text-anchor="middle">▲</text>
+  <text x="1167" y="270" fill="#A0AFAF" font-size="10" font-weight="800" text-anchor="middle">СКРОЛЛ</text>
+  <text x="1167" y="295" fill="#B4EDCC" font-size="16" text-anchor="middle">▼</text>
+</g>
+
+<!-- PANEL 3: STYLUS & SIGNATURE -->
+<g clip-path="url(#c3)">
+  <rect x="40" y="460" width="575" height="340" fill="#221615"/>
+  <rect x="40" y="460" width="575" height="340" stroke="#593F3C" stroke-width="1.5" rx="20" fill="none"/>
+
+  <text x="65" y="492" fill="#F8DCC0" font-size="12" font-weight="800">3. ЦИФРОВАЯ ПОДПИСЬ И НАБРОСКИ</text>
+  <text x="65" y="508" fill="#C19E75" font-size="10">Роспись стилусом/пальцем с мгновенной вставкой в документ ПК (Ctrl+V)</text>
+
+  <!-- Canvas -->
+  <rect x="65" y="525" width="410" height="250" rx="14" fill="#1A1110" stroke="#3E2826"/>
+  <!-- Vector Signature Curve -->
+  <path d="M100 680 C 140 600, 160 720, 200 640 S 260 590, 310 650 S 370 690, 420 620" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="90" y1="710" x2="450" y2="710" stroke="#593F3C" stroke-width="1"/>
+  <text x="270" y="740" fill="#C19E75" font-size="10" text-anchor="middle">Сглаживание Безье • Прозрачный альфа-фон</text>
+
+  <!-- Right Palette & Actions -->
+  <g transform="translate(490 525)">
+    <rect x="0" y="0" width="105" height="250" rx="12" fill="#2E1E1C" stroke="#593F3C"/>
+    <text x="52" y="24" fill="#F8DCC0" font-size="9" font-weight="800" text-anchor="middle">ЦВЕТ ПЕРА</text>
+
+    <!-- Colors -->
+    <circle cx="28" cy="46" r="10" fill="#FFFFFF" stroke="#F8DCC0" stroke-width="2"/>
+    <circle cx="56" cy="46" r="10" fill="#38BDF8"/>
+    <circle cx="84" cy="46" r="10" fill="#22C55E"/>
+
+    <text x="52" y="80" fill="#F8DCC0" font-size="9" font-weight="800" text-anchor="middle">ТОЛЩИНА</text>
+    <rect x="12" y="92" width="81" height="22" rx="4" fill="#3D2A28"/>
+    <text x="52" y="107" fill="#F8DCC0" font-size="9" font-weight="700" text-anchor="middle">4px Средне</text>
+
+    <rect x="10" y="150" width="85" height="38" rx="6" fill="#F8DCC0"/>
+    <text x="52" y="174" fill="#221615" font-size="9" font-weight="800" text-anchor="middle">Вставить ПК</text>
+
+    <rect x="10" y="196" width="85" height="34" rx="6" fill="#3D2A28" stroke="#593F3C"/>
+    <text x="52" y="217" fill="#F8DCC0" font-size="9" font-weight="600" text-anchor="middle">Сохранить</text>
+  </g>
+</g>
+
+<!-- PANEL 4: SCREEN CAPTURE & DESKTOP PREVIEW -->
+<g clip-path="url(#c4)">
+  <rect x="665" y="460" width="575" height="340" fill="#090E17"/>
+  <rect x="665" y="460" width="575" height="340" stroke="#2D3C59" stroke-width="1.5" rx="20" fill="none"/>
+
+  <text x="690" y="492" fill="#D0E2FF" font-size="12" font-weight="800">4. ЗАХВАТ И ПРЕВЬЮ ЭКРАНА WINDOWS</text>
+  <text x="690" y="508" fill="#54617A" font-size="10">Снимок дисплея в реальном времени с сохранением в Pictures\Pult</text>
+
+  <!-- Screenshot Display Card -->
+  <rect x="690" y="525" width="410" height="250" rx="14" fill="#131B2A" stroke="#2D3C59"/>
+  <!-- Mini Desktop Simulation inside preview -->
+  <rect x="704" y="540" width="382" height="220" rx="8" fill="#050B14"/>
+  <rect x="720" y="555" width="220" height="130" rx="6" fill="#101A2B" stroke="#2D3C59"/>
+  <text x="732" y="575" fill="#D0E2FF" font-size="9" class="mono">C:\Users\Vlad\Pult&gt; make</text>
+  <text x="732" y="595" fill="#22C55E" font-size="9" class="mono">[OK] Keep-Alive 1.04ms</text>
+  <!-- Mini taskbar -->
+  <rect x="704" y="736" width="382" height="24" rx="0" fill="#0E1624"/>
+  <rect x="880" y="742" width="12" height="12" rx="2" fill="#38BDF8"/>
+
+  <!-- Right Actions -->
+  <g transform="translate(1115 525)">
+    <rect x="0" y="0" width="105" height="250" rx="12" fill="#131B2A" stroke="#2D3C59"/>
+    <text x="52" y="24" fill="#D0E2FF" font-size="9" font-weight="800" text-anchor="middle">ДЕЙСТВИЯ</text>
+
+    <rect x="10" y="40" width="85" height="38" rx="6" fill="#D0E2FF"/>
+    <text x="52" y="64" fill="#090E17" font-size="9" font-weight="800" text-anchor="middle">Снимок</text>
+
+    <rect x="10" y="90" width="85" height="36" rx="6" fill="#1B263B" stroke="#2D3C59"/>
+    <text x="52" y="112" fill="#D0E2FF" font-size="9" font-weight="700" text-anchor="middle">В буфер ПК</text>
+
+    <rect x="10" y="136" width="85" height="36" rx="6" fill="#1B263B" stroke="#2D3C59"/>
+    <text x="52" y="158" fill="#D0E2FF" font-size="9" font-weight="700" text-anchor="middle">На диск ПК</text>
+
+    <text x="52" y="210" fill="#54617A" font-size="8" text-anchor="middle">Pictures\Pult</text>
+  </g>
+</g>
+</svg>

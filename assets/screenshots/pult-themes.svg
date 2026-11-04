@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="380" viewBox="0 0 1280 380" role="img" aria-label="Pult Theme Palettes">
+<defs>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+  text { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .glass { fill: #1B2629; fill-opacity: 0.82; stroke: #354449; stroke-width: 1; }
+  .glass-card { fill: #172124; fill-opacity: 0.88; stroke: #2D3A3F; stroke-width: 1; rx: 14; }
+  .tile { fill: #1D2A2E; stroke: #38494F; stroke-width: 1; rx: 14; }
+  .tile-fav { fill: #23343A; stroke: #B4EDCC; stroke-opacity: 0.55; stroke-width: 1.5; rx: 14; }
+  .tile-run { fill: #1D2A2E; stroke: #A3E6BE; stroke-opacity: 0.85; stroke-width: 1.5; rx: 14; }
+  .btn { fill: #263438; stroke: #3B4D53; stroke-width: 1; rx: 8; }
+  .btn-accent { fill: #B4EDCC; rx: 8; }
+  .badge { fill: #263438; stroke: #3B4D53; stroke-width: 1; rx: 6; }
+</style>
+</defs>
+
+<rect width="1280" height="380" fill="#080C0E"/>
+
+<text x="640" y="38" fill="#EEF3F1" font-size="16" font-weight="800" text-anchor="middle" letter-spacing="0.8">5 ПРЕМИАЛЬНЫХ ТЕМАТИЧЕСКИХ ПАЛИТР PULT</text>
+<text x="640" y="58" fill="#758585" font-size="11" font-weight="600" text-anchor="middle">ОРИГИНАЛЬНЫЕ ЦВЕТОВЫЕ СИСТЕМЫ В ЭСТЕТИКЕ APPLE × CLAUDE × OKTO</text>
+
+<!-- 1. AURORA -->
+<g transform="translate(60 85)">
+  <rect x="0" y="0" width="210" height="240" rx="16" fill="#101719" stroke="#354449" stroke-width="1.5"/>
+  <circle cx="105" cy="50" r="24" fill="#B4EDCC"/>
+  <text x="105" y="105" fill="#B4EDCC" font-size="14" font-weight="800" text-anchor="middle">Aurora</text>
+  <text x="105" y="125" fill="#71A78A" font-size="10" font-weight="600" text-anchor="middle">Изумрудный рассвет</text>
+  <rect x="25" y="150" width="160" height="28" rx="6" fill="#1B2629" stroke="#354449"/>
+  <text x="105" y="168" fill="#EEF3F1" font-size="10" class="mono" text-anchor="middle">#101719 • #B4EDCC</text>
+  <rect x="25" y="190" width="160" height="24" rx="6" fill="#B4EDCC" fill-opacity="0.15"/>
+  <text x="105" y="206" fill="#B4EDCC" font-size="10" font-weight="700" text-anchor="middle">По умолчанию</text>
+</g>
+
+<!-- 2. DUSK -->
+<g transform="translate(300 85)">
+  <rect x="0" y="0" width="210" height="240" rx="16" fill="#171228" stroke="#463A68" stroke-width="1.5"/>
+  <circle cx="105" cy="50" r="24" fill="#E7D4FF"/>
+  <text x="105" y="105" fill="#E7D4FF" font-size="14" font-weight="800" text-anchor="middle">Dusk</text>
+  <text x="105" y="125" fill="#8B578F" font-size="10" font-weight="600" text-anchor="middle">Сумеречный индиго</text>
+  <rect x="25" y="150" width="160" height="28" rx="6" fill="#231B38" stroke="#463A68"/>
+  <text x="105" y="168" fill="#EEF3F1" font-size="10" class="mono" text-anchor="middle">#171228 • #E7D4FF</text>
+  <rect x="25" y="190" width="160" height="24" rx="6" fill="#E7D4FF" fill-opacity="0.15"/>
+  <text x="105" y="206" fill="#E7D4FF" font-size="10" font-weight="700" text-anchor="middle">Глубокий вечер</text>
+</g>
+
+<!-- 3. EMBER -->
+<g transform="translate(540 85)">
+  <rect x="0" y="0" width="210" height="240" rx="16" fill="#221615" stroke="#593F3C" stroke-width="1.5"/>
+  <circle cx="105" cy="50" r="24" fill="#F8DCC0"/>
+  <text x="105" y="105" fill="#F8DCC0" font-size="14" font-weight="800" text-anchor="middle">Ember</text>
+  <text x="105" y="125" fill="#A45F43" font-size="10" font-weight="600" text-anchor="middle">Тёплая терракота</text>
+  <rect x="25" y="150" width="160" height="28" rx="6" fill="#2E1E1C" stroke="#593F3C"/>
+  <text x="105" y="168" fill="#EEF3F1" font-size="10" class="mono" text-anchor="middle">#221615 • #F8DCC0</text>
+  <rect x="25" y="190" width="160" height="24" rx="6" fill="#F8DCC0" fill-opacity="0.15"/>
+  <text x="105" y="206" fill="#F8DCC0" font-size="10" font-weight="700" text-anchor="middle">Уютный огонь</text>
+</g>
+
+<!-- 4. MIDNIGHT -->
+<g transform="translate(780 85)">
+  <rect x="0" y="0" width="210" height="240" rx="16" fill="#090E17" stroke="#2D3C59" stroke-width="1.5"/>
+  <circle cx="105" cy="50" r="24" fill="#D0E2FF"/>
+  <text x="105" y="105" fill="#D0E2FF" font-size="14" font-weight="800" text-anchor="middle">Midnight</text>
+  <text x="105" y="125" fill="#54617A" font-size="10" font-weight="600" text-anchor="middle">Ночной ультрамарин</text>
+  <rect x="25" y="150" width="160" height="28" rx="6" fill="#131B2A" stroke="#2D3C59"/>
+  <text x="105" y="168" fill="#EEF3F1" font-size="10" class="mono" text-anchor="middle">#090E17 • #D0E2FF</text>
+  <rect x="25" y="190" width="160" height="24" rx="6" fill="#D0E2FF" fill-opacity="0.15"/>
+  <text x="105" y="206" fill="#D0E2FF" font-size="10" font-weight="700" text-anchor="middle">Космический лёд</text>
+</g>
+
+<!-- 5. OLED -->
+<g transform="translate(1020 85)">
+  <rect x="0" y="0" width="210" height="240" rx="16" fill="#000000" stroke="#1F2432" stroke-width="1.5"/>
+  <circle cx="105" cy="50" r="24" fill="#38BDF8"/>
+  <text x="105" y="105" fill="#38BDF8" font-size="14" font-weight="800" text-anchor="middle">OLED Pure</text>
+  <text x="105" y="125" fill="#8B949E" font-size="10" font-weight="600" text-anchor="middle">Абсолютный чёрный</text>
+  <rect x="25" y="150" width="160" height="28" rx="6" fill="#0C0E14" stroke="#1F2432"/>
+  <text x="105" y="168" fill="#EEF3F1" font-size="10" class="mono" text-anchor="middle">#000000 • #38BDF8</text>
+  <rect x="25" y="190" width="160" height="24" rx="6" fill="#38BDF8" fill-opacity="0.15"/>
+  <text x="105" y="206" fill="#38BDF8" font-size="10" font-weight="700" text-anchor="middle">Максимум контраста</text>
+</g>
+</svg>
