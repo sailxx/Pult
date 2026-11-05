@@ -175,6 +175,7 @@ fun PultVolumeSlider(
     onVolumeChangeFinished: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val palette = LocalPultPalette.current
     var isDragging by remember { mutableStateOf(false) }
     var dragPercent by remember { mutableStateOf(volume.toFloat()) }
 
@@ -223,7 +224,7 @@ fun PultVolumeSlider(
         // Заполненная часть слайдера
         Canvas(modifier = Modifier.fillMaxSize()) {
             val fillWidth = size.width * animatedProgress
-            val fillColor = if (isMuted) PultColors.danger.copy(alpha = 0.8f) else PultColors.accent
+            val fillColor = if (isMuted) palette.danger.copy(alpha = 0.8f) else palette.accent
             
             if (fillWidth > 0f) {
                 drawRoundRect(

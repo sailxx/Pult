@@ -379,7 +379,7 @@ fun DockScreen(
                                 },
                             contentAlignment = Alignment.Center
                         ) {
-                            PultIconPlay(Modifier.size(13.dp), color = Color(0xFF0C0E12))
+                            PultIconPlayPause(Modifier.size(13.dp), color = Color(0xFF0C0E12))
                         }
 
                         Box(
