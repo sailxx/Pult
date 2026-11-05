@@ -15,8 +15,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Compile Pult.exe
+        shell: cmd
         run: |
-          cmd.exe /c "host\build.cmd"
+          call host\build.cmd
           if not exist host\Pult.exe exit /b 1
 
       - name: Upload Host Binary
@@ -37,9 +38,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
 
       - name: Grant execute permission for gradlew
         run: chmod +x android/gradlew
