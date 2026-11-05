@@ -17,8 +17,9 @@ jobs:
       - name: Compile Pult.exe
         shell: cmd
         run: |
-          call host\build.cmd
-          if not exist host\Pult.exe exit /b 1
+          cd host
+          call build.cmd
+          if not exist Pult.exe exit /b 1
 
       - name: Upload Host Binary
         uses: actions/upload-artifact@v4
